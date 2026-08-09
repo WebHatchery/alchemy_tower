@@ -33,13 +33,15 @@ async fn main() {
 
     // Screenshot harness: when ALCHEMY_TOWER_CAPTURE_PATH is set, seed a
     // scene, simulate deterministic frames, write a PNG, and exit.
-    if let Some(config) = capture::CaptureConfig::from_env("ALCHEMY_TOWER") {
-        game.begin_capture_scene(&config.scene);
-        capture::run_capture(&config, |_dt| {
-            game.update();
-            game.draw();
-        })
-        .await;
+    if let Some(configs) = capture::CaptureConfig::all_from_env("ALCHEMY_TOWER") {
+        for config in configs {
+            game.begin_capture_scene(&config.scene);
+            capture::run_capture_once(&config, |_dt| {
+                game.update();
+                game.draw();
+            })
+            .await;
+        }
         return;
     }
 
