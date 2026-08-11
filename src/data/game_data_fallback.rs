@@ -12,7 +12,7 @@ impl GameData {
     pub(crate) fn runtime_fallback() -> Self {
         let mut data: GameData = expect_labeled_json(
             "game_data_fallback",
-            include_str!("../../assets/data/game_data_fallback.json"),
+            macroquad_toolkit::include_json_str!("../../assets/data/game_data_fallback.json"),
         );
         data.build_indexes()
             .expect("embedded runtime fallback indexes must remain valid");

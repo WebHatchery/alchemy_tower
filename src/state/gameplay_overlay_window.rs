@@ -16,34 +16,8 @@ pub(super) fn visible_window_start(selected: usize, total: usize, window: usize)
 }
 
 #[cfg(test)]
-mod tests {
-    use super::visible_window_start;
-
-    #[test]
-    fn the_selection_is_always_inside_the_window() {
-        for window in 1..6usize {
-            for total in 1..40usize {
-                for selected in 0..total {
-                    let start = visible_window_start(selected, total, window);
-                    assert!(
-                        selected >= start && selected < start + window,
-                        "selection {selected} of {total} fell outside a {window}-row window at {start}"
-                    );
-                    assert!(
-                        start + window <= total.max(window),
-                        "window ran past the list"
-                    );
-                }
-            }
-        }
-    }
-
-    #[test]
-    fn a_short_list_never_scrolls() {
-        assert_eq!(visible_window_start(0, 3, 5), 0);
-        assert_eq!(visible_window_start(2, 3, 5), 0);
-    }
-}
+#[path = "gameplay_overlay_window/tests.rs"]
+mod tests;
 
 /// Rows shown at once by the archive's section lists and the brew journal.
 pub(super) const ARCHIVE_PAGE_ROWS: usize = 6;
@@ -76,33 +50,5 @@ pub(super) fn paged_window(selected: usize, total: usize, rows: usize) -> (usize
 }
 
 #[cfg(test)]
-mod paged_tests {
-    use super::{paged_window, ARCHIVE_PAGE_ROWS};
-
-    /// The failure this replaces: a selection past the first page was drawn on
-    /// no page at all, so nothing appeared highlighted and the detail panel
-    /// described a row the player could not see.
-    #[test]
-    fn every_selection_lands_on_the_page_that_is_drawn() {
-        for total in 1..60usize {
-            for selected in 0..total {
-                let (start, _) = paged_window(selected, total, ARCHIVE_PAGE_ROWS);
-                assert!(
-                    selected >= start && selected < start + ARCHIVE_PAGE_ROWS,
-                    "selection {selected} of {total} is not on the page starting at {start}"
-                );
-            }
-        }
-    }
-
-    #[test]
-    fn a_single_page_is_not_announced() {
-        assert_eq!(
-            paged_window(0, ARCHIVE_PAGE_ROWS, ARCHIVE_PAGE_ROWS).1,
-            None
-        );
-        assert!(paged_window(0, ARCHIVE_PAGE_ROWS + 1, ARCHIVE_PAGE_ROWS)
-            .1
-            .is_some());
-    }
-}
+#[path = "gameplay_overlay_window/paged_tests.rs"]
+mod paged_tests;

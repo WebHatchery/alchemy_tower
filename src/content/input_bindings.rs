@@ -95,7 +95,7 @@ pub(crate) fn input_bindings() -> &'static InputBindings {
     static INPUTS: OnceLock<InputBindings> = OnceLock::new();
     INPUTS.get_or_init(|| {
         parse_required_json(
-            include_str!("../../assets/data/input_bindings.json"),
+            macroquad_toolkit::include_json_str!("../../assets/data/input_bindings.json"),
             "input_bindings.json",
         )
     })

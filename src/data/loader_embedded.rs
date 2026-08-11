@@ -12,59 +12,67 @@ use crate::data::{
 const AREA_SOURCES: &[(&str, &str)] = &[
     (
         "world/areas/tower_entry",
-        include_str!("../../assets/data/world/areas/tower_entry.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/tower_entry.json"),
     ),
     (
         "world/areas/north_plains",
-        include_str!("../../assets/data/world/areas/north_plains.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/north_plains.json"),
     ),
     (
         "world/areas/town_square",
-        include_str!("../../assets/data/world/areas/town_square.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/town_square.json"),
     ),
     (
         "world/areas/moonlit_forest",
-        include_str!("../../assets/data/world/areas/moonlit_forest.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/moonlit_forest.json"),
     ),
     (
         "world/areas/rock_fields",
-        include_str!("../../assets/data/world/areas/rock_fields.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/rock_fields.json"),
     ),
     (
         "world/areas/lake_shore",
-        include_str!("../../assets/data/world/areas/lake_shore.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/lake_shore.json"),
     ),
     (
         "world/areas/sunscar_desert",
-        include_str!("../../assets/data/world/areas/sunscar_desert.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/sunscar_desert.json"),
     ),
     (
         "world/areas/tropical_rainforest",
-        include_str!("../../assets/data/world/areas/tropical_rainforest.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/areas/tropical_rainforest.json"
+        ),
     ),
     (
         "world/areas/greenhouse_floor",
-        include_str!("../../assets/data/world/areas/greenhouse_floor.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/greenhouse_floor.json"),
     ),
     (
         "world/areas/containment_floor",
-        include_str!("../../assets/data/world/areas/containment_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/areas/containment_floor.json"
+        ),
     ),
     (
         "world/areas/rune_workshop_floor",
-        include_str!("../../assets/data/world/areas/rune_workshop_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/areas/rune_workshop_floor.json"
+        ),
     ),
     (
         "world/areas/archive_floor",
-        include_str!("../../assets/data/world/areas/archive_floor.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/archive_floor.json"),
     ),
     (
         "world/areas/observatory_floor",
-        include_str!("../../assets/data/world/areas/observatory_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/areas/observatory_floor.json"
+        ),
     ),
     (
         "world/areas/southern_pass",
-        include_str!("../../assets/data/world/areas/southern_pass.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/areas/southern_pass.json"),
     ),
 ];
 
@@ -73,78 +81,90 @@ const AREA_SOURCES: &[(&str, &str)] = &[
 const ITEM_SOURCES: &[(&str, &str)] = &[
     (
         "items/ingredients_shared",
-        include_str!("../../assets/data/items/ingredients_shared.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/ingredients_shared.json"),
     ),
     (
         "items/ingredients_plains",
-        include_str!("../../assets/data/items/ingredients_plains.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/ingredients_plains.json"),
     ),
     (
         "items/ingredients_moonlit_forest",
-        include_str!("../../assets/data/items/ingredients_moonlit_forest.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_moonlit_forest.json"
+        ),
     ),
     (
         "items/ingredients_rock_fields",
-        include_str!("../../assets/data/items/ingredients_rock_fields.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_rock_fields.json"
+        ),
     ),
     (
         "items/ingredients_lake_shore",
-        include_str!("../../assets/data/items/ingredients_lake_shore.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/ingredients_lake_shore.json"),
     ),
     (
         "items/ingredients_sunscar_desert",
-        include_str!("../../assets/data/items/ingredients_sunscar_desert.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_sunscar_desert.json"
+        ),
     ),
     (
         "items/ingredients_rainforest",
-        include_str!("../../assets/data/items/ingredients_rainforest.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/ingredients_rainforest.json"),
     ),
     (
         "items/ingredients_containment",
-        include_str!("../../assets/data/items/ingredients_containment.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_containment.json"
+        ),
     ),
     (
         "items/ingredients_southern_pass",
-        include_str!("../../assets/data/items/ingredients_southern_pass.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_southern_pass.json"
+        ),
     ),
     (
         "items/ingredients_observatory",
-        include_str!("../../assets/data/items/ingredients_observatory.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/items/ingredients_observatory.json"
+        ),
     ),
     (
         "items/ingredients_archive",
-        include_str!("../../assets/data/items/ingredients_archive.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/ingredients_archive.json"),
     ),
     (
         "items/materials",
-        include_str!("../../assets/data/items/materials.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/materials.json"),
     ),
     (
         "items/potions_restore",
-        include_str!("../../assets/data/items/potions_restore.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_restore.json"),
     ),
     (
         "items/potions_restore_tower",
-        include_str!("../../assets/data/items/potions_restore_tower.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_restore_tower.json"),
     ),
     (
         "items/potions_glow",
-        include_str!("../../assets/data/items/potions_glow.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_glow.json"),
     ),
     // The archive's lights are a family of their own: they show a surface
     // rather than a distance, and they are brewed at the reading bench, which
     // already has its own recipe file.
     (
         "items/potions_glow_reading",
-        include_str!("../../assets/data/items/potions_glow_reading.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_glow_reading.json"),
     ),
     (
         "items/potions_speed",
-        include_str!("../../assets/data/items/potions_speed.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_speed.json"),
     ),
     (
         "items/potions_unstable",
-        include_str!("../../assets/data/items/potions_unstable.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/items/potions_unstable.json"),
     ),
 ];
 
@@ -173,31 +193,39 @@ struct EmbeddedStationData {
 const STATION_SOURCES: &[(&str, &str)] = &[
     (
         "world/stations/tower_entry",
-        include_str!("../../assets/data/world/stations/tower_entry.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/stations/tower_entry.json"),
     ),
     (
         "world/stations/greenhouse_floor",
-        include_str!("../../assets/data/world/stations/greenhouse_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/stations/greenhouse_floor.json"
+        ),
     ),
     (
         "world/stations/town_square",
-        include_str!("../../assets/data/world/stations/town_square.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/stations/town_square.json"),
     ),
     (
         "world/stations/containment_floor",
-        include_str!("../../assets/data/world/stations/containment_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/stations/containment_floor.json"
+        ),
     ),
     (
         "world/stations/rune_workshop_floor",
-        include_str!("../../assets/data/world/stations/rune_workshop_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/stations/rune_workshop_floor.json"
+        ),
     ),
     (
         "world/stations/archive_floor",
-        include_str!("../../assets/data/world/stations/archive_floor.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/stations/archive_floor.json"),
     ),
     (
         "world/stations/observatory_floor",
-        include_str!("../../assets/data/world/stations/observatory_floor.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/world/stations/observatory_floor.json"
+        ),
     ),
 ];
 
@@ -227,27 +255,29 @@ struct EmbeddedQuestData {
 const QUEST_SOURCES: &[(&str, &str)] = &[
     (
         "town/quests_arcs",
-        include_str!("../../assets/data/town/quests_arcs.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_arcs.json"),
     ),
     (
         "town/quests_board",
-        include_str!("../../assets/data/town/quests_board.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board.json"),
     ),
     (
         "town/quests_board_standing",
-        include_str!("../../assets/data/town/quests_board_standing.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board_standing.json"),
     ),
     (
         "town/quests_board_commissions",
-        include_str!("../../assets/data/town/quests_board_commissions.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/town/quests_board_commissions.json"
+        ),
     ),
     (
         "town/quests_board_unsigned",
-        include_str!("../../assets/data/town/quests_board_unsigned.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board_unsigned.json"),
     ),
     (
         "town/quests_board_afterward",
-        include_str!("../../assets/data/town/quests_board_afterward.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board_afterward.json"),
     ),
     // Orders that exist only because a particular piece of ground does. Filed
     // apart from the standing orders because the standing file was at 658 lines
@@ -256,7 +286,7 @@ const QUEST_SOURCES: &[(&str, &str)] = &[
     // of them had a buyer until the bench was counted room by room.
     (
         "town/quests_board_ground",
-        include_str!("../../assets/data/town/quests_board_ground.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board_ground.json"),
     ),
     // The plain supply lines: bottles the valley simply uses, ordered because
     // somebody has run out rather than because anything is wrong. Filed apart
@@ -265,7 +295,7 @@ const QUEST_SOURCES: &[(&str, &str)] = &[
     // that its own description had already named a buyer.
     (
         "town/quests_board_supply",
-        include_str!("../../assets/data/town/quests_board_supply.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/quests_board_supply.json"),
     ),
 ];
 
@@ -301,39 +331,53 @@ struct EmbeddedMutationData {
 const RECIPE_SOURCES: &[(&str, &str)] = &[
     (
         "crafting/recipes_restore_entry_cauldron",
-        include_str!("../../assets/data/crafting/recipes_restore_entry_cauldron.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_restore_entry_cauldron.json"
+        ),
     ),
     (
         "crafting/recipes_restore_greenhouse_still",
-        include_str!("../../assets/data/crafting/recipes_restore_greenhouse_still.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_restore_greenhouse_still.json"
+        ),
     ),
     (
         "crafting/recipes_restore_containment_cold_bench",
-        include_str!("../../assets/data/crafting/recipes_restore_containment_cold_bench.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_restore_containment_cold_bench.json"
+        ),
     ),
     (
         "crafting/recipes_restore_rune_forge_bench",
-        include_str!("../../assets/data/crafting/recipes_restore_rune_forge_bench.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_restore_rune_forge_bench.json"
+        ),
     ),
     (
         "crafting/recipes_restore_archive_reading_bench",
-        include_str!("../../assets/data/crafting/recipes_restore_archive_reading_bench.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_restore_archive_reading_bench.json"
+        ),
     ),
     (
         "crafting/recipes_glow",
-        include_str!("../../assets/data/crafting/recipes_glow.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/crafting/recipes_glow.json"),
     ),
     (
         "crafting/recipes_glow_archive_reading_bench",
-        include_str!("../../assets/data/crafting/recipes_glow_archive_reading_bench.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_glow_archive_reading_bench.json"
+        ),
     ),
     (
         "crafting/recipes_speed",
-        include_str!("../../assets/data/crafting/recipes_speed.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/crafting/recipes_speed.json"),
     ),
     (
         "crafting/recipes_speed_archive_reading_bench",
-        include_str!("../../assets/data/crafting/recipes_speed_archive_reading_bench.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/crafting/recipes_speed_archive_reading_bench.json"
+        ),
     ),
 ];
 
@@ -383,23 +427,23 @@ fn load_recipes() -> Result<Vec<RecipeDefinition>, String> {
 pub(super) fn load_embedded_parts() -> Result<GameDataParts, String> {
     let config: EmbeddedConfigData = load_labeled_json(
         "game_data_config",
-        include_str!("../../assets/data/game_data_config.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/game_data_config.json"),
     )?;
     let routes: EmbeddedRouteData = load_labeled_json(
         "world/gathering_routes",
-        include_str!("../../assets/data/world/gathering_routes.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/world/gathering_routes.json"),
     )?;
     let npc: EmbeddedNpcData = load_labeled_json(
         "town/npcs",
-        include_str!("../../assets/data/town/npcs.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/town/npcs.json"),
     )?;
     let runes: EmbeddedRuneRecipeData = load_labeled_json(
         "crafting/rune_recipes",
-        include_str!("../../assets/data/crafting/rune_recipes.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/crafting/rune_recipes.json"),
     )?;
     let mutations: EmbeddedMutationData = load_labeled_json(
         "crafting/mutation_formulas",
-        include_str!("../../assets/data/crafting/mutation_formulas.json"),
+        macroquad_toolkit::include_json_str!("../../assets/data/crafting/mutation_formulas.json"),
     )?;
 
     Ok(GameDataParts {

@@ -132,39 +132,57 @@ pub(crate) struct NarrativeReaction {
 const REACTION_SOURCES: &[(&str, &str)] = &[
     (
         "narrative/reactions_brin_groundskeeper",
-        include_str!("../../assets/data/narrative/reactions_brin_groundskeeper.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_brin_groundskeeper.json"
+        ),
     ),
     (
         "narrative/reactions_crow_guide",
-        include_str!("../../assets/data/narrative/reactions_crow_guide.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_crow_guide.json"
+        ),
     ),
     (
         "narrative/reactions_ione_archivist",
-        include_str!("../../assets/data/narrative/reactions_ione_archivist.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_ione_archivist.json"
+        ),
     ),
     (
         "narrative/reactions_lyra_keeper",
-        include_str!("../../assets/data/narrative/reactions_lyra_keeper.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_lyra_keeper.json"
+        ),
     ),
     (
         "narrative/reactions_mayor_elric",
-        include_str!("../../assets/data/narrative/reactions_mayor_elric.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_mayor_elric.json"
+        ),
     ),
     (
         "narrative/reactions_mira_apothecary",
-        include_str!("../../assets/data/narrative/reactions_mira_apothecary.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_mira_apothecary.json"
+        ),
     ),
     (
         "narrative/reactions_rowan_herbalist",
-        include_str!("../../assets/data/narrative/reactions_rowan_herbalist.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_rowan_herbalist.json"
+        ),
     ),
     (
         "narrative/reactions_tarn_wayfarer",
-        include_str!("../../assets/data/narrative/reactions_tarn_wayfarer.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_tarn_wayfarer.json"
+        ),
     ),
     (
         "narrative/reactions_wren_physician",
-        include_str!("../../assets/data/narrative/reactions_wren_physician.json"),
+        macroquad_toolkit::include_json_str!(
+            "../../assets/data/narrative/reactions_wren_physician.json"
+        ),
     ),
 ];
 
@@ -180,7 +198,7 @@ pub(crate) fn narrative_text() -> &'static NarrativeText {
     static TEXT: OnceLock<NarrativeText> = OnceLock::new();
     TEXT.get_or_init(|| {
         let mut text: NarrativeText = parse_required_json(
-            include_str!("../../assets/data/narrative_text.json"),
+            macroquad_toolkit::include_json_str!("../../assets/data/narrative_text.json"),
             "narrative_text.json",
         );
         text.reactions = REACTION_SOURCES
