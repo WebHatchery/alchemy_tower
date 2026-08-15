@@ -9,8 +9,6 @@ pub(super) const TOAST_ICON_CATEGORY: &str = "toast_icon";
 pub(super) const WORLD_NODE_CATEGORY: &str = "world_node";
 
 pub(super) const PLAYER_ID: &str = "player_tower_alchemist";
-pub(super) const GENERATED_ASSET_PACK: &str = "assets/generated.zip";
-
 pub(super) fn asset_key(category: &str, id: &str) -> String {
     format!("{category}:{id}")
 }

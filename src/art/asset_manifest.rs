@@ -42,7 +42,7 @@ fn add_area_backgrounds(configs: &mut Vec<TextureConfig>, data: &GameData) {
             configs,
             BACKGROUND_CATEGORY,
             &area.id,
-            format!("assets/generated/areas/{}.png", area.id),
+            format!("assets/art/areas/{}.png", area.id),
         );
     }
 }
@@ -57,7 +57,7 @@ fn add_characters(configs: &mut Vec<TextureConfig>, data: &GameData) {
             configs,
             CHARACTER_CATEGORY,
             &id,
-            format!("assets/generated/characters/{id}.png"),
+            format!("assets/art/characters/{id}.png"),
         );
     }
 }
@@ -68,7 +68,7 @@ fn add_stations(configs: &mut Vec<TextureConfig>, data: &GameData) {
             configs,
             STATION_CATEGORY,
             &station.id,
-            format!("assets/generated/stations/{}.png", station.id),
+            format!("assets/art/stations/{}.png", station.id),
         );
     }
 }
@@ -79,7 +79,7 @@ fn add_item_icons(configs: &mut Vec<TextureConfig>, data: &GameData) {
             configs,
             ITEM_ICON_CATEGORY,
             &item.id,
-            format!("assets/generated/items/icons/{}.png", item.id),
+            format!("assets/art/items/icons/{}.png", item.id),
         );
     }
 }
@@ -104,7 +104,7 @@ fn add_world_nodes(configs: &mut Vec<TextureConfig>, data: &GameData) {
             configs,
             WORLD_NODE_CATEGORY,
             &id,
-            format!("assets/generated/items/world/{id}.png"),
+            format!("assets/art/items/world/{id}.png"),
         );
     }
 }
@@ -153,7 +153,7 @@ fn push_texture_config(configs: &mut Vec<TextureConfig>, category: &str, id: &st
     configs.push(TextureConfig {
         key: asset_key(category, id),
         path,
-        filter: None,
+        filter: Some(TextureFilter::Linear),
     });
 }
 
