@@ -1324,3 +1324,14 @@ content with no destination.
   speakers — the visual feedbacks beside them already work this way.
   Still open, and genuinely wanting a composer: there is no ambient bed and no
   music at all. The one-shots are procedural and sound it.
+
+## Player-facing follow-ups
+
+- [ ] Consider a more distinctive game name; “Alchemy Tower” feels generic.
+- [ ] Fix the Settings buttons so they sit fully inside their panel.
+- [ ] Make all controls touch-friendly; remove keyboard-command labels such as Tab and J.
+- [ ] Refresh the Journal screen so its design matches the rest of the game.
+- [ ] Investigate the town wrap-up, where the order appears to change randomly.
+- [ ] Make the bag/inventory easier to find and inspect.
+- [ ] Improve the Alchemy screen overall.
+- [ ] Clarify how to make the healing potion required for the first quest.
