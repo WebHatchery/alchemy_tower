@@ -25,7 +25,9 @@
 
 ## Presentation
 
-- [ ] Complete the character and prop art pass; characters are still simple
-  four-colour figures and props are still primitives.
+- [ ] Replace the current procedural and generated placeholder graphics with a
+  cohesive hand-authored 2D art set across the full game. Follow
+  [`docs/2d_asset_requirements.md`](docs/2d_asset_requirements.md), including
+  the phased migration and final removal of procedural-art dependencies.
 - [ ] Replace the procedural one-shot sounds with hand-authored audio, and add
   ambient sound and music.
