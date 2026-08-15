@@ -32,6 +32,7 @@ pub(crate) struct AlchemyMaterialsPanelView {
 }
 
 pub(crate) struct AlchemyMaterialRowView {
+    pub(crate) item_id: String,
     pub(crate) title: String,
     pub(crate) meta: String,
     pub(crate) selected: bool,
@@ -84,12 +85,14 @@ pub(crate) struct AlchemySlotsPanelView {
 }
 
 pub(crate) struct AlchemySlotView {
+    pub(crate) item_id: Option<String>,
     pub(crate) label: String,
     pub(crate) item_name: String,
     pub(crate) action_text: &'static str,
 }
 
 pub(crate) struct AlchemyCatalystSlotView {
+    pub(crate) item_id: Option<String>,
     pub(crate) item_name: String,
     pub(crate) action_text: &'static str,
 }

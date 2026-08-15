@@ -1,11 +1,12 @@
 use super::{
-    draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
-    draw_overlay_section_title, draw_overlay_subtitle, draw_panel, draw_selection_card,
-    draw_state_banner, standard_overlay_panel_rect,
+    draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
+    draw_overlay_section_title, draw_overlay_subtitle, draw_panel, draw_state_banner,
+    standard_overlay_panel_rect,
 };
+use crate::art::ArtAssets;
 use crate::view_models::rune::RuneOverlayView;
 
-pub(crate) fn draw_rune_overlay_view(view: &RuneOverlayView) {
+pub(crate) fn draw_rune_overlay_view(view: &RuneOverlayView, art: &ArtAssets) {
     draw_overlay_backdrop();
     let panel = standard_overlay_panel_rect();
     let x = panel.x;
@@ -26,7 +27,9 @@ pub(crate) fn draw_rune_overlay_view(view: &RuneOverlayView) {
         draw_state_banner(x + 32.0, row_y - 16.0, w - 64.0, &view.empty_text, false);
     } else {
         for entry in &view.entries {
-            draw_selection_card(
+            draw_item_selection_card(
+                art,
+                &entry.output_item_id,
                 x + 32.0,
                 row_y - 24.0,
                 w - 64.0,

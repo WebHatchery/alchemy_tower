@@ -1,12 +1,13 @@
 use super::{
-    draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
+    draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
     draw_overlay_section_title, draw_overlay_subtitle, draw_overlay_tab, draw_panel,
-    draw_selection_card, draw_state_banner,
+    draw_state_banner,
 };
+use crate::art::ArtAssets;
 use crate::view_models::shop::ShopOverlayView;
 use macroquad::prelude::*;
 
-pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView) {
+pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
     draw_overlay_backdrop();
     let x = 160.0;
     let y = 88.0;
@@ -41,7 +42,9 @@ pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView) {
         draw_state_banner(x + 32.0, row_y - 16.0, w - 64.0, &view.empty_text, false);
     } else {
         for entry in &view.entries {
-            draw_selection_card(
+            draw_item_selection_card(
+                art,
+                &entry.item_id,
                 x + 32.0,
                 row_y - 24.0,
                 w - 64.0,

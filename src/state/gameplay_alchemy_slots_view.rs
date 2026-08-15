@@ -26,6 +26,7 @@ impl GameplayState {
                 .into_iter()
                 .enumerate()
                 .map(|(slot, item_id)| AlchemySlotView {
+                    item_id: item_id.clone(),
                     label: ui_format("overlay_slot_label", &[("slot", &(slot + 1).to_string())]),
                     item_name: item_id
                         .as_deref()
@@ -39,6 +40,7 @@ impl GameplayState {
                 })
                 .collect(),
             catalyst: AlchemyCatalystSlotView {
+                item_id: self.selected_catalyst().map(str::to_owned),
                 item_name: self
                     .selected_catalyst()
                     .map(|id| data.item_name(id).to_owned())

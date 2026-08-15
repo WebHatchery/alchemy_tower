@@ -10,6 +10,7 @@ pub(crate) struct RuneOverlayView {
 }
 
 pub(crate) struct RuneOverlayEntry {
+    pub(crate) output_item_id: String,
     pub(crate) title: String,
     pub(crate) detail: String,
     pub(crate) meta: String,

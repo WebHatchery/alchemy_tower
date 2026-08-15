@@ -412,6 +412,39 @@ impl GameplayState {
         self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Journal);
     }
 
+    /// Fill the brew-memory shelf and open its journal tab so verification
+    /// covers potion icons and the longest normal list state.
+    pub(crate) fn open_brews_journal_sample(&mut self, data: &GameData) {
+        for item in &data.items {
+            if item.category != crate::data::ItemCategory::Potion {
+                continue;
+            }
+            let recipe_id = data
+                .recipes
+                .iter()
+                .find(|recipe| recipe.output_item_id == item.id)
+                .map(|recipe| recipe.id.clone())
+                .unwrap_or_default();
+            self.progression.potion_memories.insert(
+                item.id.clone(),
+                crate::data::PotionMemoryEntry {
+                    item_id: item.id.clone(),
+                    first_seen_day: 0,
+                    seen: true,
+                    learned: !recipe_id.is_empty(),
+                    learned_day: 1,
+                    successful_brews: 3,
+                    best_quality_score: 78,
+                    best_quality_band: "Excellent".to_owned(),
+                    last_recipe_id: recipe_id,
+                },
+            );
+        }
+        self.ui.journal_tab = 2;
+        self.ui.journal_index = 0;
+        self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Journal);
+    }
+
     /// Open the journal on the Notes tab with every beat the game can record
     /// already in it, which is the state a finished campaign's journal is in.
     ///
@@ -482,6 +515,29 @@ impl GameplayState {
         // identical before and after four reworks were added.
         self.ui.rune_index = data.rune_recipes.len().saturating_sub(1);
         self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Rune);
+    }
+
+    /// Stand at the main apothecary with enough coin to show its complete
+    /// illustrated stock list. This keeps the shop capture deterministic and
+    /// exercises the same proximity guard as normal play.
+    pub(crate) fn open_shop_sample(&mut self, data: &GameData) {
+        if let Some(station) = data.stations.iter().find(|station| {
+            station.kind == crate::data::StationKind::Shop && !station.stock.is_empty()
+        }) {
+            self.world.current_area_id = station.area_id.clone();
+            self.world.player.position =
+                macroquad::prelude::vec2(station.position[0], station.position[1]);
+            self.coins = station
+                .stock
+                .iter()
+                .map(|stock| stock.price)
+                .max()
+                .unwrap_or_default()
+                .saturating_mul(2);
+        }
+        self.ui.shop_buy_tab = true;
+        self.ui.shop_index = 0;
+        self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Shop);
     }
 
     pub(crate) fn open_quest_board_sample(&mut self, data: &GameData) {

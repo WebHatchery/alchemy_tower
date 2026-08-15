@@ -9,7 +9,7 @@ use macroquad_toolkit::ui::{draw_ui_text, measure_ui_text};
 #[path = "widgets_selection_card.rs"]
 mod widgets_selection_card;
 
-pub(crate) use self::widgets_selection_card::draw_selection_card;
+pub(crate) use self::widgets_selection_card::{draw_item_selection_card, draw_selection_card};
 
 pub(crate) fn draw_action_button(rect: Rect, label: &str, label_offset_x: f32) {
     let hovered = rect.contains(mouse_position_vec());

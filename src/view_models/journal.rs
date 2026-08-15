@@ -15,6 +15,7 @@ pub(crate) struct JournalBrewsTabView {
 }
 
 pub(crate) struct JournalBrewMemoryView {
+    pub(crate) item_id: String,
     pub(crate) title: String,
     pub(crate) state_line: String,
     pub(crate) recap: String,

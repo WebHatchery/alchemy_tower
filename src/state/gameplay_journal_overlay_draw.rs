@@ -27,7 +27,7 @@ impl GameplayState {
         match self.journal_tab_index() {
             0 => self.draw_journal_routes_tab(data, x, y, w, h),
             1 => self.draw_journal_notes_tab(data, x, y, w, h),
-            2 => self.draw_journal_brews_tab(data, x, y, w, h),
+            2 => self.draw_journal_brews_tab(data, art, x, y, w, h),
             3 if self.greenhouse_journal_unlocked() => {
                 self.draw_journal_greenhouse_tab(data, x, y, w, h)
             }

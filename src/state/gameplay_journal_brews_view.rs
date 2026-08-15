@@ -56,6 +56,7 @@ impl GameplayState {
                     };
 
                     JournalBrewMemoryView {
+                        item_id: entry.item_id.clone(),
                         title: data.item_name(&entry.item_id).to_owned(),
                         state_line: self.journal_potion_state_line(entry),
                         recap: self.journal_potion_recap(data, &entry.item_id),

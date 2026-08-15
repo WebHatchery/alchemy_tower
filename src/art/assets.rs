@@ -6,9 +6,9 @@ use macroquad_toolkit::assets::{AssetManager, TextureConfig};
 use crate::data::GameData;
 
 use super::asset_keys::{
-    asset_key, BACKGROUND_CATEGORY, CHARACTER_CATEGORY, EFFECT_CATEGORY, ITEM_ICON_CATEGORY,
-    JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY, TITLE_SCREEN_CATEGORY, TOAST_ICON_CATEGORY,
-    WORLD_NODE_CATEGORY,
+    asset_key, ART_ASSET_PACK, BACKGROUND_CATEGORY, CHARACTER_CATEGORY, EFFECT_CATEGORY,
+    ITEM_ICON_CATEGORY, JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY, TITLE_SCREEN_CATEGORY,
+    TOAST_ICON_CATEGORY, WORLD_NODE_CATEGORY,
 };
 use super::asset_manifest::build_texture_manifest;
 
@@ -21,10 +21,22 @@ impl ArtAssets {
     pub(crate) async fn load(data: &GameData) -> Result<Self, String> {
         let mut manager = AssetManager::new();
         manager.set_placeholder_texture_direct(transparent_placeholder_texture());
+        // Published builds serve the production set as one archive. Source runs
+        // deliberately fall back to the loose files, so artists can replace a
+        // PNG and inspect it without rebuilding an asset pack first.
+        let asset_pack_error = manager.load_asset_pack(ART_ASSET_PACK).await.err();
         let manifest = build_texture_manifest(data);
         load_required_textures(&mut manager, &manifest.texture_configs)
             .await
-            .map_err(|error| format!("production art validation failed: {error}"))?;
+            .map_err(|error| match asset_pack_error.as_ref() {
+                Some(pack_error) => format!(
+                    "production art validation failed: {error}; art pack fallback also failed: {pack_error}"
+                ),
+                None => format!("production art validation failed: {error}"),
+            })?;
+        if let Some(pack_error) = asset_pack_error {
+            eprintln!("Art pack was not loaded; using loose production files: {pack_error}");
+        }
 
         Ok(Self {
             manager,

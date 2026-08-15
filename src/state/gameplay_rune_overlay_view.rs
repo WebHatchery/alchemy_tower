@@ -31,6 +31,7 @@ impl GameplayState {
             .skip(start)
             .take(VISIBLE_RUNE_ROWS)
             .map(|(index, recipe)| RuneOverlayEntry {
+                output_item_id: recipe.output_item_id.clone(),
                 title: ui_format(
                     "overlay_rune_recipe_title",
                     &[

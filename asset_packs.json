@@ -1,7 +1,13 @@
 {
   "packs": [
     {
-      "source": "assets/generated",
+      "source": "assets/art",
+      "output": "assets/art.zip",
+      "entry_root": "assets/art",
+      "delete_source": true
+    },
+    {
+      "source": "assets/generated/audio",
       "output": "assets/generated.zip",
       "entry_root": "assets/generated",
       "delete_source": true

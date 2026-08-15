@@ -160,6 +160,13 @@ impl Game {
                 gameplay.open_rune_bench_sample(&self.data);
                 GameState::from_gameplay(gameplay)
             }
+            // "shop" opens the apothecary with every row affordable, making
+            // the item-art treatment visible without depending on a save.
+            "shop" => {
+                let mut gameplay = GameplayState::new(&self.data);
+                gameplay.open_shop_sample(&self.data);
+                GameState::from_gameplay(gameplay)
+            }
             // "board" opens the quest board with a ready-to-deliver request.
             "board" => {
                 let mut gameplay = GameplayState::new(&self.data);
@@ -189,6 +196,11 @@ impl Game {
                 if !herb_id.is_empty() {
                     gameplay.select_journal_herb(&self.data, herb_id);
                 }
+                GameState::from_gameplay(gameplay)
+            }
+            "brews_journal" => {
+                let mut gameplay = GameplayState::new(&self.data);
+                gameplay.open_brews_journal_sample(&self.data);
                 GameState::from_gameplay(gameplay)
             }
             // Default ("menu" or anything else): the boot flow already lands

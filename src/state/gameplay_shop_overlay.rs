@@ -75,6 +75,7 @@ impl GameplayState {
                     ui_format("overlay_sell_price", &[("price", &price)])
                 };
                 ShopOverlayEntry {
+                    item_id: draft.item_id.clone(),
                     title: data.item_name(&draft.item_id).to_owned(),
                     detail,
                     meta: self.item_card_meta(data, &draft.item_id, amount, &extra),

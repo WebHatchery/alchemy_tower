@@ -1,16 +1,26 @@
 use super::hud::{draw_beveled_rect, draw_beveled_rect_lines, draw_panel_texture, fill_slate};
-use super::{draw_action_button, draw_overlay_section_box, draw_overlay_section_title};
+use super::{
+    draw_action_button, draw_overlay_section_box, draw_overlay_section_title,
+    truncate_text_to_width,
+};
 use crate::alchemy_layout::{
     alchemy_slot_rect_at, catalyst_rect_at, heat_down_rect_at, heat_up_rect_at, right_column_width,
     stirs_rect_at, timing_rect_at, AL_PROC_READOUT_Y, AL_RX, AL_SLOT_BOX_H, AL_SLOT_BOX_Y,
     AL_SLOT_TITLE_Y,
 };
+use crate::art::{draw_texture_centered, ArtAssets};
 use crate::view_models::alchemy::AlchemySlotsPanelView;
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
 use macroquad_toolkit::ui::draw_ui_text;
 
-pub(crate) fn draw_alchemy_slots_panel_view(view: &AlchemySlotsPanelView, x: f32, y: f32, w: f32) {
+pub(crate) fn draw_alchemy_slots_panel_view(
+    view: &AlchemySlotsPanelView,
+    art: &ArtAssets,
+    x: f32,
+    y: f32,
+    w: f32,
+) {
     let rw = right_column_width(w);
     draw_overlay_section_title(x + AL_RX, y + AL_SLOT_TITLE_Y, view.title, None);
     draw_overlay_section_box(x + AL_RX - 2.0, y + AL_SLOT_BOX_Y, rw, AL_SLOT_BOX_H);
@@ -35,6 +45,8 @@ pub(crate) fn draw_alchemy_slots_panel_view(view: &AlchemySlotsPanelView, x: f32
             &slot_view.label,
             &slot_view.item_name,
             slot_view.action_text,
+            slot_view.item_id.as_deref(),
+            art,
         );
     }
 
@@ -44,17 +56,43 @@ pub(crate) fn draw_alchemy_slots_panel_view(view: &AlchemySlotsPanelView, x: f32
         view.catalyst_label,
         &view.catalyst.item_name,
         view.catalyst.action_text,
+        view.catalyst.item_id.as_deref(),
+        art,
     );
 }
 
-fn draw_slot_box(rect: Rect, accent: Color, label: &str, item_name: &str, action_text: &str) {
+fn draw_slot_box(
+    rect: Rect,
+    accent: Color,
+    label: &str,
+    item_name: &str,
+    action_text: &str,
+    item_id: Option<&str>,
+    art: &ArtAssets,
+) {
     let bevel = 5.0;
     draw_beveled_rect(rect, bevel, Color::from_rgba(24, 26, 34, 236));
     draw_panel_texture(rect, bevel, fill_slate(), 0.35);
     draw_beveled_rect_lines(rect, bevel, 1.5, Color::from_rgba(223, 184, 111, 120));
     draw_rectangle(rect.x + 2.0, rect.y + 9.0, 4.0, rect.h - 18.0, accent);
     draw_ui_text(label, rect.x + 14.0, rect.y + 26.0, 20.0, dark::TEXT_BRIGHT);
-    draw_ui_text(item_name, rect.x + 12.0, rect.y + 60.0, 18.0, dark::TEXT);
+    let item_text_x = if let Some(texture) = item_id.and_then(|id| art.item_icon(id)) {
+        draw_texture_centered(
+            texture,
+            vec2(rect.x + 24.0, rect.y + 63.0),
+            vec2(30.0, 30.0),
+            WHITE,
+        );
+        rect.x + 43.0
+    } else {
+        rect.x + 12.0
+    };
+    let item_name = truncate_text_to_width(
+        item_name,
+        (rect.x + rect.w - item_text_x - 8.0).max(24.0),
+        18.0,
+    );
+    draw_ui_text(&item_name, item_text_x, rect.y + 60.0, 18.0, dark::TEXT);
     draw_ui_text(
         action_text,
         rect.x + 12.0,

@@ -32,8 +32,8 @@ impl GameplayState {
         crate::ui_scale::set_overlay_mouse(true);
         match overlay {
             OverlayScreen::Dialogue(_) => self.draw_dialogue_overlay(data),
-            OverlayScreen::Shop => self.draw_shop_overlay(data),
-            OverlayScreen::Rune => self.draw_rune_overlay(data),
+            OverlayScreen::Shop => self.draw_shop_overlay(data, art),
+            OverlayScreen::Rune => self.draw_rune_overlay(data, art),
             OverlayScreen::Archive => self.draw_archive_overlay(data),
             OverlayScreen::Ending => self.draw_ending_overlay(),
             OverlayScreen::QuestBoard => self.draw_quest_board_overlay(data),

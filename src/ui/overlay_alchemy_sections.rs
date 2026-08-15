@@ -1,16 +1,22 @@
 use super::{
-    draw_overlay_section_box, draw_overlay_section_title, draw_selection_card, draw_state_banner,
-    truncate_text_to_width,
+    draw_item_selection_card, draw_overlay_section_box, draw_overlay_section_title,
+    draw_state_banner, truncate_text_to_width,
 };
 use crate::alchemy_layout::{
     material_row_rect_at, AL_LW, AL_LX, AL_MAT_BOX_H, AL_MAT_BOX_Y, AL_MAT_TITLE_Y,
     AL_MAT_VISIBLE_ROWS,
 };
+use crate::art::ArtAssets;
 use crate::view_models::alchemy::AlchemyMaterialsPanelView;
 use macroquad_toolkit::colors::dark;
 use macroquad_toolkit::ui::{draw_ui_text, measure_ui_text};
 
-pub(crate) fn draw_alchemy_materials_panel_view(view: &AlchemyMaterialsPanelView, x: f32, y: f32) {
+pub(crate) fn draw_alchemy_materials_panel_view(
+    view: &AlchemyMaterialsPanelView,
+    art: &ArtAssets,
+    x: f32,
+    y: f32,
+) {
     draw_overlay_section_title(x + AL_LX, y + AL_MAT_TITLE_Y, view.title, None);
     // Sort mode, right-aligned inside the column so it can't spill into the
     // slots panel the way the old fixed-offset meta did.
@@ -53,7 +59,9 @@ pub(crate) fn draw_alchemy_materials_panel_view(view: &AlchemyMaterialsPanelView
         let rect = material_row_rect_at(x, y, offset);
         // Description is omitted here (it appears in the preview) so each row
         // stays compact enough to avoid overlapping its neighbor.
-        draw_selection_card(
+        draw_item_selection_card(
+            art,
+            &row.item_id,
             rect.x,
             rect.y,
             rect.w,

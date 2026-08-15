@@ -27,6 +27,7 @@ impl GameplayState {
                         ],
                     );
                     AlchemyMaterialRowView {
+                        item_id: card.item_id.clone(),
                         // A held wild variant is worth more in the pot and the
                         // bench spends it first, and the belt shows one stack
                         // per id — so until now nothing on screen said which

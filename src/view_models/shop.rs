@@ -14,6 +14,7 @@ pub(crate) struct ShopOverlayView {
 }
 
 pub(crate) struct ShopOverlayEntry {
+    pub(crate) item_id: String,
     pub(crate) title: String,
     pub(crate) detail: String,
     pub(crate) meta: String,

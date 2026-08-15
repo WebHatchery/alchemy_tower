@@ -2,6 +2,7 @@ pub(super) const BACKGROUND_CATEGORY: &str = "background";
 pub(super) const CHARACTER_CATEGORY: &str = "character";
 pub(super) const EFFECT_CATEGORY: &str = "effect";
 pub(super) const ITEM_ICON_CATEGORY: &str = "item_icon";
+pub(super) const ART_ASSET_PACK: &str = "assets/art.zip";
 pub(super) const JOURNAL_TAB_CATEGORY: &str = "journal_tab";
 pub(super) const STATION_CATEGORY: &str = "station";
 pub(super) const TITLE_SCREEN_CATEGORY: &str = "title_screen";
