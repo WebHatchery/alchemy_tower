@@ -1,6 +1,6 @@
 use super::menu_background::{draw_title_background, draw_title_vignette};
 use super::{draw_action_button, draw_wrapped_text, truncate_text_to_width};
-use crate::art::{draw_character_preview, ArtAssets};
+use crate::art::{draw_texture_centered, ArtAssets};
 use crate::data::GameData;
 use crate::data::PlayerGender;
 use crate::menu_layout::{
@@ -59,12 +59,16 @@ fn draw_gender_select(art: &ArtAssets, view: &MenuScreenView) {
         .enumerate()
     {
         let button = gender_choice_rect(index);
-        if let Some(texture) = art.player(*gender) {
-            draw_character_preview(
+        let portrait_size = ((rect.h - 176.0) * 0.75).clamp(82.0, 132.0);
+        if let Some(texture) = art.player_portrait(*gender) {
+            draw_texture_centered(
                 texture,
-                vec2(button.x + button.w * 0.5, button.y - 48.0),
-                vec2(-1.0, 0.0),
-                92.0,
+                vec2(
+                    button.x + button.w * 0.5,
+                    button.y - portrait_size * 0.5 - 8.0,
+                ),
+                vec2(portrait_size, portrait_size),
+                WHITE,
             );
         }
     }

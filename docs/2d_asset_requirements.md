@@ -194,12 +194,14 @@ Required families include:
 
 ### Characters
 
-Eleven complete character sheets are required:
+Eleven complete character sheets and two player-selection portraits are required:
 
 | ID | Readable identity |
 | --- | --- |
 | `player_tower_alchemist` | Practical young male alchemist, travel cloak, ingredient satchel, visible belt vials |
 | `player_tower_alchemist_female` | Practical young female alchemist, braided hair, matching travel gear and animation pivots |
+| `player_tower_alchemist_portrait` | Forward-facing male alchemist selection portrait, matching the playable sheet |
+| `player_tower_alchemist_female_portrait` | Forward-facing female alchemist selection portrait, matching the playable sheet |
 | `crow_guide` | Pale-marked magical crow with a distinct silhouette at 64 px |
 | `mira_apothecary` | Confident shopkeeper, apron, warm salmon and honey palette |
 | `rowan_herbalist` | Field-worn herbalist, gathering tools, green travel layers |

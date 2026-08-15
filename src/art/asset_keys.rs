@@ -11,6 +11,8 @@ pub(super) const WORLD_NODE_CATEGORY: &str = "world_node";
 
 pub(super) const PLAYER_ID: &str = "player_tower_alchemist";
 pub(super) const FEMALE_PLAYER_ID: &str = "player_tower_alchemist_female";
+pub(super) const PLAYER_PORTRAIT_ID: &str = "player_tower_alchemist_portrait";
+pub(super) const FEMALE_PLAYER_PORTRAIT_ID: &str = "player_tower_alchemist_female_portrait";
 pub(super) fn asset_key(category: &str, id: &str) -> String {
     format!("{category}:{id}")
 }

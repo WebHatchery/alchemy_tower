@@ -56,7 +56,7 @@ pub(crate) fn settings_back_rect() -> Rect {
 
 pub(crate) fn gender_select_rect() -> Rect {
     let width = 540.0_f32.min(screen_width() - 40.0);
-    let height = 300.0_f32.min(screen_height() - 210.0);
+    let height = 350.0_f32.min(screen_height() - 210.0);
     Rect::new(
         screen_width() * 0.5 - width * 0.5,
         (screen_height() * 0.5 - height * 0.5 + 62.0).max(174.0),
