@@ -6,12 +6,17 @@ use super::gameplay_runtime_types::RuntimeState;
 use super::gameplay_support::starting_day_time;
 use super::gameplay_world_types::WorldState;
 use super::GameplayState;
-use crate::data::GameData;
+use crate::data::{GameData, PlayerGender};
 use std::collections::BTreeMap;
 
 impl GameplayState {
     pub(crate) fn new(data: &GameData) -> Self {
+        Self::new_with_gender(data, PlayerGender::Male)
+    }
+
+    pub(crate) fn new_with_gender(data: &GameData, player_gender: PlayerGender) -> Self {
         let mut state = Self {
+            player_gender,
             world: WorldState::new(data, starting_day_time(data)),
             progression: ProgressionState::new(initial_journal_milestones()),
             coins: 24,

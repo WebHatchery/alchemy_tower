@@ -63,6 +63,11 @@ impl Game {
         };
         self.state = Some(match scene {
             "gameplay" => GameState::from_gameplay(GameplayState::new(&self.data)),
+            "gameplay:female" => GameState::from_gameplay(GameplayState::new_with_gender(
+                &self.data,
+                crate::data::PlayerGender::Female,
+            )),
+            "gender" => GameState::Menu(crate::state::MenuState::new_gender_select()),
             "paused" => GameState::pause(GameplayState::new(&self.data)),
             // "afterword:<npc_id>" opens a conversation with the whole story
             // already behind it — the only way to look at what the valley says

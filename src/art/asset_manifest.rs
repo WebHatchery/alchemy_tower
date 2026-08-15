@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
 use super::asset_keys::{
-    asset_key, BACKGROUND_CATEGORY, CHARACTER_CATEGORY, EFFECT_CATEGORY, ITEM_ICON_CATEGORY,
-    JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY, TITLE_SCREEN_CATEGORY, TOAST_ICON_CATEGORY,
-    WORLD_NODE_CATEGORY,
+    asset_key, BACKGROUND_CATEGORY, CHARACTER_CATEGORY, EFFECT_CATEGORY, FEMALE_PLAYER_ID,
+    ITEM_ICON_CATEGORY, JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY, TITLE_SCREEN_CATEGORY,
+    TOAST_ICON_CATEGORY, WORLD_NODE_CATEGORY,
 };
 use super::ui_art_catalog::{ui_art_catalog, UiArtCatalog};
 use macroquad_toolkit::assets::{TextureConfig, TextureFilter};
@@ -48,7 +48,7 @@ fn add_area_backgrounds(configs: &mut Vec<TextureConfig>, data: &GameData) {
 }
 
 fn add_characters(configs: &mut Vec<TextureConfig>, data: &GameData) {
-    let mut character_ids = vec![PLAYER_ID.to_owned()];
+    let mut character_ids = vec![PLAYER_ID.to_owned(), FEMALE_PLAYER_ID.to_owned()];
     character_ids.extend(data.npcs.iter().map(|npc| npc.id.clone()));
     character_ids.sort();
     character_ids.dedup();

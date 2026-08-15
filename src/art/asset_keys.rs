@@ -10,6 +10,7 @@ pub(super) const TOAST_ICON_CATEGORY: &str = "toast_icon";
 pub(super) const WORLD_NODE_CATEGORY: &str = "world_node";
 
 pub(super) const PLAYER_ID: &str = "player_tower_alchemist";
+pub(super) const FEMALE_PLAYER_ID: &str = "player_tower_alchemist_female";
 pub(super) fn asset_key(category: &str, id: &str) -> String {
     format!("{category}:{id}")
 }

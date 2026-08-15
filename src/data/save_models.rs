@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use super::schema::{HabitatStateEntry, JournalMilestoneEntry, PlanterStateEntry};
+use super::PlayerGender;
 
 #[path = "save_memory_models.rs"]
 mod save_memory_models;
@@ -53,6 +54,8 @@ pub(crate) struct ExperimentLogEntry {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub(crate) struct SaveData {
     pub(crate) version: u32,
+    #[serde(default)]
+    pub(crate) player_gender: PlayerGender,
     pub(crate) current_area: String,
     pub(crate) player_position: [f32; 2],
     pub(crate) day_clock_seconds: f32,

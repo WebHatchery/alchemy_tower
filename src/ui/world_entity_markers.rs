@@ -9,7 +9,9 @@ use crate::art::{
     draw_character_frame, draw_gather_node_marker, draw_priority_marker, draw_station_marker,
     ArtAssets,
 };
-use crate::data::{GatherNodeDefinition, ItemCategory, NpcDefinition, StationDefinition};
+use crate::data::{
+    GatherNodeDefinition, ItemCategory, NpcDefinition, PlayerGender, StationDefinition,
+};
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
 
@@ -81,6 +83,7 @@ pub(crate) fn draw_player_world_marker(
     facing: Vec2,
     moving: bool,
     glow_active: bool,
+    player_gender: PlayerGender,
     art: &ArtAssets,
 ) {
     if glow_active {
@@ -91,7 +94,7 @@ pub(crate) fn draw_player_world_marker(
             Color::from_rgba(215, 202, 255, 70),
         );
     }
-    if let Some(texture) = art.player() {
+    if let Some(texture) = art.player(player_gender) {
         draw_character_frame(texture, center, facing, moving, 1.0);
     } else {
         draw_circle(

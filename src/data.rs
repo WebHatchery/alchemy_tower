@@ -20,6 +20,7 @@ mod game_data_schema_tests;
 #[cfg(test)]
 mod game_data_world_tests;
 mod loader;
+mod player_gender;
 mod save_models;
 mod schema;
 
@@ -28,6 +29,7 @@ pub(crate) use game_data::GameDataParts;
 #[cfg(test)]
 pub(crate) use loader::load_embedded;
 pub(crate) use loader::load_embedded_or_fallback;
+pub(crate) use player_gender::PlayerGender;
 pub(crate) use save_models::{
     BoardQuestCooldownEntry, BottleBatchEntry, CraftedItemProfileEntry, ExperimentLogEntry,
     FieldJournalEntry, HerbMemoryEntry, InventoryEntry, PotionMemoryEntry, RecipeMasteryEntry,

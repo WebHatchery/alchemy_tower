@@ -5,9 +5,11 @@ use super::gameplay_overlay_types::OverlayState;
 use super::gameplay_progression_types::ProgressionState;
 use super::gameplay_runtime_types::RuntimeState;
 use super::gameplay_world_types::WorldState;
+use crate::data::PlayerGender;
 
 #[derive(Clone, Debug)]
 pub(crate) struct GameplayState {
+    pub(super) player_gender: PlayerGender,
     pub(super) world: WorldState,
     pub(super) progression: ProgressionState,
     pub(super) coins: u32,

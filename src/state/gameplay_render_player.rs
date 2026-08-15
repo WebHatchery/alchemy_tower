@@ -14,6 +14,7 @@ impl GameplayState {
             self.world.player.facing,
             self.world.player.moving,
             self.effect_active(EffectKind::Glow),
+            self.player_gender,
             art,
         );
     }

@@ -1,10 +1,11 @@
 use super::menu_background::{draw_title_background, draw_title_vignette};
 use super::{draw_action_button, draw_wrapped_text, truncate_text_to_width};
-use crate::art::ArtAssets;
+use crate::art::{draw_character_preview, ArtAssets};
 use crate::data::GameData;
+use crate::data::PlayerGender;
 use crate::menu_layout::{
-    fullscreen_toggle_rect, quiet_hud_toggle_rect, settings_back_rect, settings_rect, status_y,
-    title_button_rect,
+    fullscreen_toggle_rect, gender_back_rect, gender_choice_rect, gender_select_rect,
+    quiet_hud_toggle_rect, settings_back_rect, settings_rect, status_y, title_button_rect,
 };
 use crate::view_models::menu::MenuScreenView;
 use macroquad::prelude::*;
@@ -17,10 +18,59 @@ pub(crate) fn draw_menu_screen(data: &GameData, art: &ArtAssets, view: &MenuScre
     draw_title_text(view);
     if view.showing_settings {
         draw_settings(view);
+    } else if view.showing_gender_select {
+        draw_gender_select(art, view);
     } else {
         draw_title_buttons(view);
     }
     draw_title_status(&view.status_text);
+}
+
+fn draw_gender_select(art: &ArtAssets, view: &MenuScreenView) {
+    let rect = gender_select_rect();
+    draw_rectangle(
+        rect.x,
+        rect.y,
+        rect.w,
+        rect.h,
+        Color::from_rgba(10, 12, 18, 202),
+    );
+    draw_rectangle_lines(
+        rect.x,
+        rect.y,
+        rect.w,
+        rect.h,
+        1.5,
+        Color::from_rgba(240, 218, 168, 150),
+    );
+    draw_centered_shadow_text(&view.gender_title, rect.y + 42.0, 30.0, dark::TEXT_BRIGHT);
+    draw_wrapped_text(
+        &view.gender_hint,
+        rect.x + 28.0,
+        rect.y + 70.0,
+        rect.w - 56.0,
+        17.0,
+        18.0,
+        Color::from_rgba(238, 231, 214, 224),
+    );
+
+    for (index, gender) in [PlayerGender::Female, PlayerGender::Male]
+        .iter()
+        .enumerate()
+    {
+        let button = gender_choice_rect(index);
+        if let Some(texture) = art.player(*gender) {
+            draw_character_preview(
+                texture,
+                vec2(button.x + button.w * 0.5, button.y - 48.0),
+                vec2(-1.0, 0.0),
+                92.0,
+            );
+        }
+    }
+    draw_action_button(gender_choice_rect(0), &view.female_label, 22.0);
+    draw_action_button(gender_choice_rect(1), &view.male_label, 22.0);
+    draw_action_button(gender_back_rect(), &view.gender_back_label, 18.0);
 }
 
 fn draw_title_text(view: &MenuScreenView) {

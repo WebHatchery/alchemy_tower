@@ -22,6 +22,7 @@ pub(super) fn apply_save_snapshot(
         return Err(save_restore_text::unknown_area());
     }
 
+    state.player_gender = save.player_gender;
     state.world.current_area_id = save.current_area;
     state.set_player_position(save.player_position);
     state.set_player_facing([0.0, 1.0]);

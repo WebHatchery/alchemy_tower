@@ -13,12 +13,14 @@ mod menu_input;
 
 use self::menu_fullscreen::{apply_fullscreen_enabled, saved_fullscreen_enabled};
 use self::menu_input::{
-    selected_settings_action, selected_title_action, SettingsAction, TitleAction,
+    selected_gender_action, selected_settings_action, selected_title_action, GenderAction,
+    SettingsAction, TitleAction,
 };
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum TitleMode {
     Actions,
+    GenderSelect,
     Settings,
 }
 
@@ -39,15 +41,26 @@ impl MenuState {
         }
     }
 
+    pub(crate) fn new_gender_select() -> Self {
+        let mut state = Self::new();
+        state.mode = TitleMode::GenderSelect;
+        state
+    }
+
     pub(crate) fn update(&mut self, data: &GameData) -> Option<StateTransition> {
         if self.mode == TitleMode::Settings {
             self.update_settings();
             return None;
         }
+        if self.mode == TitleMode::GenderSelect {
+            return self.update_gender_select(data);
+        }
 
         match selected_title_action() {
             Some(TitleAction::NewGame) => {
-                Some(StateTransition::EnterGameplay(GameplayState::new(data)))
+                self.mode = TitleMode::GenderSelect;
+                self.status_text.clear();
+                None
             }
             Some(TitleAction::LoadGame) => self.load_game(data),
             Some(TitleAction::Settings) => {
@@ -55,6 +68,19 @@ impl MenuState {
                 self.status_text.clear();
                 None
             }
+            None => None,
+        }
+    }
+
+    fn update_gender_select(&mut self, data: &GameData) -> Option<StateTransition> {
+        match selected_gender_action() {
+            Some(GenderAction::Back) => {
+                self.mode = TitleMode::Actions;
+                None
+            }
+            Some(GenderAction::Start(gender)) => Some(StateTransition::EnterGameplay(
+                GameplayState::new_with_gender(data, gender),
+            )),
             None => None,
         }
     }
@@ -109,6 +135,7 @@ impl MenuState {
     fn menu_screen_view(&self) -> MenuScreenView {
         MenuScreenView {
             showing_settings: self.mode == TitleMode::Settings,
+            showing_gender_select: self.mode == TitleMode::GenderSelect,
             title: ui_copy("menu_title").to_owned(),
             subtitle: ui_copy("menu_subtitle").to_owned(),
             new_game_label: ui_copy("menu_new_game").to_owned(),
@@ -129,6 +156,11 @@ impl MenuState {
             })
             .to_owned(),
             settings_back_label: ui_copy("menu_settings_back").to_owned(),
+            gender_title: ui_copy("menu_gender_title").to_owned(),
+            gender_hint: ui_copy("menu_gender_hint").to_owned(),
+            female_label: ui_copy("menu_gender_female").to_owned(),
+            male_label: ui_copy("menu_gender_male").to_owned(),
+            gender_back_label: ui_copy("menu_gender_back").to_owned(),
             status_text: self.status_text.clone(),
         }
     }

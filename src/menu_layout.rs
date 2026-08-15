@@ -53,3 +53,36 @@ pub(crate) fn settings_back_rect() -> Rect {
     let rect = settings_rect();
     Rect::new(rect.x + 24.0, rect.y + 228.0, rect.w - 48.0, 38.0)
 }
+
+pub(crate) fn gender_select_rect() -> Rect {
+    let width = 540.0_f32.min(screen_width() - 40.0);
+    let height = 300.0_f32.min(screen_height() - 210.0);
+    Rect::new(
+        screen_width() * 0.5 - width * 0.5,
+        (screen_height() * 0.5 - height * 0.5 + 62.0).max(174.0),
+        width,
+        height,
+    )
+}
+
+pub(crate) fn gender_choice_rect(index: usize) -> Rect {
+    let panel = gender_select_rect();
+    let gap = 18.0;
+    let width = (panel.w - 48.0 - gap) * 0.5;
+    Rect::new(
+        panel.x + 24.0 + index as f32 * (width + gap),
+        panel.y + panel.h - 106.0,
+        width,
+        52.0,
+    )
+}
+
+pub(crate) fn gender_back_rect() -> Rect {
+    let panel = gender_select_rect();
+    Rect::new(
+        panel.x + 24.0,
+        panel.y + panel.h - 44.0,
+        panel.w - 48.0,
+        34.0,
+    )
+}

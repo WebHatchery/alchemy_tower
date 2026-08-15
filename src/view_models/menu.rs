@@ -1,5 +1,6 @@
 pub(crate) struct MenuScreenView {
     pub(crate) showing_settings: bool,
+    pub(crate) showing_gender_select: bool,
     pub(crate) title: String,
     pub(crate) subtitle: String,
     pub(crate) new_game_label: String,
@@ -10,5 +11,10 @@ pub(crate) struct MenuScreenView {
     pub(crate) fullscreen_label: String,
     pub(crate) quiet_hud_label: String,
     pub(crate) settings_back_label: String,
+    pub(crate) gender_title: String,
+    pub(crate) gender_hint: String,
+    pub(crate) female_label: String,
+    pub(crate) male_label: String,
+    pub(crate) gender_back_label: String,
     pub(crate) status_text: String,
 }

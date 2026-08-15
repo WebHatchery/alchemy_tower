@@ -2,7 +2,7 @@ use super::super::gameplay_save_snapshot::build_save_snapshot;
 use super::super::GameplayState;
 use crate::data::{
     CraftedItemProfileEntry, ExperimentLogEntry, HabitatStateEntry, HerbMemoryEntry,
-    JournalMilestoneEntry, PlanterStateEntry, PotionMemoryEntry,
+    JournalMilestoneEntry, PlanterStateEntry, PlayerGender, PotionMemoryEntry, SaveData,
 };
 
 /// Twenty-five passes have added fields to the progression state, and the
@@ -16,6 +16,7 @@ fn a_save_round_trip_keeps_everything_the_game_tracks() {
 
     // Make every tracked field distinctive, so a dropped one cannot pass by
     // coincidentally matching a fresh game's default.
+    state.player_gender = PlayerGender::Female;
     state.coins = 1234;
     state.vitality = 61.5;
     state.inventory.insert("whisper_moss".to_owned(), 7);
@@ -144,6 +145,11 @@ fn a_save_round_trip_keeps_everything_the_game_tracks() {
     let mut restored = GameplayState::new(&data);
     super::apply_save_snapshot(&mut restored, &data, snapshot).expect("the save should load");
 
+    assert_eq!(
+        restored.player_gender,
+        PlayerGender::Female,
+        "player gender"
+    );
     assert_eq!(restored.coins, state.coins, "coins");
     assert_eq!(restored.vitality, state.vitality, "vitality");
     assert_eq!(restored.inventory, state.inventory, "inventory");
@@ -262,4 +268,18 @@ fn a_save_round_trip_keeps_everything_the_game_tracks() {
         a.herb_memories.contains_key("whisper_moss"),
         "herb memories"
     );
+}
+
+#[test]
+fn an_older_save_without_gender_keeps_the_original_male_alchemist() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let state = GameplayState::new_with_gender(&data, PlayerGender::Female);
+    let snapshot = build_save_snapshot(&state, &data);
+    let mut json = serde_json::to_value(snapshot).expect("snapshot should serialize");
+    json.as_object_mut()
+        .expect("a save is a JSON object")
+        .remove("player_gender");
+    let old_save: SaveData = serde_json::from_value(json).expect("old saves should deserialize");
+
+    assert_eq!(old_save.player_gender, PlayerGender::Male);
 }

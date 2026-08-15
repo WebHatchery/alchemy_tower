@@ -8,6 +8,7 @@ pub(super) fn build_save_snapshot(state: &GameplayState, data: &GameData) -> Sav
     // Runtime-only UI/session fields intentionally stay transient across saves.
     SaveData {
         version: data.config.save_version,
+        player_gender: state.player_gender,
         current_area: state.world.current_area_id.clone(),
         player_position: [state.world.player.position.x, state.world.player.position.y],
         day_clock_seconds: state.world.day_clock_seconds,

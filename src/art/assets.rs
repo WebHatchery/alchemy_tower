@@ -7,10 +7,11 @@ use crate::data::GameData;
 
 use super::asset_keys::{
     asset_key, ART_ASSET_PACK, BACKGROUND_CATEGORY, CHARACTER_CATEGORY, EFFECT_CATEGORY,
-    ITEM_ICON_CATEGORY, JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY, TITLE_SCREEN_CATEGORY,
-    TOAST_ICON_CATEGORY, WORLD_NODE_CATEGORY,
+    FEMALE_PLAYER_ID, ITEM_ICON_CATEGORY, JOURNAL_TAB_CATEGORY, PLAYER_ID, STATION_CATEGORY,
+    TITLE_SCREEN_CATEGORY, TOAST_ICON_CATEGORY, WORLD_NODE_CATEGORY,
 };
 use super::asset_manifest::build_texture_manifest;
+use crate::data::PlayerGender;
 
 pub(crate) struct ArtAssets {
     manager: AssetManager,
@@ -52,8 +53,11 @@ impl ArtAssets {
         self.texture(CHARACTER_CATEGORY, id)
     }
 
-    pub(crate) fn player(&self) -> Option<&Texture2D> {
-        self.character(PLAYER_ID)
+    pub(crate) fn player(&self, gender: PlayerGender) -> Option<&Texture2D> {
+        self.character(match gender {
+            PlayerGender::Female => FEMALE_PLAYER_ID,
+            PlayerGender::Male => PLAYER_ID,
+        })
     }
 
     pub(crate) fn station(&self, id: &str) -> Option<&Texture2D> {

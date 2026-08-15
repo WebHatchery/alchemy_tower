@@ -50,6 +50,21 @@ pub(crate) fn draw_character_frame(
     moving: bool,
     alpha: f32,
 ) {
+    draw_character_at_size(texture, center, facing, moving, alpha, 64.0);
+}
+
+pub(crate) fn draw_character_preview(texture: &Texture2D, center: Vec2, facing: Vec2, size: f32) {
+    draw_character_at_size(texture, center, facing, false, 1.0, size);
+}
+
+fn draw_character_at_size(
+    texture: &Texture2D,
+    center: Vec2,
+    facing: Vec2,
+    moving: bool,
+    alpha: f32,
+    size: f32,
+) {
     let row = if facing.y > 0.5 {
         0.0
     } else if facing.x < -0.5 {
@@ -66,12 +81,12 @@ pub(crate) fn draw_character_frame(
     };
     draw_texture_ex(
         texture,
-        center.x - 32.0,
-        center.y - 32.0,
+        center.x - size * 0.5,
+        center.y - size * 0.5,
         Color::new(1.0, 1.0, 1.0, alpha),
         DrawTextureParams {
             source: Some(Rect::new(column * 64.0, row * 64.0, 64.0, 64.0)),
-            dest_size: Some(vec2(64.0, 64.0)),
+            dest_size: Some(vec2(size, size)),
             ..Default::default()
         },
     );
