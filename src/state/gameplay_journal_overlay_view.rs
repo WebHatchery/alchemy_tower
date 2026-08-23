@@ -6,7 +6,6 @@ impl GameplayState {
     pub(super) fn journal_chrome_view(&self) -> JournalChromeView {
         JournalChromeView {
             title: ui_copy("overlay_journal_title"),
-            close_label: ui_copy("overlay_close"),
             current_conditions_text: ui_format(
                 "overlay_current_conditions",
                 &[

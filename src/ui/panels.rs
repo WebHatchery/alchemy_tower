@@ -3,6 +3,7 @@ use macroquad_toolkit::colors::dark;
 
 use super::hud::{brass_light, bright_ink, draw_ornate_panel, draw_panel_filigree, fill_slate};
 use super::{draw_wrapped_text, truncate_text_to_width};
+use crate::content::ui_copy;
 use macroquad_toolkit::ui::draw_ui_text;
 
 pub(crate) fn draw_panel(x: f32, y: f32, width: f32, height: f32, title: &str) {
@@ -91,7 +92,11 @@ pub(crate) fn draw_overlay_footer(x: f32, y: f32, w: f32, h: f32, text: &str) {
 }
 
 pub(crate) fn draw_overlay_close_control() {
-    super::draw_action_button(super::overlay_layout::overlay_close_rect(), "CLOSE", 16.0);
+    super::draw_action_button(
+        super::overlay_layout::overlay_close_rect(),
+        ui_copy("overlay_close"),
+        16.0,
+    );
 }
 
 pub(crate) fn draw_overlay_primary_action(label: &str) {

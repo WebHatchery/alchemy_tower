@@ -7,9 +7,7 @@ use crate::input::{
     rect_contains_point, select_next_pressed, select_previous_pressed, switch_next_pressed,
     switch_previous_pressed,
 };
-use crate::journal_layout::{
-    journal_close_rect, journal_next_rect, journal_previous_rect, journal_tab_rect,
-};
+use crate::journal_layout::{journal_next_rect, journal_previous_rect, journal_tab_rect};
 
 #[path = "gameplay_overlay_input_text.rs"]
 mod overlay_input_text;
@@ -72,11 +70,6 @@ impl GameplayState {
         self.ui.journal_tab = self.ui.journal_tab.min(journal_tab_count.saturating_sub(1));
         if left_mouse_pressed() {
             let mouse = mouse_position_point();
-            if rect_contains_point(journal_close_rect(), mouse) {
-                self.clear_overlay();
-                self.runtime.status_text = overlay_input_text::closed_journal();
-                return;
-            }
             if rect_contains_point(journal_previous_rect(), mouse) {
                 self.ui.journal_index = self.ui.journal_index.saturating_sub(1);
                 return;

@@ -1,6 +1,5 @@
 pub(crate) struct JournalChromeView {
     pub(crate) title: &'static str,
-    pub(crate) close_label: &'static str,
     pub(crate) current_conditions_text: String,
     pub(crate) tabs: Vec<&'static str>,
     pub(crate) footer_text: String,
