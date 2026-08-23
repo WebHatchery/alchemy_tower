@@ -121,6 +121,10 @@ pub(crate) fn draw_hud_view(view: &HudView, art: &ArtAssets) {
     crate::ui_scale::end_ui_camera(scaled);
 }
 
+pub(crate) fn hud_potion_slot_rect(index: usize) -> Rect {
+    hud_belt::potion_slot_rect(index)
+}
+
 fn draw_hud_feedbacks(feedbacks: &[HudFeedbackView], art: &ArtAssets) {
     for feedback in feedbacks {
         let position = hud_point(feedback.position);

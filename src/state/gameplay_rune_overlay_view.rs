@@ -1,6 +1,6 @@
 use super::gameplay_overlay_window::visible_window_start;
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format, ui_text};
+use crate::content::{ui_copy, ui_format, ui_text};
 use crate::data::GameData;
 use crate::view_models::rune::{RuneOverlayEntry, RuneOverlayView};
 
@@ -61,10 +61,7 @@ impl GameplayState {
 }
 
 fn rune_footer_text() -> String {
-    ui_copy("overlay_rune_footer")
-        .replace("{select}", &input_bindings().navigation.select)
-        .replace("{confirm}", &input_bindings().global.confirm)
-        .replace("{close}", &input_bindings().global.cancel)
+    ui_copy("overlay_rune_footer").to_owned()
 }
 
 #[cfg(test)]

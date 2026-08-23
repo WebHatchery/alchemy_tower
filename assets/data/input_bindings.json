@@ -15,10 +15,8 @@
     ]
   },
   "navigation": {
-    "select": "Up/Down",
     "select_previous": "Up",
     "select_next": "Down",
-    "switch": "Left/Right",
     "switch_previous": "Left",
     "switch_next": "Right"
   },
@@ -69,8 +67,5 @@
   "dialogue": {
     "advance": "Enter",
     "advance_alternate": "Space"
-  },
-  "shop": {
-    "switch_tab": "Left/Right"
   }
 }

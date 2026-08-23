@@ -2,7 +2,10 @@ use super::gameplay_overlay_types::OverlayScreen;
 use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::GameData;
-use crate::input::{cancel_pressed, journal_pressed, sort_pressed};
+use crate::input::{
+    cancel_pressed, journal_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
+    sort_pressed,
+};
 use crate::state::StateTransition;
 use macroquad::prelude::get_frame_time;
 
@@ -33,21 +36,37 @@ impl GameplayState {
         self.update_npc_motion(data, frame_time);
         self.update_tutorial_hints(data, frame_time);
 
-        if !self.handle_active_overlay_inputs(data, audio) {
-            self.handle_exploration_inputs(data, audio, frame_time);
-        }
+        let transition = if !self.handle_active_overlay_inputs(data, audio) {
+            self.handle_exploration_inputs(data, audio, frame_time)
+        } else {
+            None
+        };
 
         self.play_pending_sounds(audio);
         self.handle_save_shortcuts(data);
 
-        None
+        transition
     }
 
-    fn handle_exploration_inputs(&mut self, data: &GameData, audio: &AudioAssets, frame_time: f32) {
-        if journal_pressed() {
+    fn handle_exploration_inputs(
+        &mut self,
+        data: &GameData,
+        audio: &AudioAssets,
+        frame_time: f32,
+    ) -> Option<StateTransition> {
+        if left_mouse_pressed()
+            && rect_contains_point(crate::ui::touch_pause_rect(), mouse_position_point())
+        {
+            return Some(StateTransition::Pause);
+        }
+        if journal_pressed()
+            || (left_mouse_pressed()
+                && rect_contains_point(crate::ui::touch_journal_rect(), mouse_position_point()))
+        {
             self.set_overlay(OverlayScreen::Journal);
             self.ui.journal_tab = 0;
             self.runtime.status_text = loop_status_text::open_journal();
+            return None;
         }
         if sort_pressed() {
             self.cycle_inventory_sort_mode();
@@ -58,5 +77,6 @@ impl GameplayState {
             self.handle_potion_inputs(data);
             self.handle_interactions(data, audio);
         }
+        None
     }
 }

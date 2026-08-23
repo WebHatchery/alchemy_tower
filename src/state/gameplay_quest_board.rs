@@ -1,6 +1,10 @@
+use super::gameplay_overlay_window::visible_window_start;
 use super::GameplayState;
 use crate::data::GameData;
-use crate::input::{cancel_pressed, confirm_pressed, select_next_pressed, select_previous_pressed};
+use crate::input::{
+    cancel_pressed, confirm_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
+    select_next_pressed, select_previous_pressed,
+};
 
 #[path = "gameplay_quest_board_text.rs"]
 mod quest_board_text;
@@ -23,6 +27,25 @@ impl GameplayState {
         if actions.is_empty() {
             return;
         }
+        if left_mouse_pressed() {
+            let point = mouse_position_point();
+            let start = visible_window_start(self.ui.shop_index, actions.len(), 3);
+            for offset in 0..actions.len().saturating_sub(start).min(3) {
+                if !rect_contains_point(
+                    crate::ui::standard_overlay_entry_rect(offset, 144.0),
+                    point,
+                ) {
+                    continue;
+                }
+                let index = start + offset;
+                if self.ui.shop_index == index {
+                    self.confirm_board_action(data, &actions[index]);
+                } else {
+                    self.ui.shop_index = index;
+                }
+                return;
+            }
+        }
         if select_previous_pressed() {
             self.ui.shop_index = self.ui.shop_index.saturating_sub(1);
         }
@@ -31,12 +54,16 @@ impl GameplayState {
         }
         if confirm_pressed() {
             if let Some(action) = actions.get(self.ui.shop_index) {
-                if action.deliver {
-                    self.deliver_board_quest(data, &action.quest_id);
-                } else {
-                    self.accept_board_quest(data, &action.quest_id);
-                }
+                self.confirm_board_action(data, action);
             }
+        }
+    }
+
+    fn confirm_board_action(&mut self, data: &GameData, action: &BoardAction) {
+        if action.deliver {
+            self.deliver_board_quest(data, &action.quest_id);
+        } else {
+            self.accept_board_quest(data, &action.quest_id);
         }
     }
 

@@ -1,5 +1,6 @@
 use crate::art::{draw_texture_centered, ArtAssets};
 use crate::input::mouse_position_vec;
+use crate::journal_layout::{journal_next_rect, journal_previous_rect};
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
 use macroquad_toolkit::ui::draw_ui_text;
@@ -113,4 +114,6 @@ pub(crate) fn draw_journal_tabs(
 
 pub(crate) fn draw_journal_footer(footer_text: &str, x: f32, y: f32, h: f32) {
     draw_ui_text(footer_text, x + 20.0, y + h - 20.0, 18.0, dark::TEXT_DIM);
+    super::draw_action_button(journal_previous_rect(), "PREVIOUS", 13.0);
+    super::draw_action_button(journal_next_rect(), "NEXT", 15.0);
 }

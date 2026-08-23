@@ -30,7 +30,9 @@ pub(crate) fn status_y() -> f32 {
 pub(crate) fn settings_rect() -> Rect {
     let target_width: f32 = if screen_width() < 760.0 { 320.0 } else { 420.0 };
     let width = target_width.min(screen_width() - 48.0);
-    let height = 238.0_f32.min(screen_height() - 48.0);
+    // Three touch-sized controls plus their explanatory copy need this much
+    // vertical room. The old 238px panel placed BACK 28px below its border.
+    let height = 300.0_f32.min(screen_height() - 48.0);
     Rect::new(
         screen_width() * 0.5 - width * 0.5,
         screen_height() * 0.5 - height * 0.5 + 42.0,
@@ -41,17 +43,17 @@ pub(crate) fn settings_rect() -> Rect {
 
 pub(crate) fn fullscreen_toggle_rect() -> Rect {
     let rect = settings_rect();
-    Rect::new(rect.x + 24.0, rect.y + 122.0, rect.w - 48.0, 44.0)
+    Rect::new(rect.x + 24.0, rect.y + rect.h - 152.0, rect.w - 48.0, 44.0)
 }
 
 pub(crate) fn quiet_hud_toggle_rect() -> Rect {
     let rect = settings_rect();
-    Rect::new(rect.x + 24.0, rect.y + 172.0, rect.w - 48.0, 44.0)
+    Rect::new(rect.x + 24.0, rect.y + rect.h - 102.0, rect.w - 48.0, 44.0)
 }
 
 pub(crate) fn settings_back_rect() -> Rect {
     let rect = settings_rect();
-    Rect::new(rect.x + 24.0, rect.y + 228.0, rect.w - 48.0, 38.0)
+    Rect::new(rect.x + 24.0, rect.y + rect.h - 52.0, rect.w - 48.0, 38.0)
 }
 
 pub(crate) fn gender_select_rect() -> Rect {

@@ -40,6 +40,9 @@ impl GameplayState {
             OverlayScreen::Journal => self.draw_field_journal(data, art),
             OverlayScreen::Alchemy => self.draw_alchemy_overlay(data, art),
         }
+        if !matches!(overlay, OverlayScreen::Alchemy | OverlayScreen::Journal) {
+            crate::ui::draw_overlay_close_control();
+        }
         crate::ui_scale::set_overlay_mouse(false);
         crate::ui_scale::end_ui_camera(scaled);
     }

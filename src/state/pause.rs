@@ -1,7 +1,7 @@
 //! Pause screen that preserves the current gameplay snapshot.
 
 use crate::art::ArtAssets;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
 use crate::state::{GameplayState, StateTransition};
 use crate::view_models::pause::PauseOverlayView;
@@ -52,14 +52,7 @@ impl PauseState {
             save_label: ui_copy("pause_save").to_owned(),
             load_label: ui_copy("pause_load").to_owned(),
             menu_label: ui_copy("pause_menu").to_owned(),
-            resume_hint: ui_format(
-                "pause_resume_hint",
-                &[
-                    ("cancel", &input_bindings().global.cancel),
-                    ("save", &input_bindings().global.save),
-                    ("load", &input_bindings().global.load),
-                ],
-            ),
+            resume_hint: ui_format("pause_resume_hint", &[]),
             status_text: self.gameplay.pause_status_text().to_owned(),
         }
     }

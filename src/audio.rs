@@ -1,11 +1,13 @@
 use crate::data::AreaDefinition;
 use macroquad::audio::Sound;
 
+#[cfg(not(target_arch = "wasm32"))]
 #[path = "audio_loading.rs"]
 mod audio_loading;
 #[path = "audio_playback.rs"]
 mod audio_playback;
 
+#[cfg(not(target_arch = "wasm32"))]
 use self::audio_loading::{load_generated_asset_pack, load_variations};
 use self::audio_playback::play_random;
 
@@ -49,6 +51,29 @@ pub(crate) struct AudioAssets {
 }
 
 impl AudioAssets {
+    #[cfg(target_arch = "wasm32")]
+    pub(crate) fn without_sounds() -> Self {
+        Self {
+            footstep_stone: Vec::new(),
+            footstep_dirt_path: Vec::new(),
+            footstep_greenhouse: Vec::new(),
+            footstep_sand: Vec::new(),
+            footstep_shore: Vec::new(),
+            footstep_gravel: Vec::new(),
+            footstep_leaf: Vec::new(),
+            gather_pickup: Vec::new(),
+            alchemy_open: Vec::new(),
+            alchemy_stir: Vec::new(),
+            brew_success: Vec::new(),
+            brew_collapse: Vec::new(),
+            journal_note: Vec::new(),
+            work_landed: Vec::new(),
+            route_restored: Vec::new(),
+            collapse_home: Vec::new(),
+        }
+    }
+
+    #[cfg(not(target_arch = "wasm32"))]
     pub(crate) async fn load() -> Result<Self, String> {
         let asset_pack = match load_generated_asset_pack().await {
             Ok(pack) => Some(pack),

@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::{ui_copy, ui_format};
 use crate::view_models::journal::JournalChromeView;
 
 impl GameplayState {
@@ -15,14 +15,7 @@ impl GameplayState {
                 ],
             ),
             tabs: self.journal_tabs(),
-            footer_text: ui_format(
-                "overlay_journal_footer",
-                &[
-                    ("switch", &input_bindings().navigation.switch),
-                    ("close", &input_bindings().global.cancel),
-                    ("journal", &input_bindings().global.journal),
-                ],
-            ),
+            footer_text: ui_copy("overlay_journal_footer").to_owned(),
         }
     }
 }

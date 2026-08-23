@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::{ui_copy, ui_format};
 use crate::data::{AreaDefinition, GameData};
 use crate::view_models::hud::{HudControlTag, HudPotionSlot, HudView, HOTBAR_SLOT_COUNT};
 
@@ -65,7 +65,7 @@ impl GameplayState {
             effects_label: ui_copy("hud_drawer_effects").to_owned(),
             no_effects_label: ui_copy("overlay_none").to_owned(),
             journal_label: ui_copy("hud_drawer_journal").to_owned(),
-            journal_key_label: input_bindings().global.journal.clone(),
+            journal_key_label: "TAP".to_owned(),
             minimap_north_label: ui_copy("hud_minimap_north").to_owned(),
             control_tags: hud_control_tags(),
             truncation_suffix: ui_copy("hud_truncation_suffix").to_owned(),
@@ -79,25 +79,9 @@ impl GameplayState {
 }
 
 fn hud_control_tags() -> Vec<HudControlTag> {
-    let bindings = input_bindings();
-    vec![
-        HudControlTag {
-            key_label: bindings.alchemy.open.clone(),
-            label: ui_copy("hud_control_alchemy").to_owned(),
-        },
-        HudControlTag {
-            key_label: bindings.global.journal.clone(),
-            label: ui_copy("hud_drawer_journal").to_owned(),
-        },
-        HudControlTag {
-            key_label: bindings.global.sort.clone(),
-            label: ui_copy("hud_control_sort").to_owned(),
-        },
-        HudControlTag {
-            key_label: bindings.global.cancel.clone(),
-            label: ui_copy("hud_control_pause").to_owned(),
-        },
-    ]
+    // The persistent touch controls name their own actions. Leaving old
+    // keyboard badges on screen would make the browser UI look keyboard-only.
+    Vec::new()
 }
 
 fn clock_text_12h(day_clock_seconds: f32, full_day_seconds: f32) -> String {
@@ -129,11 +113,6 @@ fn title_case_label(value: &str) -> String {
     format!("{}{}", first.to_ascii_uppercase(), chars.as_str())
 }
 
-fn quick_potion_key_label(index: usize) -> &'static str {
-    input_bindings()
-        .global
-        .quick_potions
-        .get(index)
-        .map(String::as_str)
-        .unwrap_or("")
+fn quick_potion_key_label(_index: usize) -> &'static str {
+    "TAP"
 }

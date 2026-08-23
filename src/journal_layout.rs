@@ -21,3 +21,23 @@ pub(crate) fn journal_close_rect() -> Rect {
     let panel = journal_panel_rect();
     Rect::new(panel.x + panel.w - 112.0, panel.y + 16.0, 92.0, 28.0)
 }
+
+pub(crate) fn journal_previous_rect() -> Rect {
+    let panel = journal_panel_rect();
+    Rect::new(
+        panel.x + panel.w - 252.0,
+        panel.y + panel.h - 40.0,
+        108.0,
+        28.0,
+    )
+}
+
+pub(crate) fn journal_next_rect() -> Rect {
+    let panel = journal_panel_rect();
+    Rect::new(
+        panel.x + panel.w - 136.0,
+        panel.y + panel.h - 40.0,
+        108.0,
+        28.0,
+    )
+}

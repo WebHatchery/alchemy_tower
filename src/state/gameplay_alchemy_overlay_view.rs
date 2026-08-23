@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format, ui_text};
+use crate::content::{ui_copy, ui_text};
 use crate::data::GameData;
 use crate::view_models::alchemy::{AlchemyActionButtonsView, AlchemyChromeView};
 
@@ -18,10 +18,7 @@ impl GameplayState {
                 .map(|station| station.room_bonus.description.clone())
                 .filter(|description| !description.is_empty())
                 .unwrap_or_else(|| ui_text().overlays.alchemy_subtitle.clone()),
-            footer_text: ui_format(
-                "overlay_alchemy_mouse_footer",
-                &[("close", &input_bindings().global.cancel)],
-            ),
+            footer_text: ui_copy("overlay_alchemy_mouse_footer").to_owned(),
             close_label: ui_copy("overlay_alchemy_close_button").to_string(),
             action_buttons: alchemy_action_buttons_view(),
         }

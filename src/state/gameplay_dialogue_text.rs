@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_format};
+use crate::content::ui_format;
 use crate::data::{GameData, NpcDefinition};
 
 impl GameplayState {
@@ -79,9 +79,5 @@ impl GameplayState {
 }
 
 fn dialogue_footer_text(copy_key: &str, replacements: &[(&str, &str)]) -> String {
-    let mut pairs = Vec::with_capacity(replacements.len() + 2);
-    pairs.extend_from_slice(replacements);
-    pairs.push(("confirm", input_bindings().global.confirm.as_str()));
-    pairs.push(("close", input_bindings().global.cancel.as_str()));
-    ui_format(copy_key, &pairs)
+    ui_format(copy_key, replacements)
 }

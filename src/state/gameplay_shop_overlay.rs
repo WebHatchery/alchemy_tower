@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format, ui_text};
+use crate::content::{ui_copy, ui_format, ui_text};
 use crate::data::GameData;
 use crate::view_models::shop::{ShopOverlayEntry, ShopOverlayView};
 
@@ -117,14 +117,5 @@ impl GameplayState {
 }
 
 fn shop_footer_text() -> String {
-    ui_format(
-        "overlay_shop_footer",
-        &[
-            ("switch", &input_bindings().shop.switch_tab),
-            ("select", &input_bindings().navigation.select),
-            ("sort", &input_bindings().global.sort),
-            ("confirm", &input_bindings().global.confirm),
-            ("close", &input_bindings().global.cancel),
-        ],
-    )
+    ui_copy("overlay_shop_footer").to_owned()
 }

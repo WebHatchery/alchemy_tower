@@ -11,10 +11,10 @@ use self::prompt_shapes::*;
 
 pub(crate) fn draw_interaction_prompt(text: &str) {
     let (key, label) = split_prompt(text);
-    let label_width = measure_ui_text(label, None, 22, 1.0).width;
-    let width = (label_width + 178.0).clamp(320.0, 470.0);
-    let x = screen_width() - width - 24.0;
-    let y = screen_height() - 78.0;
+    let rect = interaction_prompt_rect(text);
+    let width = rect.w;
+    let x = rect.x;
+    let y = rect.y;
     let center_y = y + 28.0;
     let label_rect = Rect::new(x + 18.0, y + 9.0, width - 100.0, 40.0);
     let key_center = vec2(x + width - 42.0, center_y);
@@ -57,6 +57,20 @@ pub(crate) fn draw_interaction_prompt(text: &str) {
         draw_key_medallion(key_center);
         draw_centered_text(key, key_rect.x, key_rect.y + 32.0, key_rect.w, 18.0);
     }
+}
+
+/// The entire prompt is a large, visible action target. Its text is also the
+/// target's label, so touch users are never asked to infer what a tap will do.
+pub(crate) fn interaction_prompt_rect(text: &str) -> Rect {
+    let (_, label) = split_prompt(text);
+    let label_width = measure_ui_text(label, None, 22, 1.0).width;
+    let width = (label_width + 178.0).clamp(320.0, 470.0);
+    Rect::new(
+        screen_width() - width - 24.0,
+        screen_height() - 78.0,
+        width,
+        56.0,
+    )
 }
 
 fn split_prompt(text: &str) -> (&str, &str) {

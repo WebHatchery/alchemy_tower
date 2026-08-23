@@ -1,6 +1,6 @@
 use super::gameplay_overlay_window::visible_window_start;
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format, ui_text};
+use crate::content::{ui_copy, ui_format, ui_text};
 use crate::data::GameData;
 use crate::view_models::quest_board::{QuestBoardOverlayEntry, QuestBoardOverlayView};
 
@@ -105,14 +105,7 @@ impl GameplayState {
 }
 
 fn quest_board_footer_text() -> String {
-    ui_format(
-        "overlay_quest_board_footer",
-        &[
-            ("select", &input_bindings().navigation.select),
-            ("confirm", &input_bindings().global.confirm),
-            ("close", &input_bindings().global.cancel),
-        ],
-    )
+    ui_copy("overlay_quest_board_footer").to_owned()
 }
 
 #[cfg(test)]

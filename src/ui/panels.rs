@@ -89,3 +89,15 @@ pub(crate) fn draw_overlay_footer(x: f32, y: f32, w: f32, h: f32, text: &str) {
         dark::TEXT_DIM,
     );
 }
+
+pub(crate) fn draw_overlay_close_control() {
+    super::draw_action_button(super::overlay_layout::overlay_close_rect(), "CLOSE", 16.0);
+}
+
+pub(crate) fn draw_overlay_primary_action(label: &str) {
+    super::draw_action_button(
+        super::overlay_layout::overlay_primary_action_rect(),
+        label,
+        16.0,
+    );
+}

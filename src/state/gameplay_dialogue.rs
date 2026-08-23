@@ -1,13 +1,21 @@
 use super::GameplayState;
 use crate::data::{GameData, QuestDefinition};
-use crate::input::dialogue_advance_pressed;
+use crate::input::{
+    dialogue_advance_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
+};
 
 #[path = "gameplay_dialogue_quest_text.rs"]
 mod dialogue_quest_text;
 
 impl GameplayState {
     pub(super) fn handle_dialogue_inputs(&mut self, data: &GameData) {
-        if !dialogue_advance_pressed() {
+        if !dialogue_advance_pressed()
+            && !(left_mouse_pressed()
+                && rect_contains_point(
+                    crate::ui::overlay_primary_action_rect(),
+                    mouse_position_point(),
+                ))
+        {
             return;
         }
 

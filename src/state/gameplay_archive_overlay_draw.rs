@@ -27,6 +27,15 @@ impl GameplayState {
             "disassembly" => self.draw_archive_disassembly_section(data, x, y, w, h),
             _ => self.draw_archive_duplication_section(data, x, y, w, h),
         }
+        match self.archive_tab_id() {
+            "timeline" => crate::ui::draw_overlay_primary_action("RECONSTRUCT"),
+            "experiments" => crate::ui::draw_action_button(
+                crate::ui::archive_filter_rect(),
+                &format!("FILTER: {}", self.archive_experiment_filter_label()),
+                14.0,
+            ),
+            _ => {}
+        }
         draw_overlay_footer(x, y, w, h, &chrome.footer_text);
     }
 }

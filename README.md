@@ -18,9 +18,12 @@ Turn the abandoned tower into a working magical home while learning the rhythms 
 
 ## Controls
 
-- WASD: move.
-- E: interact.
-- Esc: pause.
+- Use the on-screen arrows to move.
+- Tap ACT beside an object, person, or route to interact.
+- Tap BAG & JOURNAL to inspect your notes and PAUSE to save, load, resume, or
+  return to the menu.
+- Keyboard shortcuts are optional extras; every required action has a visible
+  touch control.
 
 ## Current Scope
 

@@ -7,7 +7,9 @@ use crate::input::{
     rect_contains_point, select_next_pressed, select_previous_pressed, switch_next_pressed,
     switch_previous_pressed,
 };
-use crate::journal_layout::{journal_close_rect, journal_tab_rect};
+use crate::journal_layout::{
+    journal_close_rect, journal_next_rect, journal_previous_rect, journal_tab_rect,
+};
 
 #[path = "gameplay_overlay_input_text.rs"]
 mod overlay_input_text;
@@ -25,6 +27,14 @@ impl GameplayState {
         // Overlay hit-testing reads the mouse in UI design space, so enable the
         // scale transform for the duration of this dispatch.
         crate::ui_scale::set_overlay_mouse(true);
+        if left_mouse_pressed()
+            && rect_contains_point(crate::ui::overlay_close_rect(), mouse_position_point())
+        {
+            self.clear_overlay();
+            self.runtime.status_text = self.closed_overlay_status(&overlay);
+            crate::ui_scale::set_overlay_mouse(false);
+            return true;
+        }
         match overlay {
             OverlayScreen::Dialogue(_) => self.handle_dialogue_inputs(data),
             OverlayScreen::Shop => self.handle_shop_inputs(data),
@@ -33,7 +43,13 @@ impl GameplayState {
             OverlayScreen::Ending => {
                 if cancel_pressed() {
                     self.clear_overlay();
-                } else if confirm_pressed() {
+                } else if confirm_pressed()
+                    || (left_mouse_pressed()
+                        && rect_contains_point(
+                            crate::ui::overlay_primary_action_rect(),
+                            mouse_position_point(),
+                        ))
+                {
                     // Read on through the epilogue, then close out.
                     if self.ui.ending_page + 1 < self.epilogue_page_count() {
                         self.ui.ending_page += 1;
@@ -59,6 +75,14 @@ impl GameplayState {
             if rect_contains_point(journal_close_rect(), mouse) {
                 self.clear_overlay();
                 self.runtime.status_text = overlay_input_text::closed_journal();
+                return;
+            }
+            if rect_contains_point(journal_previous_rect(), mouse) {
+                self.ui.journal_index = self.ui.journal_index.saturating_sub(1);
+                return;
+            }
+            if rect_contains_point(journal_next_rect(), mouse) {
+                self.ui.journal_index = self.ui.journal_index.saturating_add(1);
                 return;
             }
             for index in 0..journal_tab_count {

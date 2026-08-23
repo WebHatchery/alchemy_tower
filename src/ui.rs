@@ -36,6 +36,7 @@ mod overlay_sleep_flash;
 mod panels;
 mod prompts;
 mod text;
+mod touch_controls;
 mod widgets;
 mod world_entity_markers;
 mod world_exports;
@@ -43,7 +44,7 @@ mod world_marker_plates;
 mod world_markers;
 mod world_scene;
 
-pub(crate) use hud::draw_hud_view;
+pub(crate) use hud::{draw_hud_view, hud_potion_slot_rect};
 pub(crate) use menu_screen::draw_menu_screen;
 pub(crate) use overlay_exports::{
     draw_alchemy_action_buttons, draw_alchemy_formulae_panel_view,
@@ -69,12 +70,21 @@ pub(crate) use overlay_exports::{
     HERB_LINE_STEP, HERB_ROW_STEP, NOTES_BOTTOM_MARGIN, NOTE_DETAIL_LINE_HEIGHT,
 };
 use overlay_layout::standard_overlay_panel_rect;
-pub(crate) use panels::{
-    draw_overlay_backdrop, draw_overlay_footer, draw_overlay_subtitle, draw_panel, draw_panel_frame,
+pub(crate) use overlay_layout::{
+    archive_filter_rect, archive_list_entry_rect, overlay_close_rect, overlay_primary_action_rect,
+    shop_entry_rect, shop_tab_rect, standard_overlay_entry_rect,
 };
-pub(crate) use prompts::draw_interaction_prompt;
+pub(crate) use panels::{
+    draw_overlay_backdrop, draw_overlay_close_control, draw_overlay_footer,
+    draw_overlay_primary_action, draw_overlay_subtitle, draw_panel, draw_panel_frame,
+};
+pub(crate) use prompts::{draw_interaction_prompt, interaction_prompt_rect};
 pub(crate) use text::draw_missing_area_message;
 use text::{draw_wrapped_text, truncate_text_to_width};
+pub(crate) use touch_controls::{
+    draw_touch_controls, touch_journal_rect, touch_move_down_rect, touch_move_left_rect,
+    touch_move_right_rect, touch_move_up_rect, touch_pause_rect,
+};
 pub(crate) use widgets::draw_action_button;
 use widgets::{draw_item_selection_card, draw_selection_card, draw_state_banner};
 pub(crate) use world_exports::{

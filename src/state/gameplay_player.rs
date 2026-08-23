@@ -1,14 +1,17 @@
 use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::GameData;
-use crate::input::{interact_pressed, movement_direction};
+use crate::input::{
+    interact_pressed, left_mouse_down, left_mouse_pressed, mouse_position_point,
+    movement_direction, rect_contains_point,
+};
 
 impl GameplayState {
     pub(super) fn update_movement(&mut self, data: &GameData, frame_time: f32) {
         let Some(area) = data.area(&self.world.current_area_id) else {
             return;
         };
-        let direction = movement_direction();
+        let direction = touch_movement_direction().unwrap_or_else(movement_direction);
         if direction.length_squared() == 0.0 {
             self.world.player.moving = false;
             return;
@@ -54,7 +57,7 @@ impl GameplayState {
         let Some(area) = data.area(&self.world.current_area_id) else {
             return;
         };
-        if !interact_pressed() {
+        if !self.interaction_requested(area, data) {
             return;
         }
 
@@ -83,4 +86,33 @@ impl GameplayState {
             self.handle_gather_node_interaction(data, audio, node);
         }
     }
+
+    fn interaction_requested(&self, area: &crate::data::AreaDefinition, data: &GameData) -> bool {
+        interact_pressed()
+            || (left_mouse_pressed()
+                && self.world_prompt_view(area, data).is_some_and(|prompt| {
+                    rect_contains_point(
+                        crate::ui::interaction_prompt_rect(&prompt.text),
+                        mouse_position_point(),
+                    )
+                }))
+    }
+}
+
+fn touch_movement_direction() -> Option<macroquad::prelude::Vec2> {
+    if !left_mouse_down() {
+        return None;
+    }
+    let point = mouse_position_point();
+    if rect_contains_point(crate::ui::touch_move_up_rect(), point) {
+        return Some(macroquad::prelude::vec2(0.0, -1.0));
+    }
+    if rect_contains_point(crate::ui::touch_move_down_rect(), point) {
+        return Some(macroquad::prelude::vec2(0.0, 1.0));
+    }
+    if rect_contains_point(crate::ui::touch_move_left_rect(), point) {
+        return Some(macroquad::prelude::vec2(-1.0, 0.0));
+    }
+    rect_contains_point(crate::ui::touch_move_right_rect(), point)
+        .then(|| macroquad::prelude::vec2(1.0, 0.0))
 }

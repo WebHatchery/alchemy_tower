@@ -1,6 +1,6 @@
 use super::gameplay_overlay_window::{paged_window, ARCHIVE_PAGE_ROWS};
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
 use crate::view_models::archive::{
     ArchiveDuplicationDetailView, ArchiveDuplicationItemEntry, ArchiveDuplicationSectionView,
@@ -99,8 +99,5 @@ impl GameplayState {
 }
 
 fn duplication_help_text() -> String {
-    ui_format(
-        "overlay_archive_duplication_help",
-        &[("confirm", &input_bindings().global.confirm)],
-    )
+    ui_copy("overlay_archive_duplication_help").to_owned()
 }

@@ -1,52 +1,24 @@
-use super::{
-    GameplayState, TUTORIAL_ALCHEMY_OPEN, TUTORIAL_CROW_INTRO, TUTORIAL_HINT_KEYS,
-    TUTORIAL_JOURNAL, TUTORIAL_POTIONS,
-};
-use crate::content::input_bindings;
+use super::{GameplayState, TUTORIAL_CROW_INTRO, TUTORIAL_HINT_KEYS};
 
-/// The hint layer was invisible for the life of the project, so nothing had
-/// ever checked that a hint naming a key names the *bound* one. Three of
-/// them said "Press J" and "with E" as literals while the rest of the HUD
-/// reads `input_bindings.json`, and one of those keys is rebindable in the
-/// same file that draws the control tags.
+/// Browser hints have to name the button a player can actually touch. A
+/// keyboard legend does not help a player with no keyboard and makes a visible
+/// control look optional.
 #[test]
-fn a_hint_that_names_a_key_names_the_one_that_is_bound() {
+fn tutorial_hints_name_visible_touch_controls() {
     let data = crate::data::load_embedded().expect("embedded game data should load");
     let state = GameplayState::new(&data);
-    let bindings = input_bindings();
 
-    for (key, placeholder, expected) in [
-        (
-            TUTORIAL_JOURNAL,
-            "{journal}",
-            bindings.global.journal.as_str(),
-        ),
-        (
-            TUTORIAL_ALCHEMY_OPEN,
-            "{alchemy}",
-            bindings.alchemy.open.as_str(),
-        ),
-        (
-            TUTORIAL_POTIONS,
-            "{quick_potions}",
-            bindings.global.quick_potions[0].as_str(),
-        ),
-    ] {
-        // The copy has to *ask* for the binding. Checking only the rendered
-        // string would pass against the literal it replaced: "Press J to
-        // open the field journal" contains the bound key by coincidence.
-        assert!(
-            crate::content::ui_copy(key).contains(placeholder),
-            "{key} does not ask for {placeholder}; it spells the key out"
-        );
+    for key in TUTORIAL_HINT_KEYS {
         let text = state.tutorial_hint_text(key);
         assert!(
-            text.contains(expected),
-            "{key} does not name the bound key {expected:?}: {text}"
+            !["Press ", "Tab", "Esc", "Enter", "Space", "F5", "F9", "F11"]
+                .iter()
+                .any(|keyboard| text.contains(keyboard)),
+            "{key} still presents a keyboard-only instruction: {text}"
         );
         assert!(
             !text.contains('{'),
-            "{key} has a placeholder nothing filled in: {text}"
+            "{key} left a placeholder unfilled: {text}"
         );
     }
 }

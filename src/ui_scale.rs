@@ -101,3 +101,16 @@ pub(crate) fn transform_mouse(point: [f32; 2]) -> [f32; 2] {
         None => point,
     }
 }
+
+/// HUD touch targets are always authored in design space, unlike the menu and
+/// world prompt controls. This is the matching input transform for those
+/// scaled panels.
+pub(crate) fn transform_hud_mouse(point: [f32; 2]) -> [f32; 2] {
+    match virtual_ui() {
+        Some(ui) => {
+            let mapped = ui.screen_to_ui(vec2(point[0], point[1]));
+            [mapped.x, mapped.y]
+        }
+        None => point,
+    }
+}

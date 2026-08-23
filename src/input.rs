@@ -1,7 +1,9 @@
 #[path = "input_keys.rs"]
 mod input_keys;
 
-use macroquad::prelude::{is_mouse_button_pressed, mouse_position, MouseButton, Rect, Vec2};
+use macroquad::prelude::{
+    is_mouse_button_down, is_mouse_button_pressed, mouse_position, MouseButton, Rect, Vec2,
+};
 use macroquad_toolkit::input::was_clicked;
 
 use self::input_keys::{any_label_down, pressed_label};
@@ -110,6 +112,10 @@ pub(crate) fn left_mouse_pressed() -> bool {
     is_mouse_button_pressed(MouseButton::Left)
 }
 
+pub(crate) fn left_mouse_down() -> bool {
+    is_mouse_button_down(MouseButton::Left)
+}
+
 pub(crate) fn mouse_position_vec() -> Vec2 {
     mouse_position_point().into()
 }
@@ -119,6 +125,13 @@ pub(crate) fn mouse_position_point() -> [f32; 2] {
     // Transformed into UI design space when a scaled overlay is being read;
     // identity otherwise (normal window size, or menu/pause/world reads).
     crate::ui_scale::transform_mouse([x, y])
+}
+
+/// HUD panels use the shared virtual UI camera on small screens, so their
+/// touch targets need the same coordinate conversion as their drawing.
+pub(crate) fn hud_mouse_position_point() -> [f32; 2] {
+    let (x, y) = mouse_position();
+    crate::ui_scale::transform_hud_mouse([x, y])
 }
 
 pub(crate) fn rect_clicked(rect: Rect) -> bool {

@@ -9,7 +9,7 @@
 //! reads them from it.
 
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::ui_copy;
 use crate::data::GameData;
 
 pub(super) enum TutorialHintTone {
@@ -104,39 +104,10 @@ impl GameplayState {
         .map(|(key, tone, _)| TutorialHint { key, tone })
     }
 
-    /// A hint's words, with the keys it names filled in from the bindings.
-    ///
-    /// `tutorial_potions` used to be formatted with a `quick_potions`
-    /// substitution the copy had no placeholder for — the belt keys were looked
-    /// up, joined and dropped — which is the same shape as the banner that
-    /// discarded its own text, one layer down.
+    /// A hint's words, written against the visible touch controls rather than
+    /// whichever keyboard bindings happen to be configured.
     pub(super) fn tutorial_hint_text(&self, key: &str) -> String {
-        let bindings = input_bindings();
-        match key {
-            TUTORIAL_SAVE => ui_format(
-                key,
-                &[
-                    ("save", &bindings.global.save),
-                    ("load", &bindings.global.load),
-                ],
-            ),
-            TUTORIAL_JOURNAL => ui_format(key, &[("journal", &bindings.global.journal)]),
-            TUTORIAL_ALCHEMY_OPEN => ui_format(
-                key,
-                &[
-                    ("interact", &bindings.global.interact),
-                    ("alchemy", &bindings.alchemy.open),
-                ],
-            ),
-            TUTORIAL_GATHER | TUTORIAL_DELIVERY_READY | TUTORIAL_ROUTE_READY => {
-                ui_format(key, &[("interact", &bindings.global.interact)])
-            }
-            TUTORIAL_POTIONS => ui_format(
-                key,
-                &[("quick_potions", &bindings.global.quick_potions.join(", "))],
-            ),
-            _ => ui_copy(key).to_owned(),
-        }
+        ui_copy(key).to_owned()
     }
 }
 

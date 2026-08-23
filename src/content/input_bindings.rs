@@ -17,7 +17,6 @@ pub(crate) struct InputBindings {
     pub(crate) alchemy: AlchemyBindings,
     pub(crate) archive: ArchiveBindings,
     pub(crate) dialogue: DialogueBindings,
-    pub(crate) shop: ShopBindings,
 }
 
 #[derive(Debug, Deserialize)]
@@ -37,10 +36,8 @@ pub(crate) struct GlobalBindings {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(crate) struct NavigationBindings {
-    pub(crate) select: String,
     pub(crate) select_previous: String,
     pub(crate) select_next: String,
-    pub(crate) switch: String,
     pub(crate) switch_previous: String,
     pub(crate) switch_next: String,
 }
@@ -83,12 +80,6 @@ pub(crate) struct ArchiveBindings {
 pub(crate) struct DialogueBindings {
     pub(crate) advance: String,
     pub(crate) advance_alternate: String,
-}
-
-#[derive(Debug, Deserialize)]
-#[serde(deny_unknown_fields)]
-pub(crate) struct ShopBindings {
-    pub(crate) switch_tab: String,
 }
 
 pub(crate) fn input_bindings() -> &'static InputBindings {

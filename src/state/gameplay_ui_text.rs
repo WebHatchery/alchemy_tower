@@ -1,5 +1,5 @@
 use super::GameplayState;
-use crate::content::{input_bindings, ui_copy, ui_format};
+use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
 
 impl GameplayState {
@@ -68,20 +68,13 @@ impl GameplayState {
         copy_key: &str,
         replacements: &[(&str, &str)],
     ) -> String {
-        let mut pairs = Vec::with_capacity(replacements.len() + 1);
+        let mut pairs = Vec::with_capacity(replacements.len());
         pairs.extend_from_slice(replacements);
-        pairs.push(("interact", input_bindings().global.interact.as_str()));
         ui_format(copy_key, &pairs)
     }
 
     pub(super) fn alchemy_prompt_copy(&self, label: &str) -> String {
-        self.interact_prompt_copy(
-            "world_prompt_alchemy",
-            &[
-                ("alchemy", input_bindings().alchemy.open.as_str()),
-                ("label", label),
-            ],
-        )
+        self.interact_prompt_copy("world_prompt_alchemy", &[("label", label)])
     }
 
     pub(super) fn next_goal_summary(&self, data: &GameData) -> String {

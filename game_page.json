@@ -10,16 +10,8 @@
   ],
   "controls": [
     {
-      "key": "WASD",
-      "desc": "Move"
-    },
-    {
-      "key": "E",
-      "desc": "Interact"
-    },
-    {
-      "key": "Esc",
-      "desc": "Pause"
+      "key": "Touch controls",
+      "desc": "Use the on-screen arrows to move, ACT to interact, and PAUSE to save or return to the menu."
     }
   ],
   "details": [

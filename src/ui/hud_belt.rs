@@ -53,22 +53,24 @@ pub(super) fn draw_potion_belt(view: &HudView, art: &ArtAssets) {
     draw_gem(vec2(rect.x + rect.w * 0.5, rect.y + rect.h + 2.0), 9.0);
 
     for (index, slot) in view.potions.iter().enumerate() {
-        let slot_rect = Rect::new(
-            x + 40.0 + index as f32 * (slot_size + gap),
-            y + 16.0,
-            slot_size,
-            slot_size,
-        );
+        let slot_rect = potion_slot_rect(index);
         draw_hotbar_slot(slot_rect, slot, art, index);
-        draw_centered_text_shadowed(
-            &(index + 1).to_string(),
-            slot_rect.x,
-            slot_rect.y + 85.0,
-            slot_rect.w,
-            20.0,
-            bright_ink(),
-        );
     }
+}
+
+pub(crate) fn potion_slot_rect(index: usize) -> Rect {
+    const SLOT_SIZE: f32 = 58.0;
+    const GAP: f32 = 12.0;
+    let slot_count = crate::view_models::hud::HOTBAR_SLOT_COUNT;
+    let width = 40.0 + SLOT_SIZE * slot_count as f32 + GAP * (slot_count - 1) as f32 + 40.0;
+    let x = super::hud_w() * 0.5 - width * 0.5;
+    let y = super::hud_h() - 108.0;
+    Rect::new(
+        x + 40.0 + index as f32 * (SLOT_SIZE + GAP),
+        y + 16.0,
+        SLOT_SIZE,
+        SLOT_SIZE,
+    )
 }
 
 pub(super) fn draw_status_strip(view: &HudView) {

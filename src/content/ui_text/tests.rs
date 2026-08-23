@@ -88,3 +88,47 @@ fn composed_copy_keys_name_real_items() {
         "copy composed for items that do not exist:\n{stranded:#?}"
     );
 }
+
+/// Browser prompts must name an on-screen action, not a keyboard binding that
+/// a touch-only player cannot produce. Keep this to the instructional copy
+/// families so story prose remains free to use ordinary words like "enter".
+#[test]
+fn touch_facing_copy_has_no_keyboard_binding_placeholders() {
+    let keyboard_placeholders = [
+        "{interact}",
+        "{alchemy}",
+        "{journal}",
+        "{save}",
+        "{load}",
+        "{quick_potions}",
+        "{confirm}",
+        "{cancel}",
+        "{select}",
+        "{switch}",
+        "{sort}",
+        "{filter}",
+        "{close}",
+    ];
+    let keyboard_copy = super::ui_text()
+        .copy
+        .iter()
+        .filter(|(key, _)| {
+            key.starts_with("tutorial_")
+                || key.starts_with("world_prompt_")
+                || key.starts_with("overlay_")
+                || key.starts_with("quests_dialogue_footer_")
+                || key.as_str() == "pause_resume_hint"
+        })
+        .filter(|(_, text)| {
+            keyboard_placeholders
+                .iter()
+                .any(|placeholder| text.contains(placeholder))
+        })
+        .map(|(key, text)| format!("{key}: {text}"))
+        .collect::<Vec<_>>();
+
+    assert!(
+        keyboard_copy.is_empty(),
+        "touch-facing copy still asks for keyboard bindings:\n{keyboard_copy:#?}"
+    );
+}
