@@ -3,6 +3,7 @@ use super::{draw_action_button, draw_wrapped_text, truncate_text_to_width};
 use crate::art::{draw_texture_centered, ArtAssets};
 use crate::data::GameData;
 use crate::data::PlayerGender;
+use crate::menu_layout::settings_show_menu_title;
 use crate::menu_layout::{
     fullscreen_toggle_rect, gender_back_rect, gender_choice_rect, gender_select_rect,
     quiet_hud_toggle_rect, settings_back_rect, settings_rect, status_y, title_button_rect,
@@ -15,7 +16,9 @@ use macroquad_toolkit::ui::{draw_ui_text, measure_ui_text};
 pub(crate) fn draw_menu_screen(data: &GameData, art: &ArtAssets, view: &MenuScreenView) {
     let has_title_screen = draw_title_background(data, art);
     draw_title_vignette(has_title_screen);
-    draw_title_text(view);
+    if !view.showing_settings || settings_show_menu_title() {
+        draw_title_text(view);
+    }
     if view.showing_settings {
         draw_settings(view);
     } else if view.showing_gender_select {

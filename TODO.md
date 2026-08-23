@@ -6,7 +6,7 @@ Last verified: 2026-08-23. This file lists only work that remains open.
 
 ### Screen and flow fixes
 
-- [ ] Move each Settings button fully inside its panel and verify the layout at
+- [x] Move each Settings button fully inside its panel and verify the layout at
   the supported viewport sizes.
 - [ ] Audit the Journal screen's panel, tab, row, and footer styling against
   the shared game UI surfaces.

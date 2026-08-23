@@ -47,6 +47,12 @@ impl MenuState {
         state
     }
 
+    pub(crate) fn new_settings() -> Self {
+        let mut state = Self::new();
+        state.mode = TitleMode::Settings;
+        state
+    }
+
     pub(crate) fn update(&mut self, data: &GameData) -> Option<StateTransition> {
         if self.mode == TitleMode::Settings {
             self.update_settings();
