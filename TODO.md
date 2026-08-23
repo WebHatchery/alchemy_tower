@@ -4,22 +4,6 @@ Last verified: 2026-08-23. This file lists only work that remains open.
 
 ## Player experience
 
-### Touch-first playability
-
-- [x] Audit the title, new-game, pause, settings, and ending flows for
-  keyboard-only actions or prompts.
-- [x] Add visible tap/click targets for every required tutorial step and menu
-  action, including start, continue, close, back, and retry actions.
-- [x] Add visible tap/click targets for every required alchemy, inventory,
-  dialogue, quest, shop, and world interaction.
-- [x] Add visible recovery controls for blocked, failed, or interrupted flows
-  so a player can continue without a keyboard.
-- [x] Replace player-facing keyboard-command labels such as Tab and J with
-  labels naming the visible control or touch gesture; keep shortcuts only as
-  optional extras.
-- [ ] Run a touch-input playcheck through the first quest, core progression,
-  and ending after the changes above.
-
 ### Screen and flow fixes
 
 - [ ] Move each Settings button fully inside its panel and verify the layout at
