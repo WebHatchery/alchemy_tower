@@ -1,5 +1,7 @@
 # TODO — Alchemy Tower
 
+Last verified: 2026-08-23. This file lists only work that remains open.
+
 ## Player experience
 
 ### Touch-first playability
@@ -50,16 +52,3 @@
   entry point, where the current UI supports that navigation.
 - [ ] Add a progression check proving the healing-potion guidance appears at
   the right time and resolves after the required potion is made.
-
-## Content and systems
-
-- [ ] Re-audit potion outputs and record the exact remaining sinkless potion
-  list, grouped by output and intended system.
-- [ ] Give sinkless potion outputs quest or order consumers where those systems
-  provide the best structural fit.
-- [ ] Give any still-unassigned potion outputs recipe, rune-pattern, or other
-  meaningful system consumers.
-- [ ] Add a content validation test that fails when a potion output has no
-  structural use.
-- [ ] Recheck the affected quest, order, recipe, and rune requirements after
-  assigning the new potion consumers.
