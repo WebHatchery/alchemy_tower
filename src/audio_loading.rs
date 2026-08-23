@@ -2,7 +2,7 @@ use macroquad::audio::Sound;
 use macroquad_toolkit::assets::AssetPack;
 use macroquad_toolkit::audio::load_sound_from_pack_or_file;
 
-const GENERATED_ASSET_PACK: &str = "assets/generated.zip";
+const GENERATED_ASSET_PACK: &str = "assets.zip";
 
 pub(super) async fn load_generated_asset_pack() -> Result<AssetPack, String> {
     AssetPack::load(GENERATED_ASSET_PACK).await
