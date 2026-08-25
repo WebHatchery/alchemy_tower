@@ -59,6 +59,56 @@ valley below. Its magic is precise and quiet rather than a spectacle.
 The cauldron, greenhouse still, and cloudglass focus share a craft language:
 heavy bases, repairable fittings, small teal cores, and materials that show use.
 
+### Cast and world studies
+
+![Character cast](character_cast_sheet.png)
+
+The cast sheet gives the nine townsfolk, the player, and the Crow distinct
+silhouettes built from the same practical valley wardrobe. Tools carry more
+identity than costume ornament.
+
+![Wild biome color keys](wild_biome_color_keys.png)
+
+The route strip separates the gathering areas by value and palette before small
+items or markers are added: plains, moonlit forest, lake shore, sunscar desert,
+and southern pass.
+
+![Ingredient prop sheet](ingredient_prop_sheet.png)
+
+The ingredient sheet sets a compact visual vocabulary for gathered materials:
+botanical texture, mineral transparency, and a small number of readable color
+accents.
+
+![Journal spread mood](journal_spread_mood.png)
+
+The journal study keeps large quiet page areas for runtime copy while using
+pressed specimens, brass corners, route sketches, and a teal bead to connect the
+overlay to the world.
+
+![Restoration progression](restoration_progression_triptych.png)
+
+The triptych is a direct visual check on the story's central rule: the same
+terrace moves from dormant, to newly tended, to flowering. The tower is a quiet
+instrument in every state; the ground carries the change.
+
+![Tower floor cutaway](tower_floor_cutaway.png)
+
+The cutaway gives the tower a single architectural spine across entry,
+greenhouse, containment, archive, rune workshop, and observatory. It is useful
+for checking that each floor feels like a room in the same building.
+
+![Arrival keyframe](arrival_keyframe.png)
+
+The arrival keyframe keeps the player and Crow small in the landscape and makes
+the first promise of the game visual: there is work to do, but the place is
+already worth caring for.
+
+![Potion bottle family](potion_bottle_family.png)
+
+The bottle family is a first pass at silhouette-led alchemy feedback. Different
+forms should remain identifiable when the runtime reduces them to small journal
+or belt icons.
+
 ## Prompt set used
 
 The image-generation pass used the `stylized-concept` use case with one prompt
@@ -72,6 +122,15 @@ per study:
    traffic.
 6. Three-instrument prop sheet: entry cauldron, greenhouse still, and
    cloudglass focus.
+7. Character cast sheet for the player, nine townsfolk, and the Crow.
+8. Five-panel wild biome color-key strip for gathering routes.
+9. Ingredient prop sheet for eight recurring gathered materials.
+10. Open journal spread with blank space for runtime notes and recipes.
+11. Restoration progression triptych showing dormant, first-tended, and
+    flowering ground.
+12. Tower cutaway showing the six functional floors as one repaired structure.
+13. Arrival keyframe with the player and Crow approaching the tower.
+14. Potion bottle family for the main effect silhouettes.
 
 Each prompt required no readable text, logos, watermark, or UI, and asked for
 the same material palette and restrained teal magic.
