@@ -52,16 +52,14 @@ pub(crate) fn draw_npc_world_marker(
     center: Vec2,
     facing: Vec2,
     moving: bool,
-    fallback_color: Color,
     show_name: bool,
     priority: Option<(&str, Color)>,
     art: &ArtAssets,
 ) {
-    if let Some(texture) = art.character(&npc.id) {
-        draw_character_frame(texture, center, facing, moving, 1.0);
-    } else {
-        draw_circle(center.x, center.y, 18.0, fallback_color);
-    }
+    let texture = art.character(&npc.id).unwrap_or_else(|| {
+        panic!("missing production character sprite for NPC `{}`", npc.id)
+    });
+    draw_character_frame(texture, center, facing, moving, 1.0);
     if show_name {
         draw_ui_text(
             &npc.name,
@@ -94,16 +92,8 @@ pub(crate) fn draw_player_world_marker(
             Color::from_rgba(215, 202, 255, 70),
         );
     }
-    if let Some(texture) = art.player(player_gender) {
-        draw_character_frame(texture, center, facing, moving, 1.0);
-    } else {
-        draw_circle(
-            center.x,
-            center.y,
-            radius,
-            Color::from_rgba(133, 204, 255, 255),
-        );
-        draw_circle_lines(center.x, center.y, radius, 2.0, WHITE);
-        draw_circle(center.x + 5.0, center.y - 4.0, 2.5, WHITE);
-    }
+    let texture = art.player(player_gender).unwrap_or_else(|| {
+        panic!("missing production player character sprite")
+    });
+    draw_character_frame(texture, center, facing, moving, 1.0);
 }

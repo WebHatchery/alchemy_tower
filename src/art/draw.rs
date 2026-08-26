@@ -50,20 +50,7 @@ pub(crate) fn draw_character_frame(
     moving: bool,
     alpha: f32,
 ) {
-    let row = if facing.y > 0.5 {
-        0.0
-    } else if facing.x < -0.5 {
-        1.0
-    } else if facing.x > 0.5 {
-        2.0
-    } else {
-        3.0
-    };
-    let column = if moving {
-        1.0 + ((get_time() * 7.0) as i32).rem_euclid(4) as f32
-    } else {
-        0.0
-    };
+    let (column, row) = character_frame_index(facing, moving, get_time());
     draw_texture_ex(
         texture,
         center.x - 32.0,
@@ -76,3 +63,24 @@ pub(crate) fn draw_character_frame(
         },
     );
 }
+
+fn character_frame_index(facing: Vec2, moving: bool, elapsed_seconds: f64) -> (f32, f32) {
+    let row = if facing.y > 0.5 {
+        0.0
+    } else if facing.x < -0.5 {
+        1.0
+    } else if facing.x > 0.5 {
+        2.0
+    } else {
+        3.0
+    };
+    let column = if moving {
+        1.0 + ((elapsed_seconds * 7.0) as i32).rem_euclid(4) as f32
+    } else {
+        0.0
+    };
+    (column, row)
+}
+
+#[cfg(test)]
+mod tests;

@@ -33,7 +33,6 @@ impl GameplayState {
                 center,
                 facing,
                 runtime.moving,
-                render_color(npc.color),
                 show_name,
                 priority
                     .as_ref()
