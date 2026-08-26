@@ -10,7 +10,7 @@ impl GameplayState {
         &self,
         area: &AreaDefinition,
         offset: Vec2,
-        data: &GameData,
+        _data: &GameData,
         art: &ArtAssets,
     ) {
         for node in &area.gather_nodes {
@@ -25,7 +25,6 @@ impl GameplayState {
             let center = vec2(offset.x + node.position[0], offset.y + node.position[1]);
             draw_gather_node_world_marker(
                 node,
-                data.item(&node.item_id).map(|item| item.category),
                 center,
                 color,
                 available,

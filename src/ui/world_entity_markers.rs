@@ -10,7 +10,7 @@ use crate::art::{
     ArtAssets,
 };
 use crate::data::{
-    GatherNodeDefinition, ItemCategory, NpcDefinition, PlayerGender, StationDefinition,
+    GatherNodeDefinition, NpcDefinition, PlayerGender, StationDefinition,
 };
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
@@ -38,13 +38,12 @@ pub(crate) fn draw_station_world_marker(
 
 pub(crate) fn draw_gather_node_world_marker(
     node: &GatherNodeDefinition,
-    item_category: Option<ItemCategory>,
     center: Vec2,
     color: Color,
     available: bool,
     art: &ArtAssets,
 ) {
-    draw_gather_node_marker(node, item_category, center, color, available, art);
+    draw_gather_node_marker(node, center, color, available, art);
 }
 
 pub(crate) fn draw_npc_world_marker(
@@ -56,9 +55,9 @@ pub(crate) fn draw_npc_world_marker(
     priority: Option<(&str, Color)>,
     art: &ArtAssets,
 ) {
-    let texture = art.character(&npc.id).unwrap_or_else(|| {
-        panic!("missing production character sprite for NPC `{}`", npc.id)
-    });
+    let texture = art
+        .character(&npc.id)
+        .unwrap_or_else(|| panic!("missing production character sprite for NPC `{}`", npc.id));
     draw_character_frame(texture, center, facing, moving, 1.0);
     if show_name {
         draw_ui_text(
@@ -92,8 +91,8 @@ pub(crate) fn draw_player_world_marker(
             Color::from_rgba(215, 202, 255, 70),
         );
     }
-    let texture = art.player(player_gender).unwrap_or_else(|| {
-        panic!("missing production player character sprite")
-    });
+    let texture = art
+        .player(player_gender)
+        .unwrap_or_else(|| panic!("missing production player character sprite"));
     draw_character_frame(texture, center, facing, moving, 1.0);
 }

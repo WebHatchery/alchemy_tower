@@ -1,6 +1,6 @@
 use macroquad::prelude::*;
 
-use crate::data::{GatherNodeDefinition, ItemCategory, StationDefinition};
+use crate::data::{GatherNodeDefinition, StationDefinition};
 
 use super::assets::ArtAssets;
 use super::draw::draw_texture_centered;
@@ -55,7 +55,6 @@ pub(crate) fn draw_station_marker(
 
 pub(crate) fn draw_gather_node_marker(
     node: &GatherNodeDefinition,
-    item_category: Option<ItemCategory>,
     center: Vec2,
     color: Color,
     available: bool,
@@ -75,20 +74,17 @@ pub(crate) fn draw_gather_node_marker(
     } else {
         &node.render.sprite_id
     };
-    if let Some(texture) = art.world_node(sprite_id) {
-        let pulse_scale = 1.0 + if available { pulse * 0.08 } else { 0.0 };
-        let size = vec2(node.render.sprite_size[0], node.render.sprite_size[1]) * pulse_scale;
-        draw_texture_centered(
-            texture,
-            center,
-            size,
-            Color::new(1.0, 1.0, 1.0, if available { 1.0 } else { 0.6 }),
-        );
-    } else if item_category == Some(ItemCategory::Catalyst) {
-        draw_poly(center.x, center.y, 4, node.radius + 2.0, 45.0, color);
-    } else {
-        draw_circle(center.x, center.y, node.radius - 3.0, color);
-    }
+    let texture = art.world_node(sprite_id).unwrap_or_else(|| {
+        panic!("missing production herb/gatherable sprite `{sprite_id}`")
+    });
+    let pulse_scale = 1.0 + if available { pulse * 0.08 } else { 0.0 };
+    let size = vec2(node.render.sprite_size[0], node.render.sprite_size[1]) * pulse_scale;
+    draw_texture_centered(
+        texture,
+        center,
+        size,
+        Color::new(1.0, 1.0, 1.0, if available { 1.0 } else { 0.6 }),
+    );
 }
 
 pub(crate) fn draw_priority_marker(center: Vec2, color: Color) {
