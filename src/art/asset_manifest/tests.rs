@@ -84,7 +84,11 @@ fn every_placed_herb_has_a_64_by_64_rgba_world_sprite() {
         }
     }
 
-    assert!(failures.is_empty(), "invalid herb sprites:\n{}", failures.join("\n"));
+    assert!(
+        failures.is_empty(),
+        "invalid herb sprites:\n{}",
+        failures.join("\n")
+    );
 }
 
 fn png_dimensions(path: &Path) -> Result<(u32, u32, u8), String> {

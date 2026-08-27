@@ -23,13 +23,7 @@ impl GameplayState {
             }
             let color = render_color(node.color);
             let center = vec2(offset.x + node.position[0], offset.y + node.position[1]);
-            draw_gather_node_world_marker(
-                node,
-                center,
-                color,
-                available,
-                art,
-            );
+            draw_gather_node_world_marker(node, center, color, available, art);
         }
     }
 }

@@ -9,9 +9,7 @@ use crate::art::{
     draw_character_frame, draw_gather_node_marker, draw_priority_marker, draw_station_marker,
     ArtAssets,
 };
-use crate::data::{
-    GatherNodeDefinition, NpcDefinition, PlayerGender, StationDefinition,
-};
+use crate::data::{GatherNodeDefinition, NpcDefinition, PlayerGender, StationDefinition};
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
 

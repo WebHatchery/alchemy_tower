@@ -74,9 +74,9 @@ pub(crate) fn draw_gather_node_marker(
     } else {
         &node.render.sprite_id
     };
-    let texture = art.world_node(sprite_id).unwrap_or_else(|| {
-        panic!("missing production herb/gatherable sprite `{sprite_id}`")
-    });
+    let texture = art
+        .world_node(sprite_id)
+        .unwrap_or_else(|| panic!("missing production herb/gatherable sprite `{sprite_id}`"));
     let pulse_scale = 1.0 + if available { pulse * 0.08 } else { 0.0 };
     let size = vec2(node.render.sprite_size[0], node.render.sprite_size[1]) * pulse_scale;
     draw_texture_centered(
