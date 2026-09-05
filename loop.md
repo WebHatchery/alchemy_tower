@@ -170,7 +170,7 @@ When you split a file: move entries, add the new source to the right table in
 - **800-line limit on every `.rs` file**, non-test lines. No new `mod.rs`.
 - **New save fields must be `#[serde(default)]`** and wired through snapshot/restore, so existing
   saves keep loading. Mirror the `relationships` / `board_quest_cooldowns` pattern.
-- **Never write anything under `D:\xampp\htdocs`** — it is a publish target only.
+- **Never write anything under `\\wsl.localhost\Ubuntu\home\kalai\dev`** — it is a publish target only.
 - **Station positions need a capture, not arithmetic.** The HUD occupies every edge of the
   screen: vitality and coins top-left, the area plaque top-centre, clock and minimap top-right,
   the goal note down the left, the bag down the right, the potion belt across the bottom. A

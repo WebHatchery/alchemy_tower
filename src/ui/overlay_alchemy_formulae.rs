@@ -64,42 +64,19 @@ pub(crate) fn draw_alchemy_formulae_panel_view(
 /// Word-wrap `text` to at most `max_lines` lines that each fit `max_w`, adding
 /// an ellipsis if content is dropped.
 fn wrap_lines(text: &str, max_w: f32, font: u16, max_lines: usize) -> Vec<String> {
-    let mut lines: Vec<String> = Vec::new();
-    let mut current = String::new();
-    for word in text.split_whitespace() {
-        let trial = if current.is_empty() {
-            word.to_string()
-        } else {
-            format!("{current} {word}")
-        };
-        if measure_ui_text(&trial, None, font, 1.0).width <= max_w {
-            current = trial;
-        } else if current.is_empty() {
-            current = word.to_string();
-        } else {
-            lines.push(std::mem::take(&mut current));
-            current = word.to_string();
-            if lines.len() == max_lines {
-                break;
-            }
-        }
-    }
-    if lines.len() < max_lines && !current.is_empty() {
-        lines.push(current);
-    }
-    if lines.len() >= max_lines && text_has_more(text, &lines) {
-        if let Some(last) = lines.last_mut() {
-            last.push('…');
-        }
-    }
+    let mut lines = macroquad_toolkit::ui::wrap_text(text, max_w, font as f32);
+    let overflow = lines.len() > max_lines;
     lines.truncate(max_lines);
+    if overflow {
+        if let Some(last) = lines.last_mut() {
+            let ellipsis_width = measure_ui_text("…", None, font, 1.0).width;
+            let clipped = macroquad_toolkit::ui::truncate_text_to_width(
+                last,
+                (max_w - ellipsis_width).max(0.0),
+                font as f32,
+            );
+            *last = format!("{}…", clipped.trim_end_matches('.'));
+        }
+    }
     lines
-}
-
-fn text_has_more(text: &str, lines: &[String]) -> bool {
-    let shown: usize = lines
-        .iter()
-        .map(|line| line.split_whitespace().count())
-        .sum();
-    text.split_whitespace().count() > shown
 }

@@ -1,4 +1,4 @@
-use super::save_codec::{decode_save, encode_save};
+use super::save_codec::encode_save;
 use super::save_native_path::save_path;
 use crate::data::SaveData;
 
@@ -12,6 +12,5 @@ pub(crate) fn exists() -> bool {
 }
 
 pub(crate) fn load() -> Result<SaveData, String> {
-    let json = std::fs::read_to_string(save_path()?).map_err(|error| error.to_string())?;
-    decode_save(&json)
+    macroquad_toolkit::persistence::load_json(save_path()?)
 }
