@@ -12,6 +12,7 @@ pub(super) struct OverlayState {
     pub(super) journal_tab: usize,
     /// Which herb memory the routes tab is showing in full.
     pub(super) journal_index: usize,
+    pub(super) inventory_index: usize,
     pub(super) shop_buy_tab: bool,
     pub(super) shop_index: usize,
     pub(super) rune_index: usize,
@@ -47,6 +48,7 @@ pub(super) enum OverlayScreen {
     Ending,
     Dialogue(String),
     Alchemy,
+    Inventory,
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]

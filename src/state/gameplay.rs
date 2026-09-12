@@ -142,8 +142,14 @@ mod gameplay_init;
 mod gameplay_interaction_targets;
 #[path = "gameplay_inventory.rs"]
 mod gameplay_inventory;
+#[path = "gameplay_inventory_input.rs"]
+mod gameplay_inventory_input;
 #[path = "gameplay_inventory_memory.rs"]
 mod gameplay_inventory_memory;
+#[path = "gameplay_inventory_overlay_draw.rs"]
+mod gameplay_inventory_overlay_draw;
+#[path = "gameplay_inventory_overlay_view.rs"]
+mod gameplay_inventory_overlay_view;
 #[path = "gameplay_inventory_references.rs"]
 mod gameplay_inventory_references;
 #[path = "gameplay_inventory_sorting.rs"]

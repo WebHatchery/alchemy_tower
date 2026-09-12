@@ -1,24 +1,57 @@
+use super::gameplay_overlay_window::visible_window_start;
 use super::gameplay_support::planter_stage_label;
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format};
 use crate::data::{GameData, StationKind};
 use crate::view_models::journal::{JournalGreenhouseBedView, JournalGreenhouseTabView};
 
+const VISIBLE_GREENHOUSE_ROWS: usize = 6;
+
 impl GameplayState {
     pub(super) fn journal_greenhouse_tab_view(&self, data: &GameData) -> JournalGreenhouseTabView {
-        let beds = self
+        let all_beds = self
             .visible_stations(data)
             .into_iter()
             .filter(|station| station.kind == StationKind::Planter)
             .map(|station| JournalGreenhouseBedView {
                 title: station.name.clone(),
                 summary: self.journal_planter_summary(data, station),
+                selected: false,
+            })
+            .collect::<Vec<_>>();
+        let selected = self.ui.journal_index.min(all_beds.len().saturating_sub(1));
+        let start = visible_window_start(selected, all_beds.len(), VISIBLE_GREENHOUSE_ROWS);
+        let beds = all_beds
+            .into_iter()
+            .enumerate()
+            .skip(start)
+            .take(VISIBLE_GREENHOUSE_ROWS)
+            .map(|(index, mut bed)| {
+                bed.selected = index == selected;
+                bed
             })
             .collect();
 
         JournalGreenhouseTabView {
             title: ui_copy("overlay_greenhouse_beds"),
             empty_text: ui_copy("overlay_greenhouse_empty").to_owned(),
+            page_text: (start + VISIBLE_GREENHOUSE_ROWS < visible_station_count(data, self)).then(
+                || {
+                    ui_format(
+                        "journal_showing_range",
+                        &[
+                            ("first", &(start + 1).to_string()),
+                            (
+                                "last",
+                                &(start + VISIBLE_GREENHOUSE_ROWS)
+                                    .min(visible_station_count(data, self))
+                                    .to_string(),
+                            ),
+                            ("total", &visible_station_count(data, self).to_string()),
+                        ],
+                    )
+                },
+            ),
             beds,
         }
     }
@@ -76,4 +109,12 @@ impl GameplayState {
             })
             .unwrap_or_else(|| ui_copy("overlay_greenhouse_none").to_owned())
     }
+}
+
+fn visible_station_count(data: &GameData, state: &GameplayState) -> usize {
+    state
+        .visible_stations(data)
+        .into_iter()
+        .filter(|station| station.kind == StationKind::Planter)
+        .count()
 }

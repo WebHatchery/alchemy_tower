@@ -1,4 +1,7 @@
-use super::draw_wrapped_text;
+use super::{
+    draw_journal_detail_box, draw_journal_row, draw_journal_section_title, draw_wrapped_text,
+};
+use crate::content::ui_copy;
 use crate::view_models::journal::JournalNotesTabView;
 use macroquad::prelude::*;
 use macroquad_toolkit::colors::dark;
@@ -49,28 +52,15 @@ pub(crate) fn draw_journal_notes_tab_view(
     w: f32,
     h: f32,
 ) {
-    draw_ui_text(view.title, x + 20.0, y + 136.0, 26.0, dark::TEXT_BRIGHT);
+    draw_journal_section_title(x + 20.0, y + 136.0, view.title, None);
 
     // Two columns. Everything used to run the panel's full width: the milestone
     // rows ended at y+480 and the recorded notes began at y+448, so the last
     // milestone's detail was overprinted by the first note's title on every
     // full record, in the shipped game.
     let left_width = (w - 40.0) * LEFT_COLUMN_FRACTION;
-    draw_ui_text(
-        view.active_title,
-        x + 20.0,
-        y + COLUMN_TOP,
-        24.0,
-        dark::TEXT_BRIGHT,
-    );
-    draw_rectangle(
-        x + 20.0,
-        y + 182.0,
-        left_width,
-        96.0,
-        Color::from_rgba(38, 40, 50, 255),
-    );
-    draw_rectangle_lines(x + 20.0, y + 182.0, left_width, 96.0, 2.0, dark::ACCENT);
+    draw_journal_section_title(x + 20.0, y + COLUMN_TOP, view.active_title, None);
+    draw_journal_detail_box(Rect::new(x + 20.0, y + 182.0, left_width, 96.0));
     draw_wrapped_text(
         &view.active_summary,
         x + 34.0,
@@ -81,16 +71,14 @@ pub(crate) fn draw_journal_notes_tab_view(
         dark::TEXT_DIM,
     );
 
-    draw_ui_text(
-        view.milestones_title,
-        x + 20.0,
-        y + 300.0,
-        24.0,
-        dark::TEXT_BRIGHT,
-    );
+    draw_journal_section_title(x + 20.0, y + 300.0, view.milestones_title, None);
     let mut milestone_y = y + 332.0;
     for row in &view.milestone_rows {
-        draw_ui_text(&row.title, x + 20.0, milestone_y, 20.0, dark::TEXT_BRIGHT);
+        draw_journal_row(
+            Rect::new(x + 20.0, milestone_y - 20.0, left_width, 26.0),
+            row.title.contains(ui_copy("overlay_progress_ready")),
+        );
+        draw_ui_text(&row.title, x + 32.0, milestone_y, 20.0, dark::TEXT_BRIGHT);
         milestone_y += 20.0;
         draw_wrapped_text(
             &row.detail,
@@ -111,10 +99,12 @@ pub(crate) fn draw_journal_notes_tab_view(
     // everything older than the fifth could not be reached at all.
     let (note_x, note_width) = note_column(x, w);
     let mut note_y = y + COLUMN_TOP;
-    draw_ui_text(view.notes_title, note_x, note_y, 24.0, dark::TEXT_BRIGHT);
-    if let Some(range_text) = &view.note_range_text {
-        draw_ui_text(range_text, note_x + 210.0, note_y, 16.0, dark::TEXT_DIM);
-    }
+    draw_journal_section_title(
+        note_x,
+        note_y,
+        view.notes_title,
+        view.note_range_text.as_deref(),
+    );
     note_y += COLUMN_HEADING_STEP;
     for row in &view.note_rows {
         let colour = if row.selected {
@@ -122,7 +112,11 @@ pub(crate) fn draw_journal_notes_tab_view(
         } else {
             dark::TEXT_DIM
         };
-        draw_ui_text(&row.title, note_x, note_y, 20.0, colour);
+        draw_journal_row(
+            Rect::new(note_x, note_y - 20.0, note_width, 26.0),
+            row.selected,
+        );
+        draw_ui_text(&row.title, note_x + 12.0, note_y, 20.0, colour);
         note_y += NOTE_ROW_STEP;
     }
 

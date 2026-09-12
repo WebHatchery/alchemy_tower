@@ -5,7 +5,7 @@ use crate::alchemy_layout::{
 use crate::view_models::alchemy::{
     AlchemyPreviewPanelState, AlchemyPreviewPanelView, AlchemyResolvedPreviewView,
 };
-use macroquad::prelude::Color;
+use macroquad::prelude::{draw_rectangle, draw_rectangle_lines, Color};
 use macroquad_toolkit::colors::dark;
 use macroquad_toolkit::ui::draw_ui_text;
 
@@ -42,7 +42,9 @@ pub(crate) fn draw_alchemy_preview_panel_view(
 
 fn draw_resolved_brew_preview_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f32, w: f32) {
     draw_ui_text(&preview.title, x, y, 24.0, dark::TEXT_BRIGHT);
-    draw_output_summary_view(preview, x, y + 30.0);
+    let summary_y = y + 30.0;
+    draw_output_summary_backplate(preview, x, summary_y, w);
+    draw_output_summary_view(preview, x, summary_y);
     let mut read_y = y + 96.0;
     if let Some(instability_line) = &preview.instability_line {
         // Warm amber for a live overcharge, red once it will collapse — so the
@@ -79,9 +81,31 @@ fn draw_resolved_brew_preview_view(preview: &AlchemyResolvedPreviewView, x: f32,
 }
 
 fn draw_output_summary_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f32) {
-    draw_ui_text(&preview.output_line, x, y, 22.0, dark::TEXT);
+    draw_ui_text(&preview.output_line, x, y, 22.0, dark::TEXT_BRIGHT);
     draw_ui_text(&preview.quality_line, x, y + 22.0, 18.0, dark::TEXT_DIM);
     draw_ui_text(&preview.traits_line, x, y + 44.0, 18.0, dark::TEXT_DIM);
+}
+
+fn draw_output_summary_backplate(preview: &AlchemyResolvedPreviewView, x: f32, y: f32, w: f32) {
+    let alarm = preview.destabilized || !preview.failure_reason_lines.is_empty();
+    let accent = if alarm {
+        Color::from_rgba(224, 122, 108, 210)
+    } else {
+        Color::from_rgba(176, 226, 255, 170)
+    };
+    draw_rectangle(
+        x - 8.0,
+        y - 10.0,
+        w + 16.0,
+        70.0,
+        if alarm {
+            Color::from_rgba(62, 31, 36, 190)
+        } else {
+            Color::from_rgba(24, 34, 44, 190)
+        },
+    );
+    draw_rectangle(x - 8.0, y - 10.0, 5.0, 70.0, accent);
+    draw_rectangle_lines(x - 8.0, y - 10.0, w + 16.0, 70.0, 1.0, accent);
 }
 
 fn draw_brew_process_diagnostics_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f32) -> f32 {
@@ -104,13 +128,28 @@ fn draw_failure_reasons_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f3
         return y;
     }
 
+    let panel_h = 28.0 + preview.failure_reason_lines.len() as f32 * 20.0;
+    draw_rectangle(
+        x - 8.0,
+        y - 8.0,
+        420.0,
+        panel_h,
+        Color::from_rgba(64, 32, 38, 170),
+    );
+    draw_rectangle(
+        x - 8.0,
+        y - 8.0,
+        5.0,
+        panel_h,
+        Color::from_rgba(224, 122, 108, 210),
+    );
     let mut next_y = y;
     draw_ui_text(
         preview.failure_reasons_title,
         x,
         next_y,
         18.0,
-        dark::TEXT_BRIGHT,
+        Color::from_rgba(255, 194, 182, 255),
     );
     next_y += 20.0;
     for reason_line in &preview.failure_reason_lines {

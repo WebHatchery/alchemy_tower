@@ -39,6 +39,7 @@ impl GameplayState {
             OverlayScreen::QuestBoard => self.draw_quest_board_overlay(data),
             OverlayScreen::Journal => self.draw_field_journal(data, art),
             OverlayScreen::Alchemy => self.draw_alchemy_overlay(data, art),
+            OverlayScreen::Inventory => self.draw_inventory_overlay(data, art),
         }
         if !matches!(overlay, OverlayScreen::Alchemy) {
             crate::ui::draw_overlay_close_control();

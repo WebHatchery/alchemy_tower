@@ -55,6 +55,7 @@ pub(crate) struct HudView {
     pub(crate) status_text: String,
     pub(crate) area_label: String,
     pub(crate) inventory_label: String,
+    pub(crate) inventory_hint: String,
     pub(crate) effects_label: String,
     pub(crate) no_effects_label: String,
     pub(crate) journal_label: String,

@@ -3,8 +3,8 @@ use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::GameData;
 use crate::input::{
-    cancel_pressed, journal_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
-    sort_pressed,
+    cancel_pressed, hud_mouse_position_point, journal_pressed, left_mouse_pressed,
+    mouse_position_point, rect_contains_point, sort_pressed,
 };
 use crate::state::StateTransition;
 use macroquad::prelude::get_frame_time;
@@ -66,6 +66,16 @@ impl GameplayState {
             self.set_overlay(OverlayScreen::Journal);
             self.ui.journal_tab = 0;
             self.runtime.status_text = loop_status_text::open_journal();
+            return None;
+        }
+        if left_mouse_pressed()
+            && rect_contains_point(
+                crate::inventory_layout::inventory_hud_rect(),
+                hud_mouse_position_point(),
+            )
+        {
+            self.set_overlay(OverlayScreen::Inventory);
+            self.ui.inventory_index = 0;
             return None;
         }
         if sort_pressed() {

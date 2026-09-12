@@ -80,6 +80,54 @@ fn town_reactions_move_on_as_the_story_does() {
     assert_eq!(state.npc_phase1_followup_line(npc_id), Some(after_harvest));
 }
 
+#[test]
+fn town_wrap_up_reactions_use_the_same_tie_order_every_run() {
+    use crate::content::narrative_text;
+
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let mut first = GameplayState::new(&data);
+    let mut second = GameplayState::new(&data);
+    for quest in &data.quests {
+        first.progression.completed_quests.insert(quest.id.clone());
+    }
+    for reaction in &narrative_text().reactions {
+        if !reaction.after_milestone.is_empty() {
+            first.push_journal_milestone(&reaction.after_milestone, "", "");
+        }
+    }
+    for reaction in narrative_text().reactions.iter().rev() {
+        if !reaction.after_milestone.is_empty() {
+            second.push_journal_milestone(&reaction.after_milestone, "", "");
+        }
+    }
+    for quest in data.quests.iter().rev() {
+        second.progression.completed_quests.insert(quest.id.clone());
+    }
+
+    let npc_id = "mayor_elric";
+    let authored = narrative_text()
+        .reactions
+        .iter()
+        .filter(|reaction| reaction.npc_id == npc_id)
+        .count();
+    let mut first_lines = Vec::new();
+    let mut second_lines = Vec::new();
+    for _ in 0..authored {
+        let first_line = first
+            .npc_phase1_followup_line(npc_id)
+            .expect("first equivalent state should have a town line");
+        let second_line = second
+            .npc_phase1_followup_line(npc_id)
+            .expect("second equivalent state should have a town line");
+        first_lines.push(first_line.to_owned());
+        second_lines.push(second_line.to_owned());
+        first.mark_followup_spoken(npc_id);
+        second.mark_followup_spoken(npc_id);
+    }
+
+    assert_eq!(first_lines, second_lines);
+}
+
 /// Thirty-six of the hundred and sixty authored reactions could never be
 /// spoken: the selector took the highest-order earned line, and earning is
 /// monotonic, so anything that came due alongside a later beat lost forever.

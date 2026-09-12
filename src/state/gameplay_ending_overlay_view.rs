@@ -25,7 +25,15 @@ impl GameplayState {
             .iter()
             .filter(|beat| self.epilogue_beat_earned(beat))
             .collect::<Vec<_>>();
-        earned.sort_by_key(|beat| std::cmp::Reverse(beat.order));
+        // The order number is the authored weight, but it is not unique: a
+        // handful of beats intentionally land together. The line is the
+        // deterministic tie-breaker so equivalent runs cannot change their
+        // town wrap-up page when the source collection is reordered.
+        earned.sort_by(|left, right| {
+            std::cmp::Reverse(left.order)
+                .cmp(&std::cmp::Reverse(right.order))
+                .then_with(|| left.line.cmp(&right.line))
+        });
         earned
     }
 

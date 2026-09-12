@@ -21,6 +21,7 @@ mod overlay_chrome;
 mod overlay_dialogue;
 mod overlay_ending;
 mod overlay_exports;
+mod overlay_inventory;
 mod overlay_journal_brews;
 mod overlay_journal_chrome;
 mod overlay_journal_greenhouse;
@@ -53,10 +54,11 @@ pub(crate) use overlay_exports::{
     draw_archive_duplication_section_view, draw_archive_experiments_section_view,
     draw_archive_mastery_section_view, draw_archive_morphs_section_view, draw_archive_tabs,
     draw_archive_timeline_section_view, draw_brew_bubble_effect, draw_dialogue_overlay_view,
-    draw_ending_overlay_view, draw_journal_brews_tab_view, draw_journal_footer,
-    draw_journal_greenhouse_tab_view, draw_journal_notes_tab_view, draw_journal_rapport_tab_view,
-    draw_journal_routes_tab_view, draw_journal_tabs, draw_overlay_section_box,
-    draw_overlay_section_title, draw_overlay_tab, draw_pause_overlay,
+    draw_ending_overlay_view, draw_inventory_overlay_view, draw_journal_brews_tab_view,
+    draw_journal_detail_box, draw_journal_footer, draw_journal_greenhouse_tab_view,
+    draw_journal_notes_tab_view, draw_journal_rapport_tab_view, draw_journal_routes_tab_view,
+    draw_journal_row, draw_journal_section_box, draw_journal_section_title, draw_journal_tabs,
+    draw_overlay_section_box, draw_overlay_section_title, draw_overlay_tab, draw_pause_overlay,
     draw_quest_board_overlay_view, draw_rune_overlay_view, draw_selected_experiment_record_view,
     draw_shop_overlay_view, draw_sleep_flash_overlay_view,
 };

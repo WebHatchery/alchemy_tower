@@ -113,6 +113,39 @@ impl GameplayState {
         self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Archive);
     }
 
+    /// Seed a useful cross-section of the satchel and open the player-facing
+    /// bag view. The scene keeps quest stock, recipe ingredients, and a usable
+    /// potion together so the inspection hierarchy can be checked in one pass.
+    pub(crate) fn open_inventory_sample(&mut self, data: &GameData) {
+        for (item_id, amount) in [
+            ("healing_draught", 3),
+            ("sunleaf", 7),
+            ("whisper_moss", 5),
+            ("field_bloom", 4),
+            ("glow_potion", 2),
+            ("starlight_shard", 1),
+        ] {
+            if data.item(item_id).is_some() {
+                self.inventory.insert(item_id.to_owned(), amount);
+            }
+        }
+        self.progression
+            .started_quests
+            .insert("healing_for_mira".to_owned());
+        self.progression.crafted_item_profiles.insert(
+            "healing_draught".to_owned(),
+            crate::data::CraftedItemProfileEntry {
+                item_id: "healing_draught".to_owned(),
+                best_quality_score: 68,
+                best_quality_band: "Excellent".to_owned(),
+                inherited_traits: vec!["restorative".to_owned()],
+                effect_kinds: vec!["restore".to_owned()],
+            },
+        );
+        self.ui.inventory_index = 0;
+        self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Inventory);
+    }
+
     /// Stand in a named room with every gate already satisfied, so the capture
     /// harness can look at a floor or biome that was just authored. Nodes whose
     /// season, weather or hour do not match the current moment still stay

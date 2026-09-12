@@ -141,6 +141,11 @@ impl Game {
                 gameplay.open_full_ending();
                 GameState::from_gameplay(gameplay)
             }
+            "inventory" => {
+                let mut gameplay = GameplayState::new(&self.data);
+                gameplay.open_inventory_sample(&self.data);
+                GameState::from_gameplay(gameplay)
+            }
             // "brew" opens the alchemy bench with a sample filled cauldron.
             "brew" => {
                 let mut gameplay = GameplayState::new(&self.data);

@@ -3,6 +3,7 @@ pub(crate) mod archive;
 pub(crate) mod dialogue;
 pub(crate) mod ending;
 pub(crate) mod hud;
+pub(crate) mod inventory;
 pub(crate) mod journal;
 pub(crate) mod menu;
 pub(crate) mod pause;

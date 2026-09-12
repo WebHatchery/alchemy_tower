@@ -81,6 +81,8 @@ impl GameplayState {
         let requirements = self.quest_requirement_summary(data, quest);
         let action = if self.quest_requirements_met(data, quest) {
             ui_format("hud_goal_ready_to_deliver", &[("location", &location)])
+        } else if quest.id == "healing_for_mira" && self.progression.total_brews == 0 {
+            ui_copy("hud_goal_healing_recipe").to_owned()
         } else {
             ui_format(
                 "hud_goal_item_need_with_requirements",
@@ -120,3 +122,7 @@ impl GameplayState {
         )
     }
 }
+
+#[cfg(test)]
+#[path = "gameplay_hud_goal/tests.rs"]
+mod tests;

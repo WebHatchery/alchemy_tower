@@ -21,6 +21,14 @@ pub(super) fn draw_side_status_panel(view: &HudView) {
         15.0,
         brass_light(),
     );
+    draw_rectangle_lines(
+        rect.x + 8.0,
+        rect.y + 33.0,
+        rect.w - 16.0,
+        38.0,
+        1.0,
+        Color::from_rgba(242, 205, 126, 90),
+    );
     draw_status_icon_medallion(
         vec2(rect.x + 30.0, rect.y + 53.0),
         Color::from_rgba(222, 174, 112, 84),
@@ -32,6 +40,14 @@ pub(super) fn draw_side_status_panel(view: &HudView) {
         rect.y + 58.0,
         18.0,
         bright_ink(),
+    );
+    draw_centered_text(
+        &view.inventory_hint,
+        rect.x,
+        rect.y + 72.0,
+        rect.w,
+        11.0,
+        Color::from_rgba(206, 196, 174, 230),
     );
     draw_side_status_divider(rect, rect.y + 78.0);
     draw_centered_text(

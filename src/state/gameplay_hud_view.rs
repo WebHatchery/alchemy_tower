@@ -62,6 +62,7 @@ impl GameplayState {
             status_text: self.runtime.status_text.clone(),
             area_label: area.name.clone(),
             inventory_label: ui_copy("hud_drawer_inventory").to_owned(),
+            inventory_hint: ui_copy("hud_drawer_inventory_hint").to_owned(),
             effects_label: ui_copy("hud_drawer_effects").to_owned(),
             no_effects_label: ui_copy("overlay_none").to_owned(),
             journal_label: ui_copy("hud_drawer_journal").to_owned(),

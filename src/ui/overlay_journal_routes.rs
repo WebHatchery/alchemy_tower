@@ -1,6 +1,9 @@
-use super::draw_wrapped_text;
+use super::{
+    draw_journal_detail_box, draw_journal_row, draw_journal_section_box,
+    draw_journal_section_title, draw_wrapped_text,
+};
 use crate::view_models::journal::{JournalHerbMemoriesView, JournalRoutesTabView};
-use macroquad::prelude::{draw_rectangle, draw_rectangle_lines, Color};
+use macroquad::prelude::Rect;
 use macroquad_toolkit::colors::dark;
 use macroquad_toolkit::ui::draw_ui_text;
 
@@ -11,15 +14,19 @@ pub(crate) fn draw_journal_routes_tab_view(
     w: f32,
     h: f32,
 ) {
-    draw_ui_text(view.title, x + 20.0, y + 136.0, 26.0, dark::TEXT_BRIGHT);
-    if let Some(range_text) = &view.route_range_text {
-        draw_ui_text(range_text, x + 200.0, y + 136.0, 16.0, dark::TEXT_DIM);
-    }
+    draw_journal_section_title(
+        x + 20.0,
+        y + 136.0,
+        view.title,
+        view.route_range_text.as_deref(),
+    );
     // The route column stops short of the herb column. Route descriptions used
     // to be drawn as one unwrapped line and ran straight through the herbs to
     // the right of them.
     const ROUTE_TEXT_WIDTH: f32 = 380.0;
     let route_limit = y + h - 170.0;
+    draw_journal_section_box(x + 18.0, y + 152.0, 384.0, (h - 340.0).max(160.0));
+    draw_journal_section_box(x + 418.0, y + 152.0, w - 436.0, (h - 340.0).max(160.0));
     let mut route_y = y + 168.0;
     for route in &view.route_rows {
         let colour = if route.selected {
@@ -27,7 +34,11 @@ pub(crate) fn draw_journal_routes_tab_view(
         } else {
             dark::TEXT_DIM
         };
-        draw_ui_text(&route.title, x + 20.0, route_y, 20.0, colour);
+        draw_journal_row(
+            Rect::new(x + 20.0, route_y - 20.0, 380.0, 26.0),
+            route.selected,
+        );
+        draw_ui_text(&route.title, x + 32.0, route_y, 20.0, colour);
         route_y += 22.0;
     }
     if let Some(detail) = &view.route_detail {
@@ -44,21 +55,8 @@ pub(crate) fn draw_journal_routes_tab_view(
         w - 440.0,
         y + h - 170.0,
     );
-    draw_ui_text(
-        view.progress_title,
-        x + 20.0,
-        y + h - 156.0,
-        24.0,
-        dark::TEXT_BRIGHT,
-    );
-    draw_rectangle(
-        x + 20.0,
-        y + h - 140.0,
-        w - 40.0,
-        96.0,
-        Color::from_rgba(38, 40, 50, 255),
-    );
-    draw_rectangle_lines(x + 20.0, y + h - 140.0, w - 40.0, 96.0, 2.0, dark::ACCENT);
+    draw_journal_section_title(x + 20.0, y + h - 156.0, view.progress_title, None);
+    draw_journal_detail_box(Rect::new(x + 20.0, y + h - 140.0, w - 40.0, 96.0));
     if let Some(all_restored_text) = &view.route_progress.all_restored_text {
         draw_ui_text(
             all_restored_text,
@@ -126,10 +124,7 @@ fn draw_journal_herb_memories_view(
     text_width: f32,
     bottom_limit: f32,
 ) {
-    draw_ui_text(view.title, x, title_y, 26.0, dark::TEXT_BRIGHT);
-    if let Some(range_text) = &view.range_text {
-        draw_ui_text(range_text, x + 210.0, title_y, 16.0, dark::TEXT_DIM);
-    }
+    draw_journal_section_title(x, title_y, view.title, view.range_text.as_deref());
     let mut entry_y = title_y + 32.0;
     if view.rows.is_empty() {
         draw_ui_text(&view.empty_text, x, entry_y, 22.0, dark::TEXT_DIM);
@@ -143,7 +138,8 @@ fn draw_journal_herb_memories_view(
         } else {
             dark::TEXT_DIM
         };
-        draw_ui_text(&row.title, x, entry_y, 20.0, colour);
+        draw_journal_row(Rect::new(x, entry_y - 20.0, text_width, 26.0), row.selected);
+        draw_ui_text(&row.title, x + 12.0, entry_y, 20.0, colour);
         draw_ui_text(&row.state_line, x + 210.0, entry_y, 16.0, dark::TEXT_DIM);
         entry_y += HERB_ROW_STEP;
     }

@@ -12,6 +12,7 @@ mod content;
 mod data;
 mod game;
 mod input;
+mod inventory_layout;
 mod journal_layout;
 mod menu_layout;
 mod pause_layout;

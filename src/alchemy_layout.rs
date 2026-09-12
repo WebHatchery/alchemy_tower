@@ -187,3 +187,7 @@ pub(crate) fn alchemy_close_rect() -> Rect {
 pub(crate) fn alchemy_close_rect_at(x: f32, y: f32, w: f32) -> Rect {
     Rect::new(x + w - 116.0, y + 16.0, 96.0, 30.0)
 }
+
+#[cfg(test)]
+#[path = "alchemy_layout/tests.rs"]
+mod tests;

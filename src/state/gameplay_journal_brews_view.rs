@@ -1,8 +1,9 @@
 use super::gameplay_overlay_window::paged_window;
 
 /// A brew memory is a title, a state line, a recap and up to five optional
-/// lines, so three fill the tab. It used to draw until it ran out of panel.
-const VISIBLE_BREW_ROWS: usize = 3;
+/// lines, so two fill the tab without forcing the footer to compete with the
+/// last row.
+const VISIBLE_BREW_ROWS: usize = 2;
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
@@ -38,7 +39,8 @@ impl GameplayState {
                 .into_iter()
                 .skip(page_start)
                 .take(VISIBLE_BREW_ROWS)
-                .map(|entry| {
+                .enumerate()
+                .map(|(offset, entry)| {
                     let profile = self.journal_potion_profile_summary(&entry.item_id);
                     let formula_text = if entry.last_recipe_id.is_empty() {
                         None
@@ -87,6 +89,7 @@ impl GameplayState {
                                 &[("count", &entry.successful_brews.to_string())],
                             )
                         }),
+                        selected: page_start + offset == self.ui.journal_index,
                     }
                 })
                 .collect(),

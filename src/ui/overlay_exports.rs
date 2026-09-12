@@ -17,8 +17,12 @@ pub(crate) use super::overlay_chrome::{
 };
 pub(crate) use super::overlay_dialogue::draw_dialogue_overlay_view;
 pub(crate) use super::overlay_ending::draw_ending_overlay_view;
+pub(crate) use super::overlay_inventory::draw_inventory_overlay_view;
 pub(crate) use super::overlay_journal_brews::draw_journal_brews_tab_view;
-pub(crate) use super::overlay_journal_chrome::{draw_journal_footer, draw_journal_tabs};
+pub(crate) use super::overlay_journal_chrome::{
+    draw_journal_detail_box, draw_journal_footer, draw_journal_row, draw_journal_section_box,
+    draw_journal_section_title, draw_journal_tabs,
+};
 pub(crate) use super::overlay_journal_greenhouse::draw_journal_greenhouse_tab_view;
 pub(crate) use super::overlay_journal_notes::draw_journal_notes_tab_view;
 #[cfg(test)]

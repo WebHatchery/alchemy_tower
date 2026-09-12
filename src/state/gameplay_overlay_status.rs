@@ -13,6 +13,7 @@ impl GameplayState {
             OverlayScreen::Dialogue(_) => ui_format("gameplay_conversation_ended", &[]),
             OverlayScreen::Journal => ui_text().statuses.closed_journal.clone(),
             OverlayScreen::QuestBoard => ui_text().statuses.closed_quest_board.clone(),
+            OverlayScreen::Inventory => ui_text().statuses.closed_inventory.clone(),
         }
     }
 }

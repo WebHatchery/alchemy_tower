@@ -23,6 +23,7 @@ pub(crate) struct JournalBrewMemoryView {
     pub(crate) best_brew_text: Option<String>,
     pub(crate) formula_text: Option<String>,
     pub(crate) successful_brews_text: Option<String>,
+    pub(crate) selected: bool,
 }
 
 /// A herb reduced to one line for the list column. The full block is shown for
@@ -37,12 +38,14 @@ pub(crate) struct JournalHerbRowView {
 pub(crate) struct JournalGreenhouseTabView {
     pub(crate) title: &'static str,
     pub(crate) empty_text: String,
+    pub(crate) page_text: Option<String>,
     pub(crate) beds: Vec<JournalGreenhouseBedView>,
 }
 
 pub(crate) struct JournalGreenhouseBedView {
     pub(crate) title: String,
     pub(crate) summary: String,
+    pub(crate) selected: bool,
 }
 
 pub(crate) struct JournalNotesTabView {
@@ -74,6 +77,7 @@ pub(crate) struct JournalNoteRowView {
 
 pub(crate) struct JournalRapportTabView {
     pub(crate) title: &'static str,
+    pub(crate) page_text: Option<String>,
     pub(crate) rows: Vec<JournalRapportRowView>,
 }
 
@@ -82,6 +86,7 @@ pub(crate) struct JournalRapportRowView {
     pub(crate) now_text: String,
     pub(crate) later_text: String,
     pub(crate) usually_text: String,
+    pub(crate) selected: bool,
 }
 
 pub(crate) struct JournalRoutesTabView {

@@ -94,6 +94,40 @@ fn an_untouched_valley_gets_only_the_fixed_paragraph() {
     );
 }
 
+#[test]
+fn the_town_wrap_up_has_one_order_for_equivalent_input_states() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let beats = &narrative_text().epilogue_beats;
+    let mut forward = GameplayState::new(&data);
+    let mut reverse = GameplayState::new(&data);
+
+    for beat in beats {
+        for milestone_id in &beat.after_milestones {
+            forward.push_journal_milestone(milestone_id, "", "");
+        }
+    }
+    for beat in beats.iter().rev() {
+        for milestone_id in beat.after_milestones.iter().rev() {
+            reverse.push_journal_milestone(milestone_id, "", "");
+        }
+    }
+
+    assert_eq!(
+        forward.epilogue_page_count(),
+        reverse.epilogue_page_count(),
+        "equivalent town wrap-up states should have the same page count"
+    );
+    for page in 0..forward.epilogue_page_count() {
+        forward.ui.ending_page = page;
+        reverse.ui.ending_page = page;
+        assert_eq!(
+            forward.ending_overlay_view().body,
+            reverse.ending_overlay_view().body,
+            "town wrap-up page {page} changed with milestone insertion order"
+        );
+    }
+}
+
 /// Earning more should never show less, and should never show more than the
 /// panel was measured for. Beats share milestones, so recording one beat's
 /// requirements can earn several — count what is genuinely earned rather

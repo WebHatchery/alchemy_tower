@@ -253,8 +253,8 @@ impl GameplayState {
         earned()
             .filter(|reaction| !already_said(reaction))
             .filter(|reaction| furthest_said.is_none_or(|said| reaction.order >= said))
-            .min_by_key(|reaction| reaction.order)
-            .or_else(|| earned().max_by_key(|reaction| reaction.order))
+            .min_by_key(|reaction| (reaction.order, reaction.line.as_str()))
+            .or_else(|| earned().max_by_key(|reaction| (reaction.order, reaction.line.as_str())))
     }
 
     pub(super) fn npc_phase1_followup_line(&self, npc_id: &str) -> Option<&'static str> {
