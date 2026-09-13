@@ -36,12 +36,22 @@ pub(crate) fn inventory_row_rect(index: usize) -> Rect {
 
 pub(crate) fn inventory_previous_rect() -> Rect {
     let panel = inventory_panel_rect();
-    Rect::new(panel.x + panel.w - 468.0, panel.y + panel.h - 46.0, 110.0, 30.0)
+    Rect::new(
+        panel.x + panel.w - 468.0,
+        panel.y + panel.h - 46.0,
+        110.0,
+        30.0,
+    )
 }
 
 pub(crate) fn inventory_next_rect() -> Rect {
     let panel = inventory_panel_rect();
-    Rect::new(panel.x + panel.w - 350.0, panel.y + panel.h - 46.0, 110.0, 30.0)
+    Rect::new(
+        panel.x + panel.w - 350.0,
+        panel.y + panel.h - 46.0,
+        110.0,
+        30.0,
+    )
 }
 
 pub(crate) fn inventory_use_rect() -> Rect {
