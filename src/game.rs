@@ -48,6 +48,16 @@ impl Game {
             return;
         };
         state.draw(&self.data, &self.art);
+        if crate::settings::current().common.show_fps {
+            macroquad::prelude::draw_rectangle(8.0, 8.0, 100.0, 28.0, macroquad::prelude::BLACK);
+            macroquad_toolkit::ui::draw_ui_text(
+                &format!("{} FPS", macroquad::prelude::get_fps()),
+                16.0,
+                28.0,
+                20.0,
+                macroquad::prelude::WHITE,
+            );
+        }
     }
 
     /// Seed a specific scene for the screenshot harness.

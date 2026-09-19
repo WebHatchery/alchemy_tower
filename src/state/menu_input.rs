@@ -16,7 +16,9 @@ pub(super) enum TitleAction {
 pub(super) enum SettingsAction {
     Back,
     ToggleFullscreen,
-    ToggleQuietHud,
+    Row(usize),
+    Previous,
+    Next,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -43,11 +45,23 @@ pub(super) fn selected_settings_action() -> Option<SettingsAction> {
     }
 
     if rect_clicked(quiet_hud_toggle_rect()) {
-        return Some(SettingsAction::ToggleQuietHud);
+        return Some(SettingsAction::Row(1));
     }
 
-    (fullscreen_pressed() || rect_clicked(fullscreen_toggle_rect()))
-        .then_some(SettingsAction::ToggleFullscreen)
+    let layout = crate::menu_layout::settings_layout_for_viewport(
+        macroquad::prelude::screen_width(),
+        macroquad::prelude::screen_height(),
+    );
+    if rect_clicked(layout.navigation[0]) {
+        return Some(SettingsAction::Previous);
+    }
+    if rect_clicked(layout.navigation[1]) {
+        return Some(SettingsAction::Next);
+    }
+    if fullscreen_pressed() {
+        return Some(SettingsAction::ToggleFullscreen);
+    }
+    rect_clicked(fullscreen_toggle_rect()).then_some(SettingsAction::Row(0))
 }
 
 pub(super) fn selected_gender_action() -> Option<GenderAction> {

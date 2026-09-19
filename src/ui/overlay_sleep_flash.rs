@@ -9,7 +9,7 @@ pub(crate) fn draw_sleep_flash_overlay_view(view: &SleepFlashOverlayView) {
     }
 
     let t = (view.remaining_seconds / 1.2).clamp(0.0, 1.0);
-    let pulse = ((get_time() as f32 * 16.0).sin() * 0.5 + 0.5) * t;
+    let pulse = ((crate::settings::effect_time(get_time() as f32) * 16.0).sin() * 0.5 + 0.5) * t;
     draw_rectangle(
         0.0,
         0.0,

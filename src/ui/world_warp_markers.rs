@@ -2,7 +2,8 @@ use crate::art::{draw_texture_centered, ArtAssets};
 use macroquad::prelude::*;
 
 pub(crate) fn draw_unlock_ready_warp_glow(rect: Rect, center: Vec2, offset: Vec2, art: &ArtAssets) {
-    let pulse = ((get_time() as f32 * 3.0) + rect.x * 0.01).sin() * 0.5 + 0.5;
+    let pulse =
+        ((crate::settings::effect_time(get_time() as f32) * 3.0) + rect.x * 0.01).sin() * 0.5 + 0.5;
     if let Some(texture) = art.effect("warp_glow_effect") {
         draw_texture_centered(
             texture,

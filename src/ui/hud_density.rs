@@ -78,9 +78,5 @@ pub(crate) fn set_quiet_hud(quiet: bool) {
     QUIET_HUD.store(quiet, Ordering::Relaxed);
 }
 
-pub(crate) fn quiet_hud_enabled() -> bool {
-    QUIET_HUD.load(Ordering::Relaxed)
-}
-
 #[cfg(test)]
 mod tests;

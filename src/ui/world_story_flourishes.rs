@@ -41,7 +41,10 @@ fn draw_flourish_shape(shape: &FlourishShape, offset: Vec2) {
             let radius = if *pulse {
                 // Offset by position so a row of lamps breathes out of step
                 // rather than blinking in unison.
-                let swell = ((get_time() as f32 * 2.2) + x * 0.01).sin() * 0.5 + 0.5;
+                let swell = ((crate::settings::effect_time(get_time() as f32) * 2.2) + x * 0.01)
+                    .sin()
+                    * 0.5
+                    + 0.5;
                 radius + swell * 2.5
             } else {
                 *radius

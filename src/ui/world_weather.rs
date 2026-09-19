@@ -34,7 +34,9 @@ fn draw_mist_overlay(area: &AreaDefinition, offset: Vec2) {
         Color::from_rgba(220, 228, 240, 28),
     );
     for index in 0..10 {
-        let drift = ((get_time() as f32 * 0.4) + index as f32 * 0.6).sin() * 18.0;
+        let drift = ((crate::settings::effect_time(get_time() as f32) * 0.4) + index as f32 * 0.6)
+            .sin()
+            * 18.0;
         let x = offset.x + 80.0 + index as f32 * 110.0 + drift;
         let y = offset.y + 60.0 + (index % 4) as f32 * 120.0;
         draw_circle(
@@ -55,7 +57,8 @@ fn draw_rain_overlay(area: &AreaDefinition, offset: Vec2) {
         Color::from_rgba(90, 126, 168, 26),
     );
     for index in 0..28 {
-        let wave = ((get_time() as f32 * 2.8) + index as f32 * 0.4).fract();
+        let wave =
+            ((crate::settings::effect_time(get_time() as f32) * 2.8) + index as f32 * 0.4).fract();
         let x = offset.x + (index as f32 * 48.0).rem_euclid(area.size[0]);
         let y = offset.y + wave * area.size[1];
         draw_line(
@@ -71,7 +74,8 @@ fn draw_rain_overlay(area: &AreaDefinition, offset: Vec2) {
 
 fn draw_windy_overlay(area: &AreaDefinition, offset: Vec2) {
     for index in 0..16 {
-        let wave = ((get_time() as f32 * 1.4) + index as f32 * 0.33).fract();
+        let wave =
+            ((crate::settings::effect_time(get_time() as f32) * 1.4) + index as f32 * 0.33).fract();
         let x = offset.x + wave * area.size[0];
         let y = offset.y + 30.0 + index as f32 * 34.0;
         draw_line(

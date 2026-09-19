@@ -32,3 +32,27 @@ Playable exploration, gathering, brewing, requests, tower restoration, inventory
 ## Design Reference
 
 `docs/alchemy_system_design.md` is the live specification for the brewing engine — element profiles, traits, quality bands, mastery, morph paths, and the instability fallback. Open work is tracked in `TODO.md`.
+
+## Player settings and toolkit review
+
+Settings has four touch-accessible pages: Display (fullscreen and Quiet HUD),
+Comfort (screen shake and reduced motion), Sound (master and effects volume),
+and More options (FPS counter and reset settings). Tap Previous/Next to browse;
+tap a volume to advance by 10%, wrapping from 100% to mute. Changes save
+immediately, and a failed save leaves the active preferences unchanged. Reset
+settings restores preferences only; it does not erase game progress.
+
+Preferences use the toolkit `GameSettings` model and JSON persistence, with
+Quiet HUD as a game-specific extension. Reduced motion applies the toolkit
+policy and freezes local weather, marker and alchemy animation, NPC sway and
+collapse flashing. Screen shake respects both effect preferences. Native audio
+multiplies each effect's authored volume by master and effects volume. Browser
+audio remains disabled by the existing startup implementation; the Sound page
+says so. Browser fullscreen requires a new tap after reload.
+
+The toolkit also provides `SettingsPanel`, `SettingsSession`, display previews,
+UI/text scaling, autosave controls, audio groups, control preferences and camera
+preferences. The existing menu action/render separation and tower styling are
+retained. Music, voice, background muting, remapping, camera controls, autosave
+and user scaling are not exposed until the game integrates those consumers;
+showing those toolkit fields alone would create ineffective controls.

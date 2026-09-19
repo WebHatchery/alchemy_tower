@@ -5,6 +5,13 @@ use crate::audio::AudioAssets;
 use crate::data::load_embedded_or_fallback;
 
 pub(super) async fn load_game() -> Game {
+    if let Err(error) = crate::settings::load() {
+        eprintln!("Could not load settings: {error}");
+    }
+    let preferences = crate::settings::current();
+    crate::ui::set_quiet_hud(preferences.quiet_hud);
+    #[cfg(not(target_arch = "wasm32"))]
+    macroquad::prelude::set_fullscreen(preferences.common.fullscreen);
     let data = load_embedded_or_fallback();
     let art = ArtAssets::load(&data)
         .await

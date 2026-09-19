@@ -26,7 +26,9 @@ pub(crate) fn draw_menu_screen(data: &GameData, art: &ArtAssets, view: &MenuScre
     } else {
         draw_title_buttons(view);
     }
-    draw_title_status(&view.status_text);
+    if !view.showing_settings {
+        draw_title_status(&view.status_text);
+    }
 }
 
 fn draw_gender_select(art: &ArtAssets, view: &MenuScreenView) {
@@ -127,22 +129,35 @@ fn draw_settings(view: &MenuScreenView) {
     draw_ui_text(
         &view.settings_title,
         rect.x + 24.0,
-        rect.y + 42.0,
-        30.0,
+        rect.y + 32.0,
+        28.0,
         dark::TEXT_BRIGHT,
     );
     draw_wrapped_text(
         &view.settings_hint,
         rect.x + 24.0,
-        rect.y + 74.0,
+        rect.y + 54.0,
         rect.w - 48.0,
-        18.0,
-        19.0,
+        16.0,
+        17.0,
         Color::from_rgba(238, 231, 214, 224),
     );
 
     draw_action_button(fullscreen_toggle_rect(), &view.fullscreen_label, 24.0);
     draw_action_button(quiet_hud_toggle_rect(), &view.quiet_hud_label, 24.0);
+    let layout = crate::menu_layout::settings_layout_for_viewport(screen_width(), screen_height());
+    draw_action_button(layout.navigation[0], &view.previous_label, 8.0);
+    draw_action_button(layout.navigation[1], &view.next_label, 8.0);
+    if !view.status_text.is_empty() {
+        let status = truncate_text_to_width(&view.status_text, rect.w - 48.0, 16.0);
+        draw_ui_text(
+            &status,
+            rect.x + 24.0,
+            rect.y + 100.0,
+            16.0,
+            dark::TEXT_BRIGHT,
+        );
+    }
     draw_action_button(settings_back_rect(), &view.settings_back_label, 24.0);
 }
 

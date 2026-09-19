@@ -14,7 +14,7 @@ mod game;
 mod input;
 mod inventory_layout;
 mod journal_layout;
-mod menu_layout;
+use alchemy_tower::{menu_layout, settings};
 mod pause_layout;
 mod save;
 mod state;

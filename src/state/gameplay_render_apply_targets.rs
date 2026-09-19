@@ -21,7 +21,7 @@ impl GameplayState {
                 target.color[2],
                 target.color[3],
             );
-            let pulse = 0.5 + 0.5 * ((get_time() as f32) * 1.6).sin();
+            let pulse = 0.5 + 0.5 * ((crate::settings::effect_time(get_time() as f32)) * 1.6).sin();
             let ring = target.radius * (0.72 + 0.18 * pulse);
 
             draw_circle(center.x, center.y, target.radius * 0.34, color);
@@ -33,7 +33,7 @@ impl GameplayState {
                 center.y,
                 3,
                 target.radius * 0.55,
-                (get_time() as f32) * 18.0,
+                (crate::settings::effect_time(get_time() as f32)) * 18.0,
                 1.5,
                 color,
             );

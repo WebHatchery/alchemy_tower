@@ -1,20 +1,21 @@
 use macroquad::prelude::{screen_height, screen_width, Rect};
 
 const SCREEN_MARGIN: f32 = 24.0;
-const SETTINGS_PANEL_HEIGHT: f32 = 300.0;
-const SETTINGS_COMPACT_TITLE_MIN_HEIGHT: f32 = 462.0;
-const SETTINGS_FULL_TITLE_MIN_HEIGHT: f32 = 528.0;
+const SETTINGS_PANEL_HEIGHT: f32 = 360.0;
+const SETTINGS_COMPACT_TITLE_MIN_HEIGHT: f32 = 522.0;
+const SETTINGS_FULL_TITLE_MIN_HEIGHT: f32 = 588.0;
 
 #[derive(Clone, Copy, Debug)]
-pub(crate) struct SettingsLayout {
-    pub(crate) panel: Rect,
-    pub(crate) fullscreen_toggle: Rect,
-    pub(crate) quiet_hud_toggle: Rect,
-    pub(crate) back_button: Rect,
-    pub(crate) show_menu_title: bool,
+pub struct SettingsLayout {
+    pub panel: Rect,
+    pub fullscreen_toggle: Rect,
+    pub quiet_hud_toggle: Rect,
+    pub back_button: Rect,
+    pub navigation: [Rect; 2],
+    pub show_menu_title: bool,
 }
 
-pub(crate) fn title_button_rect(index: usize) -> Rect {
+pub fn title_button_rect(index: usize) -> Rect {
     let button_width = if screen_width() < 760.0 { 250.0 } else { 320.0 };
     let button_height = if screen_height() < 500.0 { 40.0 } else { 48.0 };
     let gap = if screen_height() < 500.0 { 8.0 } else { 12.0 };
@@ -36,32 +37,32 @@ pub(crate) fn title_button_rect(index: usize) -> Rect {
     )
 }
 
-pub(crate) fn status_y() -> f32 {
+pub fn status_y() -> f32 {
     let last_button = title_button_rect(2);
     (last_button.y + last_button.h + 28.0).min(screen_height() - 28.0)
 }
 
-pub(crate) fn settings_rect() -> Rect {
+pub fn settings_rect() -> Rect {
     settings_layout_for_viewport(screen_width(), screen_height()).panel
 }
 
-pub(crate) fn fullscreen_toggle_rect() -> Rect {
+pub fn fullscreen_toggle_rect() -> Rect {
     settings_layout_for_viewport(screen_width(), screen_height()).fullscreen_toggle
 }
 
-pub(crate) fn quiet_hud_toggle_rect() -> Rect {
+pub fn quiet_hud_toggle_rect() -> Rect {
     settings_layout_for_viewport(screen_width(), screen_height()).quiet_hud_toggle
 }
 
-pub(crate) fn settings_back_rect() -> Rect {
+pub fn settings_back_rect() -> Rect {
     settings_layout_for_viewport(screen_width(), screen_height()).back_button
 }
 
-pub(crate) fn settings_show_menu_title() -> bool {
+pub fn settings_show_menu_title() -> bool {
     settings_layout_for_viewport(screen_width(), screen_height()).show_menu_title
 }
 
-pub(crate) fn settings_layout_for_viewport(width: f32, height: f32) -> SettingsLayout {
+pub fn settings_layout_for_viewport(width: f32, height: f32) -> SettingsLayout {
     let target_width: f32 = if width < 760.0 { 320.0 } else { 420.0 };
     let panel_width = target_width.min((width - SCREEN_MARGIN * 2.0).max(0.0));
     let panel_height = SETTINGS_PANEL_HEIGHT.min((height - SCREEN_MARGIN * 2.0).max(0.0));
@@ -89,9 +90,23 @@ pub(crate) fn settings_layout_for_viewport(width: f32, height: f32) -> SettingsL
 
     SettingsLayout {
         panel,
-        fullscreen_toggle: Rect::new(control_x, panel.y + panel.h - 152.0, control_width, 44.0),
-        quiet_hud_toggle: Rect::new(control_x, panel.y + panel.h - 102.0, control_width, 44.0),
+        fullscreen_toggle: Rect::new(control_x, panel.y + panel.h - 204.0, control_width, 44.0),
+        quiet_hud_toggle: Rect::new(control_x, panel.y + panel.h - 154.0, control_width, 44.0),
         back_button: Rect::new(control_x, panel.y + panel.h - 52.0, control_width, 38.0),
+        navigation: [
+            Rect::new(
+                control_x,
+                panel.bottom() - 104.0,
+                control_width * 0.5 - 4.0,
+                44.0,
+            ),
+            Rect::new(
+                control_x + control_width * 0.5 + 4.0,
+                panel.bottom() - 104.0,
+                control_width * 0.5 - 4.0,
+                44.0,
+            ),
+        ],
         show_menu_title,
     }
 }
@@ -104,7 +119,7 @@ fn menu_title_bottom(height: f32) -> f32 {
     }
 }
 
-pub(crate) fn gender_select_rect() -> Rect {
+pub fn gender_select_rect() -> Rect {
     let width = 540.0_f32.min(screen_width() - 40.0);
     let height = 350.0_f32.min(screen_height() - 210.0);
     Rect::new(
@@ -115,7 +130,7 @@ pub(crate) fn gender_select_rect() -> Rect {
     )
 }
 
-pub(crate) fn gender_choice_rect(index: usize) -> Rect {
+pub fn gender_choice_rect(index: usize) -> Rect {
     let panel = gender_select_rect();
     let gap = 18.0;
     let width = (panel.w - 48.0 - gap) * 0.5;
@@ -127,7 +142,7 @@ pub(crate) fn gender_choice_rect(index: usize) -> Rect {
     )
 }
 
-pub(crate) fn gender_back_rect() -> Rect {
+pub fn gender_back_rect() -> Rect {
     let panel = gender_select_rect();
     Rect::new(
         panel.x + 24.0,
@@ -136,6 +151,3 @@ pub(crate) fn gender_back_rect() -> Rect {
         34.0,
     )
 }
-
-#[cfg(test)]
-mod tests;

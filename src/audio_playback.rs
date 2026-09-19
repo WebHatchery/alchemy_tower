@@ -10,7 +10,7 @@ pub(super) fn play_random(sounds: &[Sound], volume: f32) {
         sound,
         PlaySoundParams {
             looped: false,
-            volume,
+            volume: volume * crate::settings::current().common.effective_sfx_volume(),
         },
     );
 }

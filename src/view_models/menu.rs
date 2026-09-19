@@ -6,6 +6,8 @@ pub(crate) struct MenuScreenView {
     pub(crate) new_game_label: String,
     pub(crate) load_game_label: String,
     pub(crate) settings_label: String,
+    pub(crate) previous_label: String,
+    pub(crate) next_label: String,
     pub(crate) settings_title: String,
     pub(crate) settings_hint: String,
     pub(crate) fullscreen_label: String,

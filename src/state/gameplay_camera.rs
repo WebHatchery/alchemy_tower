@@ -48,12 +48,17 @@ impl GameplayState {
             unclamped.x.clamp(min_x.min(CAMERA_PADDING), CAMERA_PADDING),
             unclamped.y.clamp(min_y.min(CAMERA_PADDING), CAMERA_PADDING),
         );
-        offset += self.runtime.camera_shake.offset();
+        if macroquad_toolkit::settings::screen_shake_enabled() {
+            offset += self.runtime.camera_shake.offset();
+        }
         offset
     }
 
     pub(super) fn npc_draw_position(&self, npc: &NpcDefinition, runtime: &NpcRuntimeState) -> Vec2 {
-        if !runtime.moving || runtime.direction.length_squared() <= 0.0 {
+        if macroquad_toolkit::settings::reduced_motion_enabled()
+            || !runtime.moving
+            || runtime.direction.length_squared() <= 0.0
+        {
             return runtime.position;
         }
         let perpendicular = vec2(-runtime.direction.y, runtime.direction.x);
