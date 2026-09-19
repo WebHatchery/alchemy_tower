@@ -1,3 +1,5 @@
+//! World collision, responsive player-follow camera, and NPC draw positions.
+
 use super::gameplay_npc::npc_motion_seed;
 use super::gameplay_npc_types::NpcRuntimeState;
 use super::gameplay_world_types::{CAMERA_PADDING, PLAYER_RADIUS};
@@ -40,14 +42,15 @@ impl GameplayState {
     }
 
     pub(super) fn camera_offset(&self, area: &AreaDefinition) -> Vec2 {
-        let half = vec2(screen_width() * 0.5, screen_height() * 0.5);
-        let unclamped = half - self.world.player.position;
-        let min_x = screen_width() - area.size[0] - CAMERA_PADDING;
-        let min_y = screen_height() - area.size[1] - CAMERA_PADDING;
-        let mut offset = vec2(
-            unclamped.x.clamp(min_x.min(CAMERA_PADDING), CAMERA_PADDING),
-            unclamped.y.clamp(min_y.min(CAMERA_PADDING), CAMERA_PADDING),
-        );
+        let viewport = vec2(screen_width(), screen_height());
+        let area_size = vec2(area.size[0], area.size[1]);
+        let centered = (viewport - area_size) * 0.5;
+        let padding = Vec2::splat(CAMERA_PADDING);
+        // Collapse each axis to the room's center when its padded bounds fit.
+        let min_offset = (viewport - area_size - padding).min(centered);
+        let max_offset = padding.max(centered);
+        let mut offset =
+            (viewport * 0.5 - self.world.player.position).clamp(min_offset, max_offset);
         if macroquad_toolkit::settings::screen_shake_enabled() {
             offset += self.runtime.camera_shake.offset();
         }
