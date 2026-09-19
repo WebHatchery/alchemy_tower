@@ -1,17 +1,13 @@
+//! Menu and responsive settings geometry shared with touch input.
 use macroquad::prelude::{screen_height, screen_width, Rect};
 
-const SCREEN_MARGIN: f32 = 24.0;
-const SETTINGS_PANEL_HEIGHT: f32 = 360.0;
-const SETTINGS_COMPACT_TITLE_MIN_HEIGHT: f32 = 522.0;
-const SETTINGS_FULL_TITLE_MIN_HEIGHT: f32 = 588.0;
-
+/// Bounds shared by settings drawing and touch input.
 #[derive(Clone, Copy, Debug)]
 pub struct SettingsLayout {
     pub panel: Rect,
-    pub fullscreen_toggle: Rect,
-    pub quiet_hud_toggle: Rect,
+    pub controls: [Rect; 8],
     pub back_button: Rect,
-    pub navigation: [Rect; 2],
+    pub status_y: f32,
     pub show_menu_title: bool,
 }
 
@@ -42,80 +38,47 @@ pub fn status_y() -> f32 {
     (last_button.y + last_button.h + 28.0).min(screen_height() - 28.0)
 }
 
-pub fn settings_rect() -> Rect {
-    settings_layout_for_viewport(screen_width(), screen_height()).panel
-}
-
-pub fn fullscreen_toggle_rect() -> Rect {
-    settings_layout_for_viewport(screen_width(), screen_height()).fullscreen_toggle
-}
-
-pub fn quiet_hud_toggle_rect() -> Rect {
-    settings_layout_for_viewport(screen_width(), screen_height()).quiet_hud_toggle
-}
-
-pub fn settings_back_rect() -> Rect {
-    settings_layout_for_viewport(screen_width(), screen_height()).back_button
-}
-
-pub fn settings_show_menu_title() -> bool {
-    settings_layout_for_viewport(screen_width(), screen_height()).show_menu_title
+pub fn settings_layout() -> SettingsLayout {
+    settings_layout_for_viewport(screen_width(), screen_height())
 }
 
 pub fn settings_layout_for_viewport(width: f32, height: f32) -> SettingsLayout {
-    let target_width: f32 = if width < 760.0 { 320.0 } else { 420.0 };
-    let panel_width = target_width.min((width - SCREEN_MARGIN * 2.0).max(0.0));
-    let panel_height = SETTINGS_PANEL_HEIGHT.min((height - SCREEN_MARGIN * 2.0).max(0.0));
-    let show_menu_title = if height < 500.0 {
-        height >= SETTINGS_COMPACT_TITLE_MIN_HEIGHT
-    } else {
-        height >= SETTINGS_FULL_TITLE_MIN_HEIGHT
-    };
+    let columns = if width >= 580.0 { 2 } else { 1 };
+    let rows = 8 / columns;
+    let compact = height < 600.0 || columns == 1;
+    let gap = if compact { 6.0 } else { 10.0 };
+    let button_height = if compact { 44.0 } else { 50.0 };
+    let header = 76.0;
+    let footer = 74.0;
+    let panel_height = header + rows as f32 * button_height + (rows - 1) as f32 * gap + footer;
+    let panel_width = (if columns == 2 { 760.0_f32 } else { 400.0 }).min(width - 24.0);
+    let show_menu_title = height >= panel_height + 222.0;
     let panel_y = if show_menu_title {
-        let preferred = height * 0.5 - panel_height * 0.5 + 42.0;
-        let min_y = menu_title_bottom(height) + 18.0;
-        let max_y = height - SCREEN_MARGIN - panel_height;
-        preferred.clamp(min_y, max_y)
+        ((height - panel_height) * 0.5 + 72.0).max(204.0)
     } else {
         (height - panel_height) * 0.5
     };
     let panel = Rect::new(
-        width * 0.5 - panel_width * 0.5,
+        (width - panel_width) * 0.5,
         panel_y,
         panel_width,
         panel_height,
     );
-    let control_x = panel.x + 24.0;
-    let control_width = (panel.w - 48.0).max(0.0);
-
+    let control_width = (panel.w - 32.0 - (columns - 1) as f32 * gap) / columns as f32;
+    let controls = std::array::from_fn(|index| {
+        Rect::new(
+            panel.x + 16.0 + (index % columns) as f32 * (control_width + gap),
+            panel.y + header + (index / columns) as f32 * (button_height + gap),
+            control_width,
+            button_height,
+        )
+    });
     SettingsLayout {
         panel,
-        fullscreen_toggle: Rect::new(control_x, panel.y + panel.h - 204.0, control_width, 44.0),
-        quiet_hud_toggle: Rect::new(control_x, panel.y + panel.h - 154.0, control_width, 44.0),
-        back_button: Rect::new(control_x, panel.y + panel.h - 52.0, control_width, 38.0),
-        navigation: [
-            Rect::new(
-                control_x,
-                panel.bottom() - 104.0,
-                control_width * 0.5 - 4.0,
-                44.0,
-            ),
-            Rect::new(
-                control_x + control_width * 0.5 + 4.0,
-                panel.bottom() - 104.0,
-                control_width * 0.5 - 4.0,
-                44.0,
-            ),
-        ],
+        controls,
+        back_button: Rect::new(panel.x + 16.0, panel.bottom() - 54.0, panel.w - 32.0, 44.0),
+        status_y: panel.bottom() - 60.0,
         show_menu_title,
-    }
-}
-
-fn menu_title_bottom(height: f32) -> f32 {
-    if height < 500.0 {
-        120.0
-    } else {
-        186.0
     }
 }
 

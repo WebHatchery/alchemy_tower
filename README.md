@@ -35,19 +35,19 @@ Playable exploration, gathering, brewing, requests, tower restoration, inventory
 
 ## Player settings and toolkit review
 
-Settings has four touch-accessible pages: Display (fullscreen and Quiet HUD),
-Comfort (screen shake and reduced motion), Sound (master and effects volume),
-and More options (FPS counter and reset settings). Tap Previous/Next to browse;
-tap a volume to advance by 10%, wrapping from 100% to mute. Changes save
-immediately, and a failed save leaves the active preferences unchanged. Reset
-settings restores preferences only; it does not erase game progress.
+Settings shows fullscreen, Quiet HUD, screen shake, reduced motion, master and
+effects volume, FPS display and reset together. Wide windows use two columns;
+portrait windows use one stack. Tap a volume to advance by 10%, wrapping from
+100% to mute. Changes save immediately, and a failed save leaves the active
+preferences unchanged. Reset settings restores preferences only; it does not
+erase game progress.
 
 Preferences use the toolkit `GameSettings` model and JSON persistence, with
 Quiet HUD as a game-specific extension. Reduced motion applies the toolkit
 policy and freezes local weather, marker and alchemy animation, NPC sway and
 collapse flashing. Screen shake respects both effect preferences. Native audio
 multiplies each effect's authored volume by master and effects volume. Browser
-audio remains disabled by the existing startup implementation; the Sound page
+audio remains disabled by the existing startup implementation; the settings panel
 says so. Browser fullscreen requires a new tap after reload.
 
 The toolkit also provides `SettingsPanel`, `SettingsSession`, display previews,

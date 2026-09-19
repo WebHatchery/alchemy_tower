@@ -1,8 +1,7 @@
 use crate::data::PlayerGender;
 use crate::input::{cancel_pressed, confirm_pressed, fullscreen_pressed, rect_clicked};
 use crate::menu_layout::{
-    fullscreen_toggle_rect, gender_back_rect, gender_choice_rect, quiet_hud_toggle_rect,
-    settings_back_rect, title_button_rect,
+    gender_back_rect, gender_choice_rect, settings_layout, title_button_rect,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -15,10 +14,7 @@ pub(super) enum TitleAction {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(super) enum SettingsAction {
     Back,
-    ToggleFullscreen,
     Row(usize),
-    Previous,
-    Next,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -40,28 +36,18 @@ pub(super) fn selected_title_action() -> Option<TitleAction> {
 }
 
 pub(super) fn selected_settings_action() -> Option<SettingsAction> {
-    if cancel_pressed() || rect_clicked(settings_back_rect()) {
+    let layout = settings_layout();
+    if cancel_pressed() || rect_clicked(layout.back_button) {
         return Some(SettingsAction::Back);
     }
-
-    if rect_clicked(quiet_hud_toggle_rect()) {
-        return Some(SettingsAction::Row(1));
-    }
-
-    let layout = crate::menu_layout::settings_layout_for_viewport(
-        macroquad::prelude::screen_width(),
-        macroquad::prelude::screen_height(),
-    );
-    if rect_clicked(layout.navigation[0]) {
-        return Some(SettingsAction::Previous);
-    }
-    if rect_clicked(layout.navigation[1]) {
-        return Some(SettingsAction::Next);
-    }
     if fullscreen_pressed() {
-        return Some(SettingsAction::ToggleFullscreen);
+        return Some(SettingsAction::Row(0));
     }
-    rect_clicked(fullscreen_toggle_rect()).then_some(SettingsAction::Row(0))
+    layout
+        .controls
+        .iter()
+        .position(|rect| rect_clicked(*rect))
+        .map(SettingsAction::Row)
 }
 
 pub(super) fn selected_gender_action() -> Option<GenderAction> {

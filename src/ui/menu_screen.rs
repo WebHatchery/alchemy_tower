@@ -3,10 +3,9 @@ use super::{draw_action_button, draw_wrapped_text, truncate_text_to_width};
 use crate::art::{draw_texture_centered, ArtAssets};
 use crate::data::GameData;
 use crate::data::PlayerGender;
-use crate::menu_layout::settings_show_menu_title;
+use crate::menu_layout::settings_layout;
 use crate::menu_layout::{
-    fullscreen_toggle_rect, gender_back_rect, gender_choice_rect, gender_select_rect,
-    quiet_hud_toggle_rect, settings_back_rect, settings_rect, status_y, title_button_rect,
+    gender_back_rect, gender_choice_rect, gender_select_rect, status_y, title_button_rect,
 };
 use crate::view_models::menu::MenuScreenView;
 use macroquad::prelude::*;
@@ -16,7 +15,7 @@ use macroquad_toolkit::ui::{draw_ui_text, measure_ui_text};
 pub(crate) fn draw_menu_screen(data: &GameData, art: &ArtAssets, view: &MenuScreenView) {
     let has_title_screen = draw_title_background(data, art);
     draw_title_vignette(has_title_screen);
-    if !view.showing_settings || settings_show_menu_title() {
+    if !view.showing_settings || settings_layout().show_menu_title {
         draw_title_text(view);
     }
     if view.showing_settings {
@@ -110,7 +109,8 @@ fn draw_title_buttons(view: &MenuScreenView) {
 }
 
 fn draw_settings(view: &MenuScreenView) {
-    let rect = settings_rect();
+    let layout = settings_layout();
+    let rect = layout.panel;
     draw_rectangle(
         rect.x,
         rect.y,
@@ -128,37 +128,68 @@ fn draw_settings(view: &MenuScreenView) {
     );
     draw_ui_text(
         &view.settings_title,
-        rect.x + 24.0,
-        rect.y + 32.0,
+        rect.x + 16.0,
+        rect.y + 30.0,
         28.0,
         dark::TEXT_BRIGHT,
     );
     draw_wrapped_text(
         &view.settings_hint,
-        rect.x + 24.0,
-        rect.y + 54.0,
-        rect.w - 48.0,
+        rect.x + 16.0,
+        rect.y + 50.0,
+        rect.w - 32.0,
         16.0,
         17.0,
         Color::from_rgba(238, 231, 214, 224),
     );
 
-    draw_action_button(fullscreen_toggle_rect(), &view.fullscreen_label, 24.0);
-    draw_action_button(quiet_hud_toggle_rect(), &view.quiet_hud_label, 24.0);
-    let layout = crate::menu_layout::settings_layout_for_viewport(screen_width(), screen_height());
-    draw_action_button(layout.navigation[0], &view.previous_label, 8.0);
-    draw_action_button(layout.navigation[1], &view.next_label, 8.0);
+    for (button, label) in layout.controls.iter().zip(&view.setting_labels) {
+        draw_settings_button(*button, label);
+    }
     if !view.status_text.is_empty() {
-        let status = truncate_text_to_width(&view.status_text, rect.w - 48.0, 16.0);
+        let status = truncate_text_to_width(&view.status_text, rect.w - 32.0, 16.0);
         draw_ui_text(
             &status,
-            rect.x + 24.0,
-            rect.y + 100.0,
+            rect.x + 16.0,
+            layout.status_y,
             16.0,
             dark::TEXT_BRIGHT,
         );
     }
-    draw_action_button(settings_back_rect(), &view.settings_back_label, 24.0);
+    draw_settings_button(layout.back_button, &view.settings_back_label);
+}
+
+fn draw_settings_button(rect: Rect, label: &str) {
+    // Keep complete option names legible in both the grid and portrait stack.
+    let hovered = rect.contains(crate::input::mouse_position_vec());
+    draw_rectangle(
+        rect.x,
+        rect.y,
+        rect.w,
+        rect.h,
+        if hovered {
+            Color::from_rgba(58, 46, 30, 235)
+        } else {
+            Color::from_rgba(30, 26, 22, 225)
+        },
+    );
+    draw_rectangle_lines(
+        rect.x,
+        rect.y,
+        rect.w,
+        rect.h,
+        1.5,
+        Color::from_rgba(223, 184, 111, 150),
+    );
+    macroquad_toolkit::ui::draw_text_centered_in_box(
+        label,
+        rect.x + 8.0,
+        rect.y,
+        rect.w - 16.0,
+        rect.h,
+        20.0,
+        dark::TEXT_BRIGHT,
+    );
 }
 
 fn draw_title_status(status_text: &str) {

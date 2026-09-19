@@ -25,23 +25,21 @@ fn settings_controls_stay_inside_their_panel_at_supported_viewports() {
         let layout = settings_layout_for_viewport(width, height);
 
         assert!(rect_is_on_screen(layout.panel, width, height));
-        for button in layout.navigation {
-            assert!(rect_is_inside(button, layout.panel));
+        let mut controls = layout.controls.to_vec();
+        controls.push(layout.back_button);
+        for (index, button) in controls.iter().enumerate() {
+            assert!(rect_is_inside(*button, layout.panel));
             assert!(button.h >= 44.0);
-            assert!(button.y >= layout.quiet_hud_toggle.bottom());
-            assert!(button.bottom() <= layout.back_button.y);
+            assert!(button.y >= layout.panel.y + 76.0);
+            for other in controls.iter().skip(index + 1) {
+                assert!(!button.overlaps(other));
+            }
         }
-        assert!(rect_is_inside(layout.fullscreen_toggle, layout.panel));
-        assert!(rect_is_inside(layout.quiet_hud_toggle, layout.panel));
-        assert!(rect_is_inside(layout.back_button, layout.panel));
-        assert!(rect_is_on_screen(layout.fullscreen_toggle, width, height));
-        assert!(rect_is_on_screen(layout.quiet_hud_toggle, width, height));
-        assert!(rect_is_on_screen(layout.back_button, width, height));
     }
 }
 
 #[test]
 fn settings_hides_the_menu_heading_when_there_is_not_room_for_both() {
-    assert!(settings_layout_for_viewport(640.0, 600.0).show_menu_title);
+    assert!(settings_layout_for_viewport(640.0, 720.0).show_menu_title);
     assert!(!settings_layout_for_viewport(640.0, 360.0).show_menu_title);
 }

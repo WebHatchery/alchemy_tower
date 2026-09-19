@@ -26,7 +26,6 @@ pub(crate) struct MenuState {
     mode: TitleMode,
     status_text: String,
     preferences: Preferences,
-    settings_page: usize,
 }
 
 impl MenuState {
@@ -35,7 +34,6 @@ impl MenuState {
             mode: TitleMode::Actions,
             status_text: String::new(),
             preferences: settings::current(),
-            settings_page: 0,
         }
     }
 
@@ -95,36 +93,22 @@ impl MenuState {
                 self.mode = TitleMode::Actions;
                 self.status_text.clear();
             }
-            Some(SettingsAction::Previous) => {
-                self.settings_page = (self.settings_page + 3) % 4;
-                self.status_text.clear();
-            }
-            Some(SettingsAction::Next) => {
-                self.settings_page = (self.settings_page + 1) % 4;
-                self.status_text.clear();
-            }
-            Some(SettingsAction::ToggleFullscreen) => self.change_setting(0, true),
-            Some(SettingsAction::Row(row)) => self.change_setting(row, false),
+            Some(SettingsAction::Row(row)) => self.change_setting(row),
             None => {}
         }
     }
 
-    fn change_setting(&mut self, row: usize, fullscreen_shortcut: bool) {
+    fn change_setting(&mut self, row: usize) {
         let mut next = self.preferences.clone();
-        let page = if fullscreen_shortcut {
-            0
-        } else {
-            self.settings_page
-        };
-        match (page, row) {
-            (0, 0) => next.common.fullscreen = !next.common.fullscreen,
-            (0, 1) => next.quiet_hud = !next.quiet_hud,
-            (1, 0) => next.common.screen_shake = !next.common.screen_shake,
-            (1, 1) => next.common.reduced_motion = !next.common.reduced_motion,
-            (2, 0) => next.common.master_volume = cycle_volume(next.common.master_volume),
-            (2, 1) => next.common.sfx_volume = cycle_volume(next.common.sfx_volume),
-            (3, 0) => next.common.show_fps = !next.common.show_fps,
-            (3, 1) => next = Preferences::default(),
+        match row {
+            0 => next.common.fullscreen = !next.common.fullscreen,
+            1 => next.quiet_hud = !next.quiet_hud,
+            2 => next.common.screen_shake = !next.common.screen_shake,
+            3 => next.common.reduced_motion = !next.common.reduced_motion,
+            4 => next.common.master_volume = cycle_volume(next.common.master_volume),
+            5 => next.common.sfx_volume = cycle_volume(next.common.sfx_volume),
+            6 => next.common.show_fps = !next.common.show_fps,
+            7 => next = Preferences::default(),
             _ => return,
         }
         if let Err(error) = next.save() {
@@ -167,28 +151,14 @@ impl MenuState {
             new_game_label: ui_copy("menu_new_game").to_owned(),
             load_game_label: ui_copy("menu_load_game").to_owned(),
             settings_label: ui_copy("menu_settings").to_owned(),
-            settings_title: format!(
-                "{} - {}/4",
-                ui_copy(
-                    ["menu_display", "menu_comfort", "menu_sound", "menu_tools"]
-                        [self.settings_page]
-                ),
-                self.settings_page + 1
-            ),
-            settings_hint: ui_copy(if self.settings_page == 2 {
-                if cfg!(target_arch = "wasm32") {
-                    "menu_audio_web"
-                } else {
-                    "menu_audio_hint"
-                }
+            settings_title: ui_copy("menu_settings").to_owned(),
+            settings_hint: ui_copy(if cfg!(target_arch = "wasm32") {
+                "menu_audio_web"
             } else {
                 "menu_settings_hint"
             })
             .to_owned(),
-            fullscreen_label: self.setting_label(0),
-            quiet_hud_label: self.setting_label(1),
-            previous_label: ui_copy("menu_previous").to_owned(),
-            next_label: ui_copy("menu_next").to_owned(),
+            setting_labels: std::array::from_fn(|index| self.setting_label(index)),
             settings_back_label: ui_copy("menu_settings_back").to_owned(),
             gender_title: ui_copy("menu_gender_title").to_owned(),
             gender_hint: ui_copy("menu_gender_hint").to_owned(),
@@ -200,20 +170,20 @@ impl MenuState {
     }
     fn setting_label(&self, row: usize) -> String {
         let common = &self.preferences.common;
-        let (key, enabled) = match (self.settings_page, row) {
-            (0, 0) => ("menu_fullscreen", common.fullscreen),
-            (0, _) => ("menu_quiet_hud", self.preferences.quiet_hud),
-            (1, 0) => ("menu_shake", common.screen_shake),
-            (1, _) => ("menu_reduced_motion", common.reduced_motion),
-            (2, _) => {
-                let (key, volume) = if row == 0 {
+        let (key, enabled) = match row {
+            0 => ("menu_fullscreen", common.fullscreen),
+            1 => ("menu_quiet_hud", self.preferences.quiet_hud),
+            2 => ("menu_shake", common.screen_shake),
+            3 => ("menu_reduced_motion", common.reduced_motion),
+            4 | 5 => {
+                let (key, volume) = if row == 4 {
                     ("menu_master", common.master_volume)
                 } else {
                     ("menu_sfx", common.sfx_volume)
                 };
                 return format!("{}: {:.0}%", ui_copy(key), volume * 100.0);
             }
-            (3, 0) => ("menu_fps", common.show_fps),
+            6 => ("menu_fps", common.show_fps),
             _ => return ui_copy("menu_defaults").to_owned(),
         };
         format!(
