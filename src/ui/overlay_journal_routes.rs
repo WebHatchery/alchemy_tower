@@ -1,7 +1,8 @@
 use super::{
-    draw_journal_detail_box, draw_journal_row, draw_journal_section_box,
+    draw_action_button, draw_journal_detail_box, draw_journal_row, draw_journal_section_box,
     draw_journal_section_title, draw_wrapped_text,
 };
+use crate::journal_layout::{journal_access_next_rect, journal_access_previous_rect};
 use crate::view_models::journal::{JournalHerbMemoriesView, JournalRoutesTabView};
 use macroquad::prelude::Rect;
 use macroquad_toolkit::colors::dark;
@@ -55,7 +56,16 @@ pub(crate) fn draw_journal_routes_tab_view(
         w - 440.0,
         y + h - 170.0,
     );
-    draw_journal_section_title(x + 20.0, y + h - 156.0, view.progress_title, None);
+    draw_journal_section_title(
+        x + 20.0,
+        y + h - 156.0,
+        view.progress_title,
+        view.route_progress.range_text.as_deref(),
+    );
+    if view.route_progress.range_text.is_some() {
+        draw_action_button(journal_access_previous_rect(), "PREVIOUS", 13.0);
+        draw_action_button(journal_access_next_rect(), "NEXT", 15.0);
+    }
     draw_journal_detail_box(Rect::new(x + 20.0, y + h - 140.0, w - 40.0, 96.0));
     if let Some(all_restored_text) = &view.route_progress.all_restored_text {
         draw_ui_text(

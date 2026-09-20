@@ -1,7 +1,7 @@
-use super::gameplay_overlay_window::visible_window_start;
+use super::gameplay_overlay_window::{paged_window, visible_window_start};
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format};
-use crate::data::GameData;
+use crate::data::{GameData, WarpDefinition};
 use crate::view_models::journal::{
     JournalHerbMemoriesView, JournalHerbMemoryView, JournalHerbRowView, JournalRouteProgressView,
     JournalRouteRowView, JournalRoutesTabView,
@@ -16,17 +16,38 @@ const VISIBLE_ROUTE_ROWS: usize = 7;
 /// row. Drawn at full detail for every herb, the column had room for one.
 const VISIBLE_HERB_ROWS: usize = 5;
 
+const VISIBLE_ACCESS_ROWS: usize = 2;
+
 impl GameplayState {
+    pub(super) fn journal_route_access_warps<'a>(
+        &self,
+        data: &'a GameData,
+    ) -> Vec<&'a WarpDefinition> {
+        let route_total = data.gathering_routes.len();
+        let route_selected = self
+            .ui
+            .journal_route_index
+            .min(route_total.saturating_sub(1));
+        let Some(route) = data.gathering_routes.get(route_selected) else {
+            return Vec::new();
+        };
+        data.area(&route.area_id)
+            .into_iter()
+            .flat_map(|area| area.warps.iter())
+            .filter(|warp| !self.warp_is_unlocked(warp))
+            .collect()
+    }
+
     pub(super) fn journal_routes_tab_view(&self, data: &GameData) -> JournalRoutesTabView {
         let route_total = data.gathering_routes.len();
-        // Routes ride the same index as the herb list rather than claiming a
-        // second key: walking the herbs walks the routes past them too.
-        let route_selected = self.ui.journal_index.min(route_total.saturating_sub(1));
+        let route_selected = self
+            .ui
+            .journal_route_index
+            .min(route_total.saturating_sub(1));
         let route_start = visible_window_start(route_selected, route_total, VISIBLE_ROUTE_ROWS);
         let locked_lines = self
-            .locked_warps(data)
+            .journal_route_access_warps(data)
             .into_iter()
-            .take(2)
             .map(|warp| {
                 ui_format(
                     "overlay_route_locked_line",
@@ -37,6 +58,32 @@ impl GameplayState {
                 )
             })
             .collect::<Vec<_>>();
+        let locked_total = locked_lines.len();
+        let (locked_start, _) = paged_window(
+            self.ui.journal_access_page,
+            locked_total,
+            VISIBLE_ACCESS_ROWS,
+        );
+        let locked_range_text = (locked_total > VISIBLE_ACCESS_ROWS).then(|| {
+            ui_format(
+                "journal_showing_range",
+                &[
+                    ("first", &(locked_start + 1).to_string()),
+                    (
+                        "last",
+                        &(locked_start + VISIBLE_ACCESS_ROWS)
+                            .min(locked_total)
+                            .to_string(),
+                    ),
+                    ("total", &locked_total.to_string()),
+                ],
+            )
+        });
+        let locked_lines = locked_lines
+            .into_iter()
+            .skip(locked_start)
+            .take(VISIBLE_ACCESS_ROWS)
+            .collect();
 
         JournalRoutesTabView {
             title: ui_copy("overlay_known_routes"),
@@ -73,9 +120,9 @@ impl GameplayState {
                 .map(|route| route.description.clone()),
             herb_memories: self.journal_herb_memories_view(data),
             route_progress: JournalRouteProgressView {
-                all_restored_text: locked_lines
-                    .is_empty()
-                    .then(|| ui_copy("overlay_routes_all_restored").to_owned()),
+                all_restored_text: (locked_total == 0)
+                    .then(|| ui_copy("overlay_route_access_all_open").to_owned()),
+                range_text: locked_range_text,
                 locked_lines,
             },
         }
@@ -94,7 +141,7 @@ impl GameplayState {
         }
 
         let total = herb_memories.len();
-        let selected = self.ui.journal_index.min(total - 1);
+        let selected = self.ui.journal_herb_index.min(total - 1);
         let start = visible_window_start(selected, total, VISIBLE_HERB_ROWS);
         let entries = herb_memories
             .into_iter()

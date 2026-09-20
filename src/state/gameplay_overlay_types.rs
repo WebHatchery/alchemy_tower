@@ -7,10 +7,23 @@ pub(super) const ARCHIVE_TABS: [&str; 6] = [
     "duplication",
 ];
 
+#[derive(Clone, Copy, Debug, Default, Eq, PartialEq)]
+pub(super) enum JournalColumn {
+    #[default]
+    Route,
+    Herb,
+}
+
 #[derive(Clone, Debug, Default)]
 pub(super) struct OverlayState {
     pub(super) journal_tab: usize,
-    /// Which herb memory the routes tab is showing in full.
+    /// The routes and herb shelves have independent selections. A single
+    /// cursor made browsing one column silently move the other one too.
+    pub(super) journal_route_index: usize,
+    pub(super) journal_herb_index: usize,
+    pub(super) journal_column: JournalColumn,
+    pub(super) journal_access_page: usize,
+    /// Selection for the journal tabs that have one shared list and detail.
     pub(super) journal_index: usize,
     pub(super) inventory_index: usize,
     pub(super) shop_buy_tab: bool,

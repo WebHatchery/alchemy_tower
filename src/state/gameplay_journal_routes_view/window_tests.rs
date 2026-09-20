@@ -15,7 +15,8 @@ fn neither_column_emits_more_rows_than_its_box_holds() {
     let mut state = seeded_state(&data);
 
     for index in 0..40 {
-        state.ui.journal_index = index;
+        state.ui.journal_route_index = index;
+        state.ui.journal_herb_index = index;
         let view = state.journal_routes_tab_view(&data);
         assert!(
             view.route_rows.len() <= VISIBLE_ROUTE_ROWS,
@@ -44,7 +45,8 @@ fn walking_the_list_keeps_the_selection_visible_and_reaches_the_end() {
 
     let mut last_row_seen = String::new();
     for index in 0..herb_total {
-        state.ui.journal_index = index;
+        state.ui.journal_route_index = 0;
+        state.ui.journal_herb_index = index;
         let view = state.journal_routes_tab_view(&data);
         assert!(
             view.herb_memories.rows.iter().any(|row| row.selected),
@@ -60,7 +62,7 @@ fn walking_the_list_keeps_the_selection_visible_and_reaches_the_end() {
         }
     }
 
-    state.ui.journal_index = 0;
+    state.ui.journal_herb_index = 0;
     let first = state.journal_routes_tab_view(&data);
     let first_page_last = first
         .herb_memories
@@ -113,7 +115,7 @@ fn every_herb_entry_gets_its_conditions_and_its_uses() {
     let total = state.herb_memories(&data).len();
     let mut clipped = Vec::new();
     for index in 0..total {
-        state.ui.journal_index = index;
+        state.ui.journal_herb_index = index;
         let view = state.journal_routes_tab_view(&data);
         let Some(entry) = view.herb_memories.detail else {
             continue;
@@ -137,6 +139,75 @@ fn every_herb_entry_gets_its_conditions_and_its_uses() {
         clipped.is_empty(),
         "herb entries whose conditions or uses fall out of the box:
 {clipped:#?}"
+    );
+}
+
+#[test]
+fn route_and_herb_columns_keep_independent_selection() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let mut state = seeded_state(&data);
+    let herb_total = state.herb_memories(&data).len();
+    let last_herb_id = state
+        .herb_memories(&data)
+        .last()
+        .expect("seeded shelf should have a last herb")
+        .item_id
+        .clone();
+    assert!(!data.gathering_routes.is_empty());
+    assert!(herb_total > 0);
+
+    state.ui.journal_route_index = 0;
+    state.ui.journal_herb_index = herb_total - 1;
+    let view = state.journal_routes_tab_view(&data);
+
+    assert!(view.route_rows.first().is_some_and(|row| row.selected));
+    assert!(view
+        .herb_memories
+        .rows
+        .last()
+        .is_some_and(|row| row.selected));
+    assert_eq!(
+        view.route_detail.as_deref(),
+        data.gathering_routes
+            .first()
+            .map(|route| route.description.as_str())
+    );
+    assert_eq!(
+        view.herb_memories
+            .detail
+            .as_ref()
+            .map(|entry| entry.title.as_str()),
+        Some(data.item_name(&last_herb_id))
+    );
+}
+
+#[test]
+fn route_progress_lists_every_locked_destination() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let mut state = seeded_state(&data);
+    let mut remaining = state
+        .locked_warps(&data)
+        .into_iter()
+        .map(|warp| warp.id.as_str())
+        .collect::<std::collections::HashSet<_>>();
+    for route_index in 0..data.gathering_routes.len() {
+        state.ui.journal_route_index = route_index;
+        state.ui.journal_access_page = 0;
+        let page_count = state
+            .journal_route_access_warps(&data)
+            .len()
+            .div_ceil(super::VISIBLE_ACCESS_ROWS);
+        for page in 0..page_count {
+            state.ui.journal_access_page = page;
+            let local = state.journal_route_access_warps(&data);
+            for warp in local {
+                remaining.remove(warp.id.as_str());
+            }
+        }
+    }
+    assert!(
+        remaining.is_empty(),
+        "unreachable locked routes: {remaining:?}"
     );
 }
 

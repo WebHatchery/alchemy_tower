@@ -36,3 +36,18 @@ pub(crate) fn journal_next_rect() -> Rect {
         28.0,
     )
 }
+
+pub(crate) fn journal_access_previous_rect() -> Rect {
+    let panel = journal_panel_rect();
+    Rect::new(
+        panel.x + panel.w - 252.0,
+        panel.y + panel.h - 174.0,
+        108.0,
+        24.0,
+    )
+}
+
+pub(crate) fn journal_access_next_rect() -> Rect {
+    let previous = journal_access_previous_rect();
+    Rect::new(previous.x + previous.w + 8.0, previous.y, 108.0, previous.h)
+}

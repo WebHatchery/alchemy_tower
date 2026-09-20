@@ -133,5 +133,6 @@ pub(crate) struct JournalHerbMemoryView {
 
 pub(crate) struct JournalRouteProgressView {
     pub(crate) all_restored_text: Option<String>,
+    pub(crate) range_text: Option<String>,
     pub(crate) locked_lines: Vec<String>,
 }

@@ -437,6 +437,10 @@ impl GameplayState {
             self.note_variant_gathered(&item_id, &variant);
         }
         self.ui.journal_tab = 0;
+        self.ui.journal_route_index = 0;
+        self.ui.journal_herb_index = 0;
+        self.ui.journal_column = super::gameplay_overlay_types::JournalColumn::Herb;
+        self.ui.journal_access_page = 0;
         // The list sorts worked-out herbs first, so the hearsay entries are all
         // at the far end and a capture opening on row one photographs the state
         // that was already visible. Point at the first unlearned one.
@@ -445,7 +449,7 @@ impl GameplayState {
             .iter()
             .position(|entry| !entry.learned)
         {
-            self.ui.journal_index = index;
+            self.ui.journal_herb_index = index;
         }
         self.set_overlay(super::gameplay_overlay_types::OverlayScreen::Journal);
     }
@@ -522,7 +526,8 @@ impl GameplayState {
             .iter()
             .position(|entry| entry.item_id == item_id)
         {
-            self.ui.journal_index = index;
+            self.ui.journal_herb_index = index;
+            self.ui.journal_column = super::gameplay_overlay_types::JournalColumn::Herb;
         }
     }
 
