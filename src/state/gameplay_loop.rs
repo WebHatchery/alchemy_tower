@@ -12,22 +12,27 @@ use macroquad::prelude::get_frame_time;
 #[path = "gameplay_loop_status_text.rs"]
 mod loop_status_text;
 
+const STATUS_TEXT_SECONDS: f32 = 2.8;
+
 impl GameplayState {
     pub(crate) fn update(
         &mut self,
         data: &GameData,
         audio: &AudioAssets,
     ) -> Option<StateTransition> {
+        let previous_status = self.runtime.status_text.clone();
         if cancel_pressed() {
             if let Some(overlay) = self.overlay().cloned() {
                 self.clear_overlay();
                 self.runtime.status_text = self.closed_overlay_status(&overlay);
+                self.runtime.status_text_seconds = STATUS_TEXT_SECONDS;
                 return None;
             }
             return Some(StateTransition::Pause);
         }
 
         let frame_time = get_frame_time();
+        self.runtime.status_text_seconds = (self.runtime.status_text_seconds - frame_time).max(0.0);
         self.advance_clock(data, frame_time);
         self.handle_sleep_pressure(data);
         self.update_area_banner(data, frame_time);
@@ -44,6 +49,10 @@ impl GameplayState {
 
         self.play_pending_sounds(audio);
         self.handle_save_shortcuts(data);
+
+        if self.runtime.status_text != previous_status {
+            self.runtime.status_text_seconds = STATUS_TEXT_SECONDS;
+        }
 
         transition
     }
