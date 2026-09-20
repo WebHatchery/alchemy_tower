@@ -65,14 +65,22 @@ impl GameplayState {
 
     fn inventory_row_meta(&self, data: &GameData, item_id: &str) -> String {
         let amount = self.inventory.get(item_id).copied().unwrap_or_default();
-        let item = data.item(item_id);
-        let category = item.map(|item| item.category.as_str()).unwrap_or("item");
-        let references = self.inventory_reference_summary(data, item_id);
-        if references.is_empty() {
-            format!("{category}  x{amount}")
-        } else {
-            format!("{category}  x{amount}  {references}")
+        let mut meta = ui_format("inventory_held", &[("amount", &amount.to_string())]);
+        let reserved = self.reserved_count(item_id);
+        if reserved > 0 {
+            meta.push_str(" · ");
+            meta.push_str(&ui_format(
+                "inventory_row_reserved",
+                &[("count", &reserved.to_string())],
+            ));
+        } else if self.active_quest_reference_count(data, item_id) > 0 {
+            meta.push_str(" · ");
+            meta.push_str(ui_copy("inventory_row_quest"));
+        } else if self.known_recipe_reference_count(data, item_id) > 0 {
+            meta.push_str(" · ");
+            meta.push_str(ui_copy("inventory_row_recipe"));
         }
+        meta
     }
 
     fn inventory_detail_view(&self, data: &GameData, item_id: &str) -> Option<InventoryDetailView> {
@@ -97,7 +105,7 @@ impl GameplayState {
             item_id: item_id.to_owned(),
             title: item.name.clone(),
             quantity_text: ui_format("inventory_quantity", &[("amount", &amount.to_string())]),
-            category_text: self.item_card_meta(data, item_id, amount, ""),
+            category_text: self.item_facts_text(data, item_id, amount),
             description: item.description.clone(),
             uses_text,
             action_text,

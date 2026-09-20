@@ -3,18 +3,29 @@ use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
 
 impl GameplayState {
-    pub(super) fn item_card_meta(
-        &self,
-        data: &GameData,
-        item_id: &str,
-        amount: u32,
-        extra: &str,
-    ) -> String {
-        let quality = data
-            .item(item_id)
-            .map(|item| item.quality)
-            .unwrap_or_default();
-        self.item_card_meta_at_quality(data, item_id, amount, extra, quality)
+    pub(super) fn item_facts_text(&self, data: &GameData, item_id: &str, amount: u32) -> String {
+        let item = data.item(item_id);
+        ui_format(
+            "inventory_item_facts",
+            &[
+                (
+                    "category",
+                    item.map(|item| item.category.as_str()).unwrap_or("Item"),
+                ),
+                (
+                    "quality",
+                    &item
+                        .map(|item| item.quality)
+                        .unwrap_or_default()
+                        .to_string(),
+                ),
+                (
+                    "rarity",
+                    &item.map(|item| item.rarity).unwrap_or_default().to_string(),
+                ),
+                ("amount", &amount.to_string()),
+            ],
+        )
     }
 
     /// The same card, told what the item is worth in this context. A shop row

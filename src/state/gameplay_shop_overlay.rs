@@ -84,18 +84,32 @@ impl GameplayState {
                     .unwrap_or_default();
                 let detail = self.inventory_reference_summary(data, &draft.item_id);
                 let price = draft.price.to_string();
-                let extra = if buying {
-                    ui_format("overlay_buy_price", &[("price", &price)])
+                let meta = if buying {
+                    ui_format(
+                        "overlay_shop_buy_meta",
+                        &[("amount", &amount.to_string()), ("price", &price)],
+                    )
                 } else if draft.safe_to_sell {
-                    ui_format("overlay_sell_price_safe", &[("price", &price)])
+                    ui_format(
+                        "overlay_shop_sell_meta_safe",
+                        &[("amount", &amount.to_string()), ("price", &price)],
+                    )
                 } else {
-                    ui_format("overlay_sell_price", &[("price", &price)])
+                    ui_format(
+                        "overlay_shop_sell_meta",
+                        &[("amount", &amount.to_string()), ("price", &price)],
+                    )
                 };
+                let item_facts = self.item_facts_text(data, &draft.item_id, amount);
                 ShopOverlayEntry {
                     item_id: draft.item_id.clone(),
                     title: data.item_name(&draft.item_id).to_owned(),
-                    detail,
-                    meta: self.item_card_meta(data, &draft.item_id, amount, &extra),
+                    detail: if detail.is_empty() {
+                        item_facts
+                    } else {
+                        format!("{item_facts} · {detail}")
+                    },
+                    meta,
                     enabled: draft.enabled,
                     selected: self.shop_item_selected(index),
                 }

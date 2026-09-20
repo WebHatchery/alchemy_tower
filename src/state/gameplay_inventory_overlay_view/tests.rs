@@ -15,8 +15,28 @@ fn inventory_view_explains_quantity_uses_and_potion_action() {
     assert!(detail.title.contains("Healing"));
     assert!(detail.quantity_text.contains('3'));
     assert!(detail.uses_text.contains("quest"));
+    assert!(detail.category_text.contains("Quality"));
+    assert!(detail.category_text.contains("Rarity"));
+    assert!(!detail.category_text.contains("q20"));
     assert!(detail.can_use);
     assert!(detail.action_text.contains("USE"));
+}
+
+#[test]
+fn inventory_rows_keep_quantity_and_only_the_relevant_warning() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let mut state = GameplayState::new(&data);
+    state.inventory.insert("healing_draught".to_owned(), 3);
+    state
+        .progression
+        .started_quests
+        .insert("healing_for_mira".to_owned());
+
+    let view = state.inventory_overlay_view(&data);
+    let row = view.items.first().expect("the bag should have a first row");
+    assert!(row.meta.contains("Held: 3"));
+    assert!(row.meta.contains("Active quest"));
+    assert!(!row.meta.contains("recipe 1"));
 }
 
 #[test]

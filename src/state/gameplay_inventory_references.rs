@@ -54,25 +54,6 @@ impl GameplayState {
         quest_refs == 0 && recipe_refs == 0 && category != ItemCategory::Potion
     }
 
-    pub(super) fn inventory_badges(&self, data: &GameData, item_id: &str) -> Vec<String> {
-        let quest_refs = self.active_quest_reference_count(data, item_id);
-        let recipe_refs = self.known_recipe_reference_count(data, item_id);
-        let mut badges = Vec::new();
-        if quest_refs > 0 {
-            badges.push(reference_text::quest_badge());
-        }
-        if recipe_refs > 0 {
-            badges.push(reference_text::recipe_badge());
-        }
-        if self.item_best_record_label(item_id).is_some() {
-            badges.push(reference_text::best_badge());
-        }
-        if self.sell_is_safe(data, item_id) {
-            badges.push(reference_text::safe_badge());
-        }
-        badges
-    }
-
     pub(super) fn inventory_reference_summary(&self, data: &GameData, item_id: &str) -> String {
         let quest_refs = self.active_quest_reference_count(data, item_id);
         let recipe_refs = self.known_recipe_reference_count(data, item_id);
@@ -92,10 +73,6 @@ impl GameplayState {
         }
         if self.sell_is_safe(data, item_id) {
             parts.push(reference_text::safe_reference());
-        }
-        let badges = self.inventory_badges(data, item_id);
-        if !badges.is_empty() {
-            parts.push(reference_text::badge_summary(&badges));
         }
         reference_text::reference_summary(&parts)
     }
