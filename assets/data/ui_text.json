@@ -441,7 +441,7 @@
     "world_marker_request": "request",
     "tutorial_crow_intro": "Crow: Nothing grows in a laboratory. North, into the plains — sunleaf where the light is open, whisper moss on the shaded stone. Both are morning work. Then the cauldron.",
     "tutorial_save": "Tap PAUSE, then use SAVE or LOAD to keep your current run safe.",
-    "tutorial_journal": "Tap BAG & JOURNAL to read routes, brews, herb notes and where everybody stands with you.",
+    "tutorial_journal": "Tap JOURNAL to read routes, brews, herb notes and where everybody stands with you. Tap BAG to inspect carried items.",
     "tutorial_alchemy_open": "Crow: Walk to the cauldron, then tap its ACT prompt to begin your first brew.",
     "tutorial_brew_goal": "Crow: First recipe — Healing Draught: 1 Sunleaf + 1 Whisper Moss. Open the cauldron, set heat 1, stir once, choose steady timing, then tap BREW for Mira.",
     "tutorial_potions": "The belt starts empty. Tap a finished potion on the belt to drink it, or carry it to whoever asked for one.",

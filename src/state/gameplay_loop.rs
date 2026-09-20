@@ -69,6 +69,13 @@ impl GameplayState {
             return None;
         }
         if left_mouse_pressed()
+            && rect_contains_point(crate::ui::touch_inventory_rect(), mouse_position_point())
+        {
+            self.set_overlay(OverlayScreen::Inventory);
+            self.ui.inventory_index = 0;
+            return None;
+        }
+        if left_mouse_pressed()
             && rect_contains_point(
                 crate::inventory_layout::inventory_hud_rect(),
                 hud_mouse_position_point(),

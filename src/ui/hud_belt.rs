@@ -10,7 +10,7 @@ use macroquad_toolkit::ui::draw_ui_text;
 pub(super) fn draw_potion_belt(view: &HudView, art: &ArtAssets) {
     let slot_size = 58.0;
     let gap = 12.0;
-    let slot_count = view.potions.len();
+    let slot_count = displayed_slot_count(view);
     let width =
         40.0 + slot_size * slot_count as f32 + gap * slot_count.saturating_sub(1) as f32 + 40.0;
     let height = 96.0;
@@ -52,16 +52,28 @@ pub(super) fn draw_potion_belt(view: &HudView, art: &ArtAssets) {
     draw_belt_hardware(rect, slot_size, gap);
     draw_gem(vec2(rect.x + rect.w * 0.5, rect.y + rect.h + 2.0), 9.0);
 
-    for (index, slot) in view.potions.iter().enumerate() {
-        let slot_rect = potion_slot_rect(index);
+    for (index, slot) in view.potions.iter().take(slot_count).enumerate() {
+        let slot_rect = potion_slot_rect_for_count(index, slot_count);
         draw_hotbar_slot(slot_rect, slot, art, index);
     }
 }
 
+fn displayed_slot_count(view: &HudView) -> usize {
+    view.potions
+        .iter()
+        .rposition(|slot| slot.icon_id.is_some())
+        .map(|index| index + 1)
+        .unwrap_or(1)
+}
+
 pub(crate) fn potion_slot_rect(index: usize) -> Rect {
+    let slot_count = crate::view_models::hud::HOTBAR_SLOT_COUNT;
+    potion_slot_rect_for_count(index, slot_count)
+}
+
+fn potion_slot_rect_for_count(index: usize, slot_count: usize) -> Rect {
     const SLOT_SIZE: f32 = 58.0;
     const GAP: f32 = 12.0;
-    let slot_count = crate::view_models::hud::HOTBAR_SLOT_COUNT;
     let width = 40.0 + SLOT_SIZE * slot_count as f32 + GAP * (slot_count - 1) as f32 + 40.0;
     let x = super::hud_w() * 0.5 - width * 0.5;
     let y = super::hud_h() - 108.0;

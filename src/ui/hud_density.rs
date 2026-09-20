@@ -16,18 +16,12 @@ pub(crate) enum HudDensity {
 /// One drawable region of the HUD.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd)]
 pub(crate) enum HudPanel {
-    /// Ornament. The tower's name, in a frame, permanently.
-    TitleBanner,
     /// Vitality can end the working day, so it survives quiet mode.
     VitalityMedallion,
-    CoinChip,
     /// The journal holds the same thing in more detail.
     GoalNote,
     /// The clock decides whether ground is gatherable and when you collapse.
     TimePanel,
-    MinimapFrame,
-    SideStatusPanel,
-    ControlTags,
     /// Actionable: the bottles a keypress away.
     PotionBelt,
     /// What just happened, and the only warning before a collapse.
@@ -37,28 +31,23 @@ pub(crate) enum HudPanel {
     EventToasts,
 }
 
-/// What each density draws. Quiet keeps the four things a player acts on and
-/// drops the six that repeat the journal or frame the picture.
+/// What each density draws. Both modes keep the same actionable information;
+/// Full mode no longer makes ornamental chrome compete with the valley.
 pub(crate) fn visible_panels(density: HudDensity) -> &'static [HudPanel] {
     match density {
         HudDensity::Full => &[
-            HudPanel::TitleBanner,
             HudPanel::VitalityMedallion,
-            HudPanel::CoinChip,
             HudPanel::GoalNote,
             HudPanel::TimePanel,
-            HudPanel::MinimapFrame,
-            HudPanel::SideStatusPanel,
-            HudPanel::ControlTags,
             HudPanel::PotionBelt,
             HudPanel::StatusStrip,
             HudPanel::EventToasts,
         ],
         HudDensity::Quiet => &[
             HudPanel::VitalityMedallion,
+            HudPanel::GoalNote,
             HudPanel::TimePanel,
             HudPanel::PotionBelt,
-            HudPanel::StatusStrip,
             HudPanel::EventToasts,
         ],
     }

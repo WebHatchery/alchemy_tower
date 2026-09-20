@@ -24,7 +24,6 @@ fn quiet_drops_the_framing_and_keeps_what_you_act_on() {
     for required in [
         HudPanel::VitalityMedallion,
         HudPanel::TimePanel,
-        HudPanel::StatusStrip,
         HudPanel::PotionBelt,
         HudPanel::EventToasts,
     ] {
@@ -34,13 +33,6 @@ fn quiet_drops_the_framing_and_keeps_what_you_act_on() {
         );
     }
 
-    // And the framing is what should go.
-    for ornament in [HudPanel::TitleBanner, HudPanel::MinimapFrame] {
-        assert!(
-            !quiet.contains(&ornament),
-            "quiet mode still draws {ornament:?}"
-        );
-    }
 }
 
 /// The full HUD is the default: a display preference should never change

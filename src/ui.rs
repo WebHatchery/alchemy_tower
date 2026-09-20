@@ -83,8 +83,8 @@ pub(crate) use prompts::{draw_interaction_prompt, interaction_prompt_rect};
 pub(crate) use text::draw_missing_area_message;
 use text::{draw_wrapped_text, truncate_text_to_width};
 pub(crate) use touch_controls::{
-    draw_touch_controls, touch_journal_rect, touch_move_down_rect, touch_move_left_rect,
-    touch_move_right_rect, touch_move_up_rect, touch_pause_rect,
+    draw_touch_controls, touch_inventory_rect, touch_journal_rect, touch_move_down_rect,
+    touch_move_left_rect, touch_move_right_rect, touch_move_up_rect, touch_pause_rect,
 };
 pub(crate) use widgets::draw_action_button;
 use widgets::{draw_item_selection_card, draw_selection_card, draw_state_banner};

@@ -61,6 +61,7 @@ impl GameplayState {
             goal: self.hud_goal(data),
             status_text: self.runtime.status_text.clone(),
             area_label: area.name.clone(),
+            area_banner_alpha: (self.runtime.area_banner_seconds / 0.8).clamp(0.0, 1.0),
             inventory_label: ui_copy("hud_drawer_inventory").to_owned(),
             inventory_hint: ui_copy("hud_drawer_inventory_hint").to_owned(),
             effects_label: ui_copy("hud_drawer_effects").to_owned(),

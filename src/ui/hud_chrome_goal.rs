@@ -69,21 +69,6 @@ pub(super) fn draw_goal_note_hardware(rect: Rect, has_icon: bool) {
     );
 }
 
-pub(super) fn draw_goal_action_strip(rect: Rect) {
-    let strip = Rect::new(rect.x + 16.0, rect.y + rect.h - 29.0, rect.w - 32.0, 22.0);
-    draw_beveled_rect(
-        Rect::new(strip.x + 2.0, strip.y + 3.0, strip.w, strip.h),
-        6.0,
-        Color::from_rgba(0, 0, 0, 72),
-    );
-    draw_beveled_rect(strip, 6.0, Color::from_rgba(44, 38, 30, 142));
-    draw_beveled_rect_lines(strip, 6.0, 0.9, Color::from_rgba(242, 205, 126, 82));
-    draw_small_diamond(
-        vec2(strip.x + strip.w - 11.0, strip.y + strip.h * 0.5),
-        Color::from_rgba(91, 223, 205, 122),
-    );
-}
-
 pub(super) fn draw_time_panel_hardware(rect: Rect) {
     hud_chrome_time_panel::draw_time_panel_hardware(rect);
 }

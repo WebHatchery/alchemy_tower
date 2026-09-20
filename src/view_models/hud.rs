@@ -54,6 +54,7 @@ pub(crate) struct HudView {
     pub(crate) goal: HudGoal,
     pub(crate) status_text: String,
     pub(crate) area_label: String,
+    pub(crate) area_banner_alpha: f32,
     pub(crate) inventory_label: String,
     pub(crate) inventory_hint: String,
     pub(crate) effects_label: String,

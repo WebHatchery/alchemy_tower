@@ -2,7 +2,7 @@
 
 ## UI_STYLE review — 2026-09-20
 
-Audit/planning only; no game code changed. Read the updated `AGENTS.md`,
+Audit baseline for the implementation pass. Read the updated `AGENTS.md`,
 `UI_STYLE.md`, `CODE_STANDARDS.md`, `GAME_DEVELOPMENT_GUIDE.md`, `README.md`,
 and the live design reference `docs/alchemy_system_design.md`. No
 `PROJECT_AGENTS.md` or separately named GDD was found. The design calls for
@@ -16,10 +16,11 @@ layout/scaling and menu/gameplay/pause transitions. Visually inspected existing
 `ui_shop.png`, `ui_rune.png`, `ui_archive_0_0.png`, `ui_toasts.png`, and
 `ui_paused.png`. These are saved captures, not new runs of the current revision.
 Archive/toast captures visibly predate the current touch labels; do not treat
-obsolete key hints in them as current defects. No live browser, native gameplay,
-or touch interactions were exercised in this audit. No minimum gameplay
-viewport is declared in the README; 1280x720 is the native/design baseline,
-not proof of phone usability.
+obsolete key hints in them as current defects. The baseline audit did not
+exercise live browser, native gameplay, or touch interactions. The
+implementation now declares 1280x720 as the design baseline and 960x540
+landscape as the minimum supported gameplay viewport; 640x360 and 360x640
+remain stress cases rather than claimed supported sizes.
 
 Keep what already works: PAUSE is separate from exploration actions, save/load
 live in pause, overlays have visible close controls, opening hints track shown
@@ -39,35 +40,6 @@ and document support for the latter sizes rather than silently shrinking them.
 Check embedded browser and native layouts, and actual rendered tap sizes.
 A practical project target is at least 44x44 logical screen pixels for controls;
 this is an audit recommendation, not a numeric requirement in UI_STYLE.md.
-
-- [ ] **UI-01 — Recompose the default exploration HUD around the valley and the next action.**
-  - **Screen/files:** Exploration, fresh and established saves; `README.md`,
-    `src/ui/hud.rs::draw_hud_view`, `hud_density.rs::visible_panels`,
-    `hud_header.rs`, `hud_status_goal.rs`, `hud_side.rs`, `hud_belt.rs`,
-    `src/state/gameplay_hud_view.rs`, `src/settings.rs`.
-  - **Observed:** Saved gameplay captures and current Full defaults show a large
-    title/location banner, vitality medallion, coin panel, full quest note,
-    clock/compass, bag/effects/journal plaque and eight-slot belt. Many equally
-    ornate regions compete with the player and room; the empty belt and
-    Effects/None plaque consume space before they help. Bag/journal entry points
-    are duplicated. Quiet HUD exists but is opt-in and retains ornate surfaces.
-  - **Change:** Record UI_STYLE §1 briefs for exploration, brewing, collection
-    inspection and transactions in the README, including normal/minimum sizes.
-    Make the default composition world-first: one compact status group and one
-    contextual action/support area. Replace the permanent title with brief area
-    arrival feedback; collapse the quest essay to its next actionable objective
-    with tap-to-open details. Consolidate bag/journal access, show active effects
-    only when present, and collapse unused belt slots while keeping potion access
-    discoverable. Relocate coin detail to relevant trade/upgrade decisions and
-    inspection. Remove redundant nested brass frames before tuning decoration.
-    Preserve a separate, quiet PAUSE route and existing preference compatibility.
-  - **Acceptance:** Normal exploration has no more than 2–3 strongly competing
-    regions, including the world. The player, nearby target and ACT are apparent
-    first; vitality/time pressure and the next objective remain understandable.
-    Quiet and Full preferences both meet the attention budget.
-  - **Verify:** Capture entry, town, a dense gathering route, empty/full belt and
-    active effects at the common size matrix. Tap movement → ACT → bag/journal →
-    close → PAUSE → resume. Check no utility is grouped with the gameplay action.
 
 - [ ] **UI-02 — Replace blanket overlay shrinking with responsive content and controls.**
   - **Screen/files:** HUD and gameplay overlays; `src/ui_scale.rs`,

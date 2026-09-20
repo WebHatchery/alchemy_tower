@@ -20,8 +20,8 @@ Turn the abandoned tower into a working magical home while learning the rhythms 
 
 - Use the on-screen arrows to move.
 - Tap ACT beside an object, person, or route to interact.
-- Tap BAG & JOURNAL to inspect your notes and PAUSE to save, load, resume, or
-  return to the menu.
+- Tap BAG or JOURNAL to inspect carried items or notes, and PAUSE to save, load,
+  resume, or return to the menu.
 - Keyboard shortcuts are optional extras; every required action has a visible
   touch control.
 
@@ -56,3 +56,37 @@ preferences. The existing menu action/render separation and tower styling are
 retained. Music, voice, background muting, remapping, camera controls, autosave
 and user scaling are not exposed until the game integrates those consumers;
 showing those toolkit fields alone would create ineffective controls.
+
+## UI screen briefs and support contract
+
+The normal design canvas is 1280x720. The supported responsive range is 960x540
+and larger in landscape; 1920x1080 is a wide-layout check. 640x360 landscape
+and 360x640 portrait remain stress cases until the responsive overlay pass
+provides a readable stacked layout, so those sizes are expected to letterbox
+and are not claimed as supported gameplay canvases.
+
+Exploration: the current decision is “what should I do next in this place?”
+The dominant focus is the valley and the nearby target. The primary action is
+the visible ACT prompt; vitality, time pressure, and the next objective stay
+near the edges without competing with the world. Bag, Journal, and PAUSE are
+separate visible touch controls. Area names appear briefly on arrival rather
+than as a permanent title. Empty potion slots collapse to one discoverable
+slot, while active potions remain available from the belt.
+
+Brewing: the current decision is “what will this setup consume and produce?”
+The dominant focus is the selected materials, slots, and predicted outcome.
+Heat, stirs, timing, shortages, and BREW remain beside the setup; advanced
+traits, mastery, and morph reasoning are supporting detail. Close is a separate
+navigation action. At the minimum supported landscape size, the panel keeps its
+readable fixed design geometry; smaller stress sizes are recorded as known
+limitations pending the stacked overlay work.
+
+Collection inspection: the current decision is “which carried item matters for
+the work ahead?” The list is the supporting area and the selected detail is the
+dominant comparison. Rows show name, held count, and only the warning that
+affects selection; explicit uses and quality appear in the detail view.
+
+Transactions: the current decision is “is this safe and affordable to buy or
+sell?” The selected item, price, held/keep-stock warning, and explicit action
+are kept together. Navigation and Close remain visually separate from the
+trade decision.

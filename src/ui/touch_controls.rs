@@ -7,7 +7,7 @@
 use super::draw_action_button;
 use macroquad::prelude::{screen_height, screen_width, Rect};
 
-const MOVE_SIZE: f32 = 48.0;
+const MOVE_SIZE: f32 = 52.0;
 const MOVE_GAP: f32 = 4.0;
 
 pub(crate) fn touch_move_up_rect() -> Rect {
@@ -40,12 +40,16 @@ pub(crate) fn touch_move_down_rect() -> Rect {
     )
 }
 
+pub(crate) fn touch_inventory_rect() -> Rect {
+    Rect::new(20.0, move_origin().1 - 54.0, 76.0, 44.0)
+}
+
 pub(crate) fn touch_journal_rect() -> Rect {
-    Rect::new(20.0, move_origin().1 - 42.0, 190.0, 34.0)
+    Rect::new(102.0, move_origin().1 - 54.0, 112.0, 44.0)
 }
 
 pub(crate) fn touch_pause_rect() -> Rect {
-    Rect::new(screen_width() - 148.0, 18.0, 128.0, 40.0)
+    Rect::new(screen_width() - 148.0, 18.0, 128.0, 44.0)
 }
 
 pub(crate) fn draw_touch_controls() {
@@ -53,7 +57,8 @@ pub(crate) fn draw_touch_controls() {
     draw_action_button(touch_move_left_rect(), "L", 18.0);
     draw_action_button(touch_move_right_rect(), "R", 18.0);
     draw_action_button(touch_move_down_rect(), "DN", 16.0);
-    draw_action_button(touch_journal_rect(), "BAG & JOURNAL", 13.0);
+    draw_action_button(touch_inventory_rect(), "BAG", 15.0);
+    draw_action_button(touch_journal_rect(), "JOURNAL", 14.0);
     draw_action_button(touch_pause_rect(), "PAUSE", 16.0);
 }
 
