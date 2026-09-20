@@ -5,6 +5,7 @@ use crate::input::{
     select_next_pressed, select_previous_pressed, sort_pressed, switch_next_pressed,
     switch_previous_pressed,
 };
+use crate::ui::{shop_visible_rows, SHOP_BUY_VISIBLE_ROWS, SHOP_SELL_VISIBLE_ROWS};
 
 impl GameplayState {
     pub(super) fn handle_shop_inputs(&mut self, data: &GameData) {
@@ -29,18 +30,41 @@ impl GameplayState {
                 self.ui.shop_index = 0;
                 return;
             }
+            if rect_contains_point(crate::ui::shop_sort_rect(), point) {
+                self.cycle_inventory_sort_mode();
+                self.ui.shop_index = 0;
+                return;
+            }
+            let total = self.shop_entry_count(data, station);
+            let page_rows = shop_visible_rows(self.ui.shop_buy_tab);
+            if total > page_rows && rect_contains_point(crate::ui::shop_previous_rect(), point) {
+                let start = visible_shop_start(self.ui.shop_index, total, page_rows);
+                self.ui.shop_index = start.saturating_sub(page_rows);
+                return;
+            }
+            if total > page_rows && rect_contains_point(crate::ui::shop_next_rect(), point) {
+                let start = visible_shop_start(self.ui.shop_index, total, page_rows);
+                self.ui.shop_index = (start + page_rows).min(total.saturating_sub(1));
+                return;
+            }
             let count = if self.ui.shop_buy_tab {
-                station.stock.len()
+                station.stock.len().min(SHOP_BUY_VISIBLE_ROWS)
             } else {
-                self.sell_candidates(data).len()
+                self.sell_candidates(data).len().min(SHOP_SELL_VISIBLE_ROWS)
             };
-            for index in 0..count {
+            let start = visible_shop_start(
+                self.ui.shop_index,
+                self.shop_entry_count(data, station),
+                page_rows,
+            );
+            for offset in 0..count.min(self.shop_entry_count(data, station).saturating_sub(start)) {
                 if !rect_contains_point(
-                    crate::ui::shop_entry_rect(index, self.ui.shop_buy_tab),
+                    crate::ui::shop_entry_rect(offset, self.ui.shop_buy_tab),
                     point,
                 ) {
                     continue;
                 }
+                let index = start + offset;
                 if self.ui.shop_index == index {
                     self.confirm_shop_selection(data, station);
                 } else {
@@ -81,6 +105,14 @@ impl GameplayState {
         self.ui.shop_index = self.ui.shop_index.min(max_index);
     }
 
+    fn shop_entry_count(&self, data: &GameData, station: &crate::data::StationDefinition) -> usize {
+        if self.ui.shop_buy_tab {
+            station.stock.len()
+        } else {
+            self.sell_candidates(data).len()
+        }
+    }
+
     fn confirm_shop_selection(
         &mut self,
         data: &GameData,
@@ -97,4 +129,8 @@ impl GameplayState {
             }
         }
     }
+}
+
+fn visible_shop_start(selected: usize, total: usize, rows: usize) -> usize {
+    super::gameplay_overlay_window::paged_window(selected, total, rows).0
 }

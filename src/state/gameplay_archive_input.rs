@@ -39,9 +39,43 @@ impl GameplayState {
             }
             let selection_len = self.archive_selection_len(data);
             if selection_len > 0 {
+                if selection_len > super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS
+                    && rect_contains_point(crate::ui::archive_previous_rect(), point)
+                {
+                    let selected = self.archive_selected_index(selection_len);
+                    let (start, _) = paged_window(
+                        selected,
+                        selection_len,
+                        super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS,
+                    );
+                    self.ui.archive_index =
+                        start.saturating_sub(super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS);
+                    return;
+                }
+                if selection_len > super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS
+                    && rect_contains_point(crate::ui::archive_next_rect(), point)
+                {
+                    let selected = self.archive_selected_index(selection_len);
+                    let (start, _) = paged_window(
+                        selected,
+                        selection_len,
+                        super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS,
+                    );
+                    self.ui.archive_index = (start
+                        + super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS)
+                        .min(selection_len.saturating_sub(1));
+                    return;
+                }
                 let selected = self.archive_selected_index(selection_len);
-                let (start, _) = paged_window(selected, selection_len, 6);
-                for offset in 0..selection_len.saturating_sub(start).min(6) {
+                let (start, _) = paged_window(
+                    selected,
+                    selection_len,
+                    super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS,
+                );
+                for offset in 0..selection_len
+                    .saturating_sub(start)
+                    .min(super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS)
+                {
                     if !rect_contains_point(crate::ui::archive_list_entry_rect(offset), point) {
                         continue;
                     }

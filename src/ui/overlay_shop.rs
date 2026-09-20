@@ -1,7 +1,7 @@
 use super::{
-    draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
-    draw_overlay_section_title, draw_overlay_subtitle, draw_overlay_tab, draw_panel,
-    draw_state_banner,
+    draw_action_button, draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer,
+    draw_overlay_section_box, draw_overlay_section_title, draw_overlay_subtitle, draw_overlay_tab,
+    draw_panel, draw_state_banner,
 };
 use crate::art::ArtAssets;
 use crate::view_models::shop::ShopOverlayView;
@@ -9,10 +9,11 @@ use macroquad::prelude::*;
 
 pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
     draw_overlay_backdrop();
-    let x = 160.0;
-    let y = 88.0;
-    let w = crate::ui_scale::ui_w() - 320.0;
-    let h = crate::ui_scale::ui_h() - 176.0;
+    let panel = crate::ui::shop_panel_rect();
+    let x = panel.x;
+    let y = panel.y;
+    let w = panel.w;
+    let h = panel.h;
     draw_panel(x, y, w, h, &view.station_name);
     draw_overlay_subtitle(x, y, &view.subtitle);
     draw_overlay_tab(
@@ -29,8 +30,9 @@ pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
         x + 20.0,
         y + 148.0,
         &view.stock_title,
-        Some(&view.sort_text),
+        view.range_text.as_deref(),
     );
+    draw_action_button(crate::ui::shop_sort_rect(), &view.sort_text, 0.0);
     draw_overlay_section_box(x + 20.0, y + 162.0, w - 40.0, h - 224.0);
 
     let mut row_y = y + 196.0;
@@ -41,13 +43,13 @@ pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
     if view.entries.is_empty() {
         draw_state_banner(x + 32.0, row_y - 16.0, w - 64.0, &view.empty_text, false);
     } else {
-        for entry in &view.entries {
+        for (index, entry) in view.entries.iter().enumerate() {
             draw_item_selection_card(
                 art,
                 &entry.item_id,
-                x + 32.0,
-                row_y - 24.0,
-                w - 64.0,
+                crate::ui::shop_entry_rect(index, view.buy_tab_active).x,
+                crate::ui::shop_entry_rect(index, view.buy_tab_active).y,
+                crate::ui::shop_entry_rect(index, view.buy_tab_active).w,
                 52.0,
                 entry.selected,
                 entry.enabled,
@@ -55,11 +57,11 @@ pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
                 &entry.detail,
                 &entry.meta,
             );
-            row_y += 60.0;
-            if row_y > y + h - 40.0 {
-                break;
-            }
         }
     }
     draw_overlay_footer(x, y, w, h, &view.footer_text);
+    if view.range_text.is_some() {
+        draw_action_button(crate::ui::shop_previous_rect(), &view.previous_label, 0.0);
+        draw_action_button(crate::ui::shop_next_rect(), &view.next_label, 0.0);
+    }
 }

@@ -32,8 +32,8 @@ pub(crate) const AL_MAT_BOX_H: f32 = 172.0;
 pub(crate) const AL_MAT_ROW_STEP: f32 = 42.0;
 pub(crate) const AL_MAT_ROW_H: f32 = 38.0;
 pub(crate) const AL_MAT_VISIBLE_ROWS: usize = 4;
-pub(crate) const AL_FORM_TITLE_Y: f32 = 318.0;
-pub(crate) const AL_FORM_BOX_Y: f32 = 326.0;
+pub(crate) const AL_FORM_TITLE_Y: f32 = 350.0;
+pub(crate) const AL_FORM_BOX_Y: f32 = 358.0;
 
 // Right column bands.
 pub(crate) const AL_SLOT_TITLE_Y: f32 = 112.0;
@@ -80,6 +80,21 @@ pub(crate) fn material_row_rect_at(x: f32, y: f32, index: usize) -> Rect {
         AL_LW - 8.0,
         AL_MAT_ROW_H,
     )
+}
+
+pub(crate) fn material_previous_rect() -> Rect {
+    let (x, y) = panel_origin();
+    Rect::new(
+        x + AL_LX,
+        y + AL_MAT_BOX_Y + AL_MAT_BOX_H + 8.0,
+        112.0,
+        34.0,
+    )
+}
+
+pub(crate) fn material_next_rect() -> Rect {
+    let previous = material_previous_rect();
+    Rect::new(previous.x + previous.w + 8.0, previous.y, 112.0, previous.h)
 }
 
 pub(crate) fn alchemy_slot_rect(slot: usize) -> Rect {

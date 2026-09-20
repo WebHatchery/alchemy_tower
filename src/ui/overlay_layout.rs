@@ -19,6 +19,17 @@ pub(crate) fn shop_panel_rect() -> Rect {
     Rect::new(160.0, 88.0, ui_w() - 320.0, ui_h() - 176.0)
 }
 
+pub(crate) const SHOP_BUY_VISIBLE_ROWS: usize = 5;
+pub(crate) const SHOP_SELL_VISIBLE_ROWS: usize = 4;
+
+pub(crate) fn shop_visible_rows(buying: bool) -> usize {
+    if buying {
+        SHOP_BUY_VISIBLE_ROWS
+    } else {
+        SHOP_SELL_VISIBLE_ROWS
+    }
+}
+
 pub(crate) fn shop_tab_rect(buying: bool) -> Rect {
     let panel = shop_panel_rect();
     Rect::new(
@@ -38,6 +49,41 @@ pub(crate) fn shop_entry_rect(index: usize, buying: bool) -> Rect {
         panel.w - 64.0,
         52.0,
     )
+}
+
+pub(crate) fn shop_sort_rect() -> Rect {
+    let panel = shop_panel_rect();
+    Rect::new(panel.x + panel.w - 190.0, panel.y + 132.0, 166.0, 32.0)
+}
+
+pub(crate) fn shop_previous_rect() -> Rect {
+    let panel = shop_panel_rect();
+    Rect::new(
+        panel.x + panel.w - 266.0,
+        panel.y + panel.h - 46.0,
+        116.0,
+        32.0,
+    )
+}
+
+pub(crate) fn shop_next_rect() -> Rect {
+    let previous = shop_previous_rect();
+    Rect::new(previous.x + previous.w + 8.0, previous.y, 116.0, previous.h)
+}
+
+pub(crate) fn standard_overlay_previous_rect() -> Rect {
+    let panel = standard_overlay_panel_rect();
+    Rect::new(
+        panel.x + panel.w - 266.0,
+        panel.y + panel.h - 46.0,
+        116.0,
+        32.0,
+    )
+}
+
+pub(crate) fn standard_overlay_next_rect() -> Rect {
+    let previous = standard_overlay_previous_rect();
+    Rect::new(previous.x + previous.w + 8.0, previous.y, 116.0, previous.h)
 }
 
 pub(crate) fn standard_overlay_entry_rect(index: usize, top: f32) -> Rect {

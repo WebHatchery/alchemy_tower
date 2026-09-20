@@ -7,9 +7,12 @@ pub(crate) struct ShopOverlayView {
     pub(crate) sell_tab_active: bool,
     pub(crate) stock_title: String,
     pub(crate) sort_text: String,
+    pub(crate) range_text: Option<String>,
     pub(crate) empty_text: String,
     pub(crate) safe_sell_banner: Option<String>,
     pub(crate) footer_text: String,
+    pub(crate) previous_label: &'static str,
+    pub(crate) next_label: &'static str,
     pub(crate) entries: Vec<ShopOverlayEntry>,
 }
 

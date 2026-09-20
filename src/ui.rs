@@ -45,6 +45,7 @@ mod world_marker_plates;
 mod world_markers;
 mod world_scene;
 
+pub(crate) use crate::archive_layout::{archive_next_rect, archive_previous_rect};
 pub(crate) use hud::{draw_hud_view, hud_potion_slot_rect};
 pub(crate) use menu_screen::draw_menu_screen;
 pub(crate) use overlay_exports::{
@@ -73,7 +74,9 @@ pub(crate) use overlay_exports::{
 use overlay_layout::standard_overlay_panel_rect;
 pub(crate) use overlay_layout::{
     archive_filter_rect, archive_list_entry_rect, overlay_close_rect, overlay_primary_action_rect,
-    shop_entry_rect, shop_tab_rect, standard_overlay_entry_rect,
+    shop_entry_rect, shop_next_rect, shop_panel_rect, shop_previous_rect, shop_sort_rect,
+    shop_tab_rect, shop_visible_rows, standard_overlay_entry_rect, standard_overlay_next_rect,
+    standard_overlay_previous_rect, SHOP_BUY_VISIBLE_ROWS, SHOP_SELL_VISIBLE_ROWS,
 };
 pub(crate) use panels::{
     draw_overlay_backdrop, draw_overlay_close_control, draw_overlay_footer,

@@ -1,4 +1,4 @@
-use super::gameplay_overlay_window::visible_window_start;
+use super::gameplay_overlay_window::paged_window;
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format, ui_text};
 use crate::data::GameData;
@@ -7,14 +7,14 @@ use crate::view_models::rune::{RuneOverlayEntry, RuneOverlayView};
 /// Cards are 64px apart inside a section box that leaves room for about this
 /// many before they would run past it and over the footer. The drafts list grew
 /// past that as soon as the workbench had more than a handful of patterns.
-const VISIBLE_RUNE_ROWS: usize = 5;
+pub(super) const VISIBLE_RUNE_ROWS: usize = 5;
 
 impl GameplayState {
     pub(super) fn rune_overlay_view(&self, data: &GameData) -> Option<RuneOverlayView> {
         let station = self.nearby_station(data)?;
         let recipes = self.available_rune_recipes(data, station);
         let total = recipes.len();
-        let start = visible_window_start(self.ui.rune_index, total, VISIBLE_RUNE_ROWS);
+        let (start, _) = paged_window(self.ui.rune_index, total, VISIBLE_RUNE_ROWS);
         let range_text = (total > VISIBLE_RUNE_ROWS).then(|| {
             ui_format(
                 "overlay_rune_range",

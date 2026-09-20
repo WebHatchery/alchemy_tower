@@ -1,7 +1,7 @@
 use super::{
-    draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer, draw_overlay_section_box,
-    draw_overlay_section_title, draw_overlay_subtitle, draw_panel, draw_state_banner,
-    standard_overlay_panel_rect,
+    draw_action_button, draw_item_selection_card, draw_overlay_backdrop, draw_overlay_footer,
+    draw_overlay_section_box, draw_overlay_section_title, draw_overlay_subtitle, draw_panel,
+    draw_state_banner, standard_overlay_panel_rect,
 };
 use crate::art::ArtAssets;
 use crate::view_models::rune::RuneOverlayView;
@@ -44,4 +44,16 @@ pub(crate) fn draw_rune_overlay_view(view: &RuneOverlayView, art: &ArtAssets) {
         }
     }
     draw_overlay_footer(x, y, w, h, &view.footer_text);
+    if view.range_text.is_some() {
+        draw_action_button(
+            crate::ui::standard_overlay_previous_rect(),
+            crate::content::ui_copy("overlay_inventory_previous"),
+            0.0,
+        );
+        draw_action_button(
+            crate::ui::standard_overlay_next_rect(),
+            crate::content::ui_copy("overlay_inventory_next"),
+            0.0,
+        );
+    }
 }

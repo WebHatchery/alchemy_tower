@@ -1,4 +1,6 @@
+use super::gameplay_overlay_window::paged_window;
 use super::GameplayState;
+use crate::alchemy_layout::AL_MAT_VISIBLE_ROWS;
 use crate::content::{ui_copy, ui_format};
 use crate::data::GameData;
 use crate::view_models::alchemy::{AlchemyMaterialRowView, AlchemyMaterialsPanelView};
@@ -9,12 +11,29 @@ impl GameplayState {
         data: &GameData,
     ) -> AlchemyMaterialsPanelView {
         let sort_label = self.inventory_sort_label();
+        let rows = self.alchemy_material_cards(data);
+        let (start, _) = paged_window(self.alchemy.index, rows.len(), AL_MAT_VISIBLE_ROWS);
+        let range_text = (rows.len() > AL_MAT_VISIBLE_ROWS).then(|| {
+            crate::content::ui_format(
+                "overlay_alchemy_range",
+                &[
+                    ("first", &(start + 1).to_string()),
+                    (
+                        "last",
+                        &((start + AL_MAT_VISIBLE_ROWS).min(rows.len()).to_string()),
+                    ),
+                    ("total", &rows.len().to_string()),
+                ],
+            )
+        });
         AlchemyMaterialsPanelView {
             title: ui_copy("overlay_materials"),
             sort_text: ui_format("overlay_sort_mode", &[("mode", sort_label)]),
+            range_text,
             empty_text: self.unavailable_state_text(ui_copy("overlay_alchemy_empty_materials")),
-            rows: self
-                .alchemy_material_cards(data)
+            previous_label: ui_copy("overlay_inventory_previous"),
+            next_label: ui_copy("overlay_inventory_next"),
+            rows: rows
                 .into_iter()
                 .map(|card| {
                     let reference = self.inventory_reference_summary(data, &card.item_id);

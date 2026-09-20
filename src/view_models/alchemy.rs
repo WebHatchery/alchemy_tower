@@ -27,7 +27,10 @@ pub(crate) struct AlchemyFormulaRowView {
 pub(crate) struct AlchemyMaterialsPanelView {
     pub(crate) title: &'static str,
     pub(crate) sort_text: String,
+    pub(crate) range_text: Option<String>,
     pub(crate) empty_text: String,
+    pub(crate) previous_label: &'static str,
+    pub(crate) next_label: &'static str,
     pub(crate) rows: Vec<AlchemyMaterialRowView>,
 }
 

@@ -3,8 +3,8 @@ use super::gameplay_alchemy_types::SLOT_COUNT;
 use super::GameplayState;
 use crate::alchemy_layout::{
     alchemy_close_rect, alchemy_slot_rect, brew_rect, catalyst_rect, clear_rect, heat_down_rect,
-    heat_up_rect, material_row_rect, repeat_rect, sort_rect, stirs_rect, timing_rect,
-    AL_MAT_VISIBLE_ROWS,
+    heat_up_rect, material_next_rect, material_previous_rect, material_row_rect, repeat_rect,
+    sort_rect, stirs_rect, timing_rect, AL_MAT_VISIBLE_ROWS,
 };
 use crate::audio::AudioAssets;
 use crate::data::{GameData, StationDefinition};
@@ -23,6 +23,16 @@ impl GameplayState {
         if rect_contains_point(alchemy_close_rect(), mouse) {
             self.clear_overlay();
             self.runtime.status_text = alchemy_input_text::closed_alchemy();
+            return;
+        }
+        if !items.is_empty() && rect_contains_point(material_previous_rect(), mouse) {
+            let start = visible_material_start(self.alchemy.index, items.len());
+            self.alchemy.index = start.saturating_sub(AL_MAT_VISIBLE_ROWS);
+            return;
+        }
+        if !items.is_empty() && rect_contains_point(material_next_rect(), mouse) {
+            let start = visible_material_start(self.alchemy.index, items.len());
+            self.alchemy.index = (start + AL_MAT_VISIBLE_ROWS).min(items.len().saturating_sub(1));
             return;
         }
         if self.select_alchemy_material_row(items, mouse) {
@@ -55,11 +65,7 @@ impl GameplayState {
         // Rows render inside a scroll window (see the materials panel), so the
         // visible row offset must be mapped back through the same window to the
         // real item index.
-        let start = self
-            .alchemy
-            .index
-            .saturating_sub(AL_MAT_VISIBLE_ROWS - 1)
-            .min(items.len().saturating_sub(AL_MAT_VISIBLE_ROWS));
+        let start = visible_material_start(self.alchemy.index, items.len());
         let visible = AL_MAT_VISIBLE_ROWS.min(items.len().saturating_sub(start));
         for offset in 0..visible {
             if rect_contains_point(material_row_rect(offset), mouse) {
@@ -145,4 +151,8 @@ impl GameplayState {
         }
         false
     }
+}
+
+fn visible_material_start(selected: usize, total: usize) -> usize {
+    super::gameplay_overlay_window::paged_window(selected, total, AL_MAT_VISIBLE_ROWS).0
 }

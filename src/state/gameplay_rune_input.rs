@@ -1,4 +1,5 @@
-use super::gameplay_overlay_window::visible_window_start;
+use super::gameplay_overlay_window::paged_window;
+use super::gameplay_rune_overlay_view::VISIBLE_RUNE_ROWS;
 use super::GameplayState;
 use crate::data::{GameData, StationKind};
 use crate::input::{
@@ -28,8 +29,22 @@ impl GameplayState {
         }
         if left_mouse_pressed() {
             let point = mouse_position_point();
-            let start = visible_window_start(self.ui.rune_index, recipes.len(), 5);
-            for offset in 0..recipes.len().saturating_sub(start).min(5) {
+            if recipes.len() > VISIBLE_RUNE_ROWS
+                && rect_contains_point(crate::ui::standard_overlay_previous_rect(), point)
+            {
+                let (start, _) = paged_window(self.ui.rune_index, recipes.len(), VISIBLE_RUNE_ROWS);
+                self.ui.rune_index = start.saturating_sub(VISIBLE_RUNE_ROWS);
+                return;
+            }
+            if recipes.len() > VISIBLE_RUNE_ROWS
+                && rect_contains_point(crate::ui::standard_overlay_next_rect(), point)
+            {
+                let (start, _) = paged_window(self.ui.rune_index, recipes.len(), VISIBLE_RUNE_ROWS);
+                self.ui.rune_index = (start + VISIBLE_RUNE_ROWS).min(recipes.len() - 1);
+                return;
+            }
+            let (start, _) = paged_window(self.ui.rune_index, recipes.len(), VISIBLE_RUNE_ROWS);
+            for offset in 0..recipes.len().saturating_sub(start).min(VISIBLE_RUNE_ROWS) {
                 if !rect_contains_point(
                     crate::ui::standard_overlay_entry_rect(offset, 148.0),
                     point,

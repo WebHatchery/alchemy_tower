@@ -1,6 +1,8 @@
+use super::gameplay_overlay_window::paged_window;
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format, ui_text};
 use crate::data::GameData;
+use crate::ui::shop_visible_rows;
 use crate::view_models::shop::{ShopOverlayEntry, ShopOverlayView};
 
 struct ShopEntryDraft {
@@ -56,9 +58,24 @@ impl GameplayState {
                     .unwrap_or_else(|| ui_copy("overlay_safe_sell").to_owned()),
             )
         };
+        let total = drafts.len();
+        let visible_rows = shop_visible_rows(buying);
+        let (start, _) = paged_window(self.ui.shop_index, total, visible_rows);
+        let range_text = (total > visible_rows).then(|| {
+            ui_format(
+                "overlay_shop_range",
+                &[
+                    ("first", &(start + 1).to_string()),
+                    ("last", &((start + visible_rows).min(total).to_string())),
+                    ("total", &total.to_string()),
+                ],
+            )
+        });
         let entries = drafts
             .into_iter()
             .enumerate()
+            .skip(start)
+            .take(visible_rows)
             .map(|(index, draft)| {
                 let amount = self
                     .inventory
@@ -104,6 +121,7 @@ impl GameplayState {
                 "overlay_sort_mode",
                 &[("mode", self.inventory_sort_label())],
             ),
+            range_text,
             empty_text: if buying {
                 self.unavailable_state_text(ui_copy("overlay_shop_empty_buy"))
             } else {
@@ -111,6 +129,8 @@ impl GameplayState {
             },
             safe_sell_banner,
             footer_text: shop_footer_text(),
+            previous_label: ui_copy("overlay_inventory_previous"),
+            next_label: ui_copy("overlay_inventory_next"),
             entries,
         })
     }

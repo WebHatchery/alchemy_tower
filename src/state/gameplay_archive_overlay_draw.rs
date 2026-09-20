@@ -2,8 +2,8 @@ use super::GameplayState;
 use crate::archive_layout::archive_panel_rect;
 use crate::data::GameData;
 use crate::ui::{
-    draw_archive_tabs, draw_overlay_backdrop, draw_overlay_footer, draw_overlay_subtitle,
-    draw_panel,
+    draw_action_button, draw_archive_tabs, draw_overlay_backdrop, draw_overlay_footer,
+    draw_overlay_subtitle, draw_panel,
 };
 
 impl GameplayState {
@@ -37,5 +37,19 @@ impl GameplayState {
             _ => {}
         }
         draw_overlay_footer(x, y, w, h, &chrome.footer_text);
+        if self.archive_tab_id() != "timeline"
+            && self.archive_selection_len(data) > super::gameplay_overlay_window::ARCHIVE_PAGE_ROWS
+        {
+            draw_action_button(
+                crate::ui::archive_previous_rect(),
+                crate::content::ui_copy("overlay_inventory_previous"),
+                0.0,
+            );
+            draw_action_button(
+                crate::ui::archive_next_rect(),
+                crate::content::ui_copy("overlay_inventory_next"),
+                0.0,
+            );
+        }
     }
 }
