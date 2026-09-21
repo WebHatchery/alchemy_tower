@@ -26,6 +26,7 @@ pub(in crate::alchemy) fn weighted_quality_average(ingredients: &[&ItemDefinitio
 pub(super) fn synthesis_efficiency_bonus(
     ingredients: &[&ItemDefinition],
     total_weight: u32,
+    multiplier: u32,
 ) -> u32 {
     if ingredients.is_empty() {
         return 0;
@@ -35,7 +36,7 @@ pub(super) fn synthesis_efficiency_bonus(
         .iter()
         .map(|item| item.synthesis_value)
         .sum::<u32>()
-        .saturating_mul(2)
+        .saturating_mul(multiplier)
         / total_weight
 }
 

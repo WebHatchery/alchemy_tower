@@ -51,7 +51,55 @@
       "alchemy": {
         "min_heat": 1,
         "max_heat": 3,
-        "initial_heat": 2
+        "initial_heat": 2,
+        "timing_ids": ["steady", "early", "late"],
+        "quality_bands": [
+          {"id": "crude", "minimum_score": 0, "label_key": "quality_band_crude"},
+          {"id": "serviceable", "minimum_score": 20, "label_key": "quality_band_serviceable"},
+          {"id": "fine", "minimum_score": 40, "label_key": "quality_band_fine"},
+          {"id": "excellent", "minimum_score": 60, "label_key": "quality_band_excellent"},
+          {"id": "masterwork", "minimum_score": 80, "label_key": "quality_band_masterwork"}
+        ],
+        "mastery_stages": [
+          {"id": "unknown", "minimum_brews": 0, "label_key": "mastery_stage_unknown"},
+          {"id": "guessed", "minimum_brews": 1, "label_key": "mastery_stage_guessed"},
+          {"id": "discovered", "minimum_brews": 2, "label_key": "mastery_stage_discovered"},
+          {"id": "refined", "minimum_brews": 4, "label_key": "mastery_stage_refined"},
+          {"id": "mastered", "minimum_brews": 7, "label_key": "mastery_stage_mastered"}
+        ],
+        "scoring": {
+          "synthesis_efficiency_multiplier": 2,
+          "shared_trait_multiplier": 3,
+          "preferred_trait_match_bonus": 4,
+          "mastery_brew_quality_bonus": 3,
+          "mastery_output_bonus": 1,
+          "heat_match_bonus": 6,
+          "heat_shortfall_penalty": 4,
+          "stirs_match_bonus": 5,
+          "stirs_shortfall_penalty": 2,
+          "catalyst_quality_divisor": 4,
+          "timing_match_bonus": 4,
+          "timing_mismatch_penalty": 4,
+          "sequence_match_bonus": 5,
+          "sequence_mismatch_penalty": 5,
+          "catalyst_mismatch_penalty": 6,
+          "minimum_elements_met_bonus": 5,
+          "minimum_elements_missed_penalty": 8,
+          "score_cap": 100
+        },
+        "volatility": {
+          "overcharge_heat_potency": 3,
+          "overcharge_stir_potency": 2,
+          "heat_instability": 14,
+          "stir_instability": 11,
+          "volatile_instability": 12,
+          "stabilizer_reduction": 9,
+          "catalyst_stabilize": 6,
+          "mastery_stabilize": 3,
+          "instability_limit": 100,
+          "volatile_trait": "volatile",
+          "stabilizer_traits": ["pure", "calm"]
+        }
       }
     }
   },

@@ -1,4 +1,3 @@
-use crate::alchemy::MASTERED_BREW_COUNT;
 use crate::state::gameplay::GameplayState;
 
 /// The gate is the point of the field, so drive it rather than trusting the
@@ -18,6 +17,7 @@ fn a_mastery_gated_request_waits_for_the_seventh_brew() {
         .expect("the guard checks this resolves")
         .name
         .clone();
+    let mastery_threshold = state_mastery_threshold(&data);
 
     let mut state = GameplayState::new(&data);
     state.progression.total_brews = 999;
@@ -31,7 +31,7 @@ fn a_mastery_gated_request_waits_for_the_seventh_brew() {
     state
         .progression
         .recipe_mastery
-        .insert(recipe_id.clone(), MASTERED_BREW_COUNT - 1);
+        .insert(recipe_id.clone(), mastery_threshold - 1);
     assert!(
         !state.quest_is_available(quest),
         "six clean brews is not mastery"
@@ -45,7 +45,7 @@ fn a_mastery_gated_request_waits_for_the_seventh_brew() {
     state
         .progression
         .recipe_mastery
-        .insert(recipe_id, MASTERED_BREW_COUNT);
+        .insert(recipe_id, mastery_threshold);
     assert!(
         state.quest_is_available(quest),
         "the seventh brew should open it"
@@ -80,7 +80,7 @@ fn a_beat_gated_request_waits_for_the_beat() {
     if !quest.required_mastered_recipe.is_empty() {
         state.progression.recipe_mastery.insert(
             quest.required_mastered_recipe.clone(),
-            crate::alchemy::MASTERED_BREW_COUNT,
+            state_mastery_threshold(&data),
         );
     }
 
@@ -100,4 +100,14 @@ fn a_beat_gated_request_waits_for_the_beat() {
         state.quest_is_available(quest),
         "recording the beat should open it"
     );
+}
+
+fn state_mastery_threshold(data: &crate::data::GameData) -> u32 {
+    data.config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default()
 }

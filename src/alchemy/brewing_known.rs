@@ -48,6 +48,7 @@ pub(super) fn resolve_known_recipe_brew<'a>(
         room_bonus_applied,
         minimum_elements_met,
         mastery_brews,
+        &data.config.balance.alchemy,
     );
     let minimum_quality_met = quality_score >= recipe.minimum_quality;
     // Heat and stirs at or *above* the requirement satisfy the process — going
@@ -66,8 +67,13 @@ pub(super) fn resolve_known_recipe_brew<'a>(
         heat,
         stirs,
         mastery_brews,
+        super::super::quality::mastery_threshold(&data.config.balance.alchemy),
+        &data.config.balance.alchemy.volatility,
     );
-    let destabilized = is_destabilized(instability);
+    let destabilized = is_destabilized(
+        instability,
+        data.config.balance.alchemy.volatility.instability_limit,
+    );
     let stable = stable_brew(
         process_match,
         minimum_quality_met,
@@ -122,7 +128,8 @@ pub(super) fn resolve_known_recipe_brew<'a>(
         }
     });
     let mastery_brews_after = mastery_brews + u32::from(stable);
-    let output_amount = recipe.output_amount + mastery_output_bonus(mastery_brews_after);
+    let output_amount = recipe.output_amount
+        + mastery_output_bonus(mastery_brews_after, &data.config.balance.alchemy);
 
     BrewResolution {
         recipe: Some(recipe),
@@ -130,14 +137,10 @@ pub(super) fn resolve_known_recipe_brew<'a>(
         output_amount,
         process_match,
         quality_score,
-        quality_band: quality_band(quality_score),
+        quality_band: quality_band(quality_score, &data.config.balance.alchemy),
         inherited_traits,
-        mastery_stage: mastery_stage(mastery_brews_after),
+        mastery_stage: mastery_stage(mastery_brews_after, &data.config.balance.alchemy),
         morph_output_item_id,
-        timing_match,
-        sequence_match,
-        catalyst_match,
-        room_bonus_applied,
         minimum_quality_met,
         minimum_elements_met,
         instability,
@@ -150,9 +153,9 @@ pub(super) fn resolve_known_recipe_brew<'a>(
 /// The extra bottle a mastered formula yields. It used to arrive at six, one
 /// brew before mastery, which left the seventh with nothing to give. Mastery is
 /// where it belongs: the run's payoff should land on the step that names it.
-fn mastery_output_bonus(mastery_brews: u32) -> u32 {
-    if mastery_brews >= super::super::quality::MASTERED_BREW_COUNT {
-        1
+fn mastery_output_bonus(mastery_brews: u32, tuning: &crate::data::AlchemyTuning) -> u32 {
+    if mastery_brews >= super::super::quality::mastery_threshold(tuning) {
+        tuning.scoring.mastery_output_bonus
     } else {
         0
     }

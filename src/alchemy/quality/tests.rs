@@ -1,4 +1,4 @@
-use super::{mastery_stage, MASTERED_BREW_COUNT};
+use super::{mastery_stage, mastery_threshold};
 use crate::alchemy::resolve_brew;
 use crate::data::GameData;
 
@@ -49,10 +49,11 @@ fn brew_at_mastery(data: &GameData, mastery_brews: u32) -> (u32, u32, String) {
 #[test]
 fn the_brew_that_earns_mastery_is_worth_making() {
     let data = crate::data::load_embedded().expect("embedded game data should load");
+    let mastery_brew_count = mastery_threshold(&data.config.balance.alchemy);
     let (before_quality, before_output, before_stage) =
-        brew_at_mastery(&data, MASTERED_BREW_COUNT - 2);
+        brew_at_mastery(&data, mastery_brew_count - 2);
     let (mastered_quality, mastered_output, mastered_stage) =
-        brew_at_mastery(&data, MASTERED_BREW_COUNT - 1);
+        brew_at_mastery(&data, mastery_brew_count - 1);
 
     assert!(
         mastered_quality > before_quality,
@@ -62,8 +63,14 @@ fn the_brew_that_earns_mastery_is_worth_making() {
         mastered_output > before_output,
         "mastery yielded no more bottles: {mastered_output} vs {before_output}"
     );
-    assert_ne!(before_stage, mastery_stage(MASTERED_BREW_COUNT));
-    assert_eq!(mastered_stage, mastery_stage(MASTERED_BREW_COUNT));
+    assert_ne!(
+        before_stage,
+        mastery_stage(mastery_brew_count, &data.config.balance.alchemy)
+    );
+    assert_eq!(
+        mastered_stage,
+        mastery_stage(mastery_brew_count, &data.config.balance.alchemy)
+    );
 
     // A failed seventh attempt neither earns mastery nor receives its
     // extra output. Only a successful brew advances the count.
@@ -96,11 +103,14 @@ fn the_brew_that_earns_mastery_is_worth_making() {
         recipe.required_heat - 1,
         recipe.required_stirs,
         &recipe.required_timing,
-        MASTERED_BREW_COUNT - 1,
+        mastery_brew_count - 1,
     );
     assert!(!failed.is_stable());
     assert_eq!(failed.output_amount, recipe.output_amount);
-    assert_ne!(failed.mastery_stage, mastery_stage(MASTERED_BREW_COUNT));
+    assert_ne!(
+        failed.mastery_stage,
+        mastery_stage(mastery_brew_count, &data.config.balance.alchemy)
+    );
 }
 
 /// Mastery is defined in this crate as being able to make one particular
@@ -158,7 +168,7 @@ fn a_mastered_formula_never_falls_below_its_own_bar() {
         recipe.required_heat,
         recipe.required_stirs,
         &recipe.required_timing,
-        MASTERED_BREW_COUNT,
+        mastery_threshold(&data.config.balance.alchemy),
     );
 
     assert!(

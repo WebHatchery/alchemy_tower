@@ -1,4 +1,4 @@
-use super::gameplay_alchemy_types::{SavedAlchemySetup, ALCHEMY_TIMINGS};
+use super::gameplay_alchemy_types::SavedAlchemySetup;
 use super::GameplayState;
 use crate::data::GameData;
 use std::collections::BTreeMap;
@@ -38,7 +38,7 @@ impl GameplayState {
         self.alchemy.stirs = setup.stirs;
         self.alchemy.timing_index = setup
             .timing_index
-            .min(ALCHEMY_TIMINGS.len().saturating_sub(1));
+            .min(self.alchemy.timing_ids.len().saturating_sub(1));
         self.alchemy.slots = setup.slots;
         self.alchemy.catalyst = setup.catalyst;
         self.runtime.status_text = saved_setup_text::repeat_loaded();

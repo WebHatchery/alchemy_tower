@@ -18,4 +18,5 @@ pub(crate) struct GameplayState {
     pub(super) runtime: RuntimeState,
     pub(super) ui: OverlayState,
     pub(super) alchemy: AlchemySession,
+    pub(super) mastery_threshold: u32,
 }

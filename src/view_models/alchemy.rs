@@ -70,12 +70,9 @@ pub(crate) struct AlchemyResolvedPreviewView {
     pub(crate) destabilized: bool,
     pub(crate) traits_line: String,
     pub(crate) read_line: String,
-    pub(crate) requirements_line: Option<String>,
-    pub(crate) process_flags_line: Option<String>,
     pub(crate) failure_reasons_title: &'static str,
     pub(crate) failure_reason_lines: Vec<String>,
     pub(crate) detail: String,
-    pub(crate) has_recipe: bool,
 }
 
 pub(crate) struct AlchemySlotsPanelView {

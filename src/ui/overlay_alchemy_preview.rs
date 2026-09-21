@@ -71,12 +71,11 @@ fn draw_resolved_brew_preview_view(preview: &AlchemyResolvedPreviewView, x: f32,
     }
     draw_ui_text(&preview.read_line, x, read_y, 18.0, dark::TEXT_DIM);
 
+    // Heat, stirs, timing, catalyst and sequence are already visible beside the
+    // slots. Keep the preview focused on consequence: the result, its stability,
+    // and any failure explanation that changes the player's next action.
     let process_y = draw_brew_process_diagnostics_view(preview, x, read_y + 24.0);
-    let detail_y = if preview.has_recipe && !preview.failure_reason_lines.is_empty() {
-        process_y + 8.0
-    } else {
-        process_y + 4.0
-    };
+    let detail_y = process_y + 4.0;
     draw_wrapped_text(&preview.detail, x, detail_y, w, 18.0, 20.0, dark::TEXT_DIM);
 }
 
@@ -109,18 +108,7 @@ fn draw_output_summary_backplate(preview: &AlchemyResolvedPreviewView, x: f32, y
 }
 
 fn draw_brew_process_diagnostics_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f32) -> f32 {
-    let (Some(requirements_line), Some(process_flags_line)) =
-        (&preview.requirements_line, &preview.process_flags_line)
-    else {
-        return y;
-    };
-
-    let mut next_y = y;
-    draw_ui_text(requirements_line, x, next_y, 18.0, dark::TEXT_DIM);
-    next_y += 22.0;
-    draw_ui_text(process_flags_line, x, next_y, 18.0, dark::TEXT_DIM);
-    next_y += 24.0;
-    draw_failure_reasons_view(preview, x, next_y)
+    draw_failure_reasons_view(preview, x, y)
 }
 
 fn draw_failure_reasons_view(preview: &AlchemyResolvedPreviewView, x: f32, y: f32) -> f32 {

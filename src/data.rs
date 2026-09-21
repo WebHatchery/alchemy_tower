@@ -36,10 +36,11 @@ pub(crate) use save_models::{
     RelationshipEntry, SalvageFamiliarityEntry, SaveData, VariantStockEntry,
 };
 pub(crate) use schema::{
-    ApplyTargetDefinition, AreaDefinition, BlockerVisualStyle, EffectDefinition, EffectKind,
-    ElementProfile, FlourishShape, GameConfig, GatherNodeDefinition, GatheringRouteDefinition,
-    HabitatStateEntry, ItemCategory, ItemDefinition, JournalMilestoneEntry, MorphDefinition,
-    MutationFormulaDefinition, NpcDefinition, PlanterStateEntry, QuestDefinition, RecipeDefinition,
-    RectDefinition, RuneRecipeDefinition, SalvageTuning, StationDefinition, StationKind,
-    WarpDefinition, WildVariantDefinition,
+    AlchemyTuning, AlchemyVolatilityTuning, ApplyTargetDefinition, AreaDefinition,
+    BlockerVisualStyle, EffectDefinition, EffectKind, ElementProfile, FlourishShape, GameConfig,
+    GatherNodeDefinition, GatheringRouteDefinition, HabitatStateEntry, ItemCategory,
+    ItemDefinition, JournalMilestoneEntry, MorphDefinition, MutationFormulaDefinition,
+    NpcDefinition, PlanterStateEntry, QuestDefinition, RecipeDefinition, RectDefinition,
+    RuneRecipeDefinition, SalvageTuning, StationDefinition, StationKind, WarpDefinition,
+    WildVariantDefinition,
 };

@@ -86,6 +86,8 @@ mod gameplay_brew_outcome;
 mod gameplay_brew_records;
 #[path = "gameplay_camera.rs"]
 mod gameplay_camera;
+#[path = "gameplay_capture.rs"]
+mod gameplay_capture;
 #[path = "gameplay_dialogue.rs"]
 mod gameplay_dialogue;
 #[path = "gameplay_dialogue_overlay_draw.rs"]

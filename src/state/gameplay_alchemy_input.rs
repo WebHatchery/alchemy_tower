@@ -1,5 +1,4 @@
 use super::gameplay_alchemy_input_text as alchemy_input_text;
-use super::gameplay_alchemy_types::ALCHEMY_TIMINGS;
 use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::{GameData, StationKind};
@@ -97,7 +96,10 @@ impl GameplayState {
     }
 
     pub(super) fn cycle_alchemy_timing(&mut self) {
-        self.alchemy.timing_index = (self.alchemy.timing_index + 1) % ALCHEMY_TIMINGS.len();
+        if self.alchemy.timing_ids.is_empty() {
+            return;
+        }
+        self.alchemy.timing_index = (self.alchemy.timing_index + 1) % self.alchemy.timing_ids.len();
         self.runtime.status_text = alchemy_input_text::timing_set(self.alchemy_timing());
     }
 

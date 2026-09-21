@@ -1,4 +1,3 @@
-use super::gameplay_alchemy_types::ALCHEMY_TIMINGS;
 use super::GameplayState;
 use crate::data::{GameData, ItemCategory};
 
@@ -13,7 +12,7 @@ pub(super) struct AlchemyMaterialCard {
 pub(super) struct AlchemyProcessSummary {
     pub(super) heat: i32,
     pub(super) stirs: u32,
-    pub(super) timing: &'static str,
+    pub(super) timing: String,
 }
 
 impl GameplayState {
@@ -66,11 +65,15 @@ impl GameplayState {
         AlchemyProcessSummary {
             heat: self.alchemy.heat,
             stirs: self.alchemy.stirs,
-            timing: self.alchemy_timing(),
+            timing: self.alchemy_timing().to_owned(),
         }
     }
 
-    pub(super) fn alchemy_timing(&self) -> &'static str {
-        ALCHEMY_TIMINGS[self.alchemy.timing_index]
+    pub(super) fn alchemy_timing(&self) -> &str {
+        self.alchemy
+            .timing_ids
+            .get(self.alchemy.timing_index)
+            .map(String::as_str)
+            .unwrap_or_default()
     }
 }

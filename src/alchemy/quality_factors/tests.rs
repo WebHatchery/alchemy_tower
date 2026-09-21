@@ -43,11 +43,11 @@ fn synthesis_efficiency_bonus_drops_for_heavier_mixes() {
     let heavy_mix = vec![&heavy_a, &heavy_b];
 
     assert_eq!(
-        synthesis_efficiency_bonus(&light_mix, total_synthesis_weight(&light_mix)),
+        synthesis_efficiency_bonus(&light_mix, total_synthesis_weight(&light_mix), 2),
         6
     );
     assert_eq!(
-        synthesis_efficiency_bonus(&heavy_mix, total_synthesis_weight(&heavy_mix)),
+        synthesis_efficiency_bonus(&heavy_mix, total_synthesis_weight(&heavy_mix), 2),
         2
     );
 }

@@ -15,7 +15,7 @@ impl GameplayState {
                 &[
                     ("heat", &process.heat.to_string()),
                     ("stirs", &process.stirs.to_string()),
-                    ("timing", process.timing),
+                    ("timing", &process.timing),
                 ],
             ),
             stir_label: ui_copy("overlay_alchemy_stir_button"),

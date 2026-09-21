@@ -40,7 +40,10 @@ impl GameplayState {
                     meta: ui_format(
                         "overlay_archive_mastery_entry_meta",
                         &[
-                            ("stage", mastery_stage(mastery)),
+                            (
+                                "stage",
+                                mastery_stage(mastery, &data.config.balance.alchemy),
+                            ),
                             ("memory", &self.recipe_memory_meta(recipe)),
                         ],
                     ),
@@ -82,7 +85,10 @@ impl GameplayState {
                 stage_text: ui_format(
                     "overlay_archive_mastery_stage",
                     &[
-                        ("stage", mastery_stage(mastery)),
+                        (
+                            "stage",
+                            mastery_stage(mastery, &data.config.balance.alchemy),
+                        ),
                         ("count", &mastery.to_string()),
                     ],
                 ),

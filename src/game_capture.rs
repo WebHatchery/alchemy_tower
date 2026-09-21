@@ -16,6 +16,13 @@ pub(super) fn build(data: &GameData, requested_scene: &str) -> GameState {
 }
 
 fn build_scene(data: &GameData, scene: &str) -> GameState {
+    // The suffix changes only the stable output filename; the captured scene
+    // itself is the same deterministic sample at the requested viewport.
+    let scene = scene
+        .strip_suffix(":minimum")
+        .or_else(|| scene.strip_suffix(":stress"))
+        .or_else(|| scene.strip_suffix(":wide"))
+        .unwrap_or(scene);
     match scene {
         "gameplay" => gameplay(data),
         "gameplay:female" => gameplay_with_gender(data, PlayerGender::Female),

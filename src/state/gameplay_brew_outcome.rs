@@ -25,7 +25,10 @@ impl GameplayState {
             } else {
                 false
             };
-            let current_mastery_stage = mastery_stage(self.recipe_mastery_brews(&recipe.id));
+            let current_mastery_stage = mastery_stage(
+                self.recipe_mastery_brews(&recipe.id),
+                &data.config.balance.alchemy,
+            );
             let recipe_discovered = self.progression.known_recipes.insert(recipe.id.clone());
             if recipe_discovered {
                 for milestone in &recipe.discovery_milestones {

@@ -47,6 +47,66 @@ pub(crate) struct AlchemyTuning {
     pub(crate) min_heat: i32,
     pub(crate) max_heat: i32,
     pub(crate) initial_heat: i32,
+    pub(crate) timing_ids: Vec<String>,
+    pub(crate) quality_bands: Vec<QualityBandDefinition>,
+    pub(crate) mastery_stages: Vec<MasteryStageDefinition>,
+    pub(crate) scoring: AlchemyScoringTuning,
+    pub(crate) volatility: AlchemyVolatilityTuning,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct QualityBandDefinition {
+    pub(crate) id: String,
+    pub(crate) minimum_score: u32,
+    pub(crate) label_key: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct MasteryStageDefinition {
+    pub(crate) id: String,
+    pub(crate) minimum_brews: u32,
+    pub(crate) label_key: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct AlchemyScoringTuning {
+    pub(crate) synthesis_efficiency_multiplier: u32,
+    pub(crate) shared_trait_multiplier: u32,
+    pub(crate) preferred_trait_match_bonus: u32,
+    pub(crate) mastery_brew_quality_bonus: u32,
+    pub(crate) mastery_output_bonus: u32,
+    pub(crate) heat_match_bonus: u32,
+    pub(crate) heat_shortfall_penalty: u32,
+    pub(crate) stirs_match_bonus: u32,
+    pub(crate) stirs_shortfall_penalty: u32,
+    pub(crate) catalyst_quality_divisor: u32,
+    pub(crate) timing_match_bonus: u32,
+    pub(crate) timing_mismatch_penalty: u32,
+    pub(crate) sequence_match_bonus: u32,
+    pub(crate) sequence_mismatch_penalty: u32,
+    pub(crate) catalyst_mismatch_penalty: u32,
+    pub(crate) minimum_elements_met_bonus: u32,
+    pub(crate) minimum_elements_missed_penalty: u32,
+    pub(crate) score_cap: u32,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct AlchemyVolatilityTuning {
+    pub(crate) overcharge_heat_potency: u32,
+    pub(crate) overcharge_stir_potency: u32,
+    pub(crate) heat_instability: u32,
+    pub(crate) stir_instability: u32,
+    pub(crate) volatile_instability: u32,
+    pub(crate) stabilizer_reduction: u32,
+    pub(crate) catalyst_stabilize: u32,
+    pub(crate) mastery_stabilize: u32,
+    pub(crate) instability_limit: u32,
+    pub(crate) volatile_trait: String,
+    pub(crate) stabilizer_traits: Vec<String>,
 }
 
 /// What a day's work costs and what rest gives back.
@@ -175,8 +235,8 @@ pub(crate) struct WarpDefinition {
     #[serde(default)]
     pub(crate) required_journal_milestone: String,
     /// Recipe that must be brought to the "mastered" mastery stage before this
-    /// warp opens. A skill gate rather than a grind gate — see
-    /// `alchemy::MASTERED_BREW_COUNT`.
+    /// warp opens. A skill gate rather than a grind gate — see the authored
+    /// `config.balance.alchemy.mastery_stages` threshold.
     #[serde(default)]
     pub(crate) required_mastered_recipe: String,
     #[serde(default)]

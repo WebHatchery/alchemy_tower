@@ -51,39 +51,109 @@ fn item(traits: &[&str]) -> ItemDefinition {
 
 #[test]
 fn on_spec_brew_is_calm() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let tuning = &data.config.balance.alchemy.volatility;
+    let mastery_threshold = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default();
     let recipe = recipe(2, 2);
     let calm = item(&["pure"]);
     let ingredients = vec![&calm];
-    let instability = brew_instability(&recipe, &ingredients, None, false, 2, 2, 0);
+    let instability = brew_instability(
+        &recipe,
+        &ingredients,
+        None,
+        false,
+        2,
+        2,
+        0,
+        mastery_threshold,
+        tuning,
+    );
     assert_eq!(instability, 0);
-    assert!(!is_destabilized(instability));
-    assert_eq!(overcharge_potency(&recipe, 2, 2), 0);
+    assert!(!is_destabilized(instability, tuning.instability_limit));
+    assert_eq!(overcharge_potency(&recipe, 2, 2, tuning), 0);
 }
 
 #[test]
 fn overcharge_trades_potency_for_instability() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let tuning = &data.config.balance.alchemy.volatility;
+    let mastery_threshold = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default();
     let recipe = recipe(2, 2);
     let plain = item(&[]);
     let ingredients = vec![&plain];
     // Four stirs over the requirement.
-    let potency = overcharge_potency(&recipe, 2, 6);
-    let instability = brew_instability(&recipe, &ingredients, None, false, 2, 6, 0);
-    assert_eq!(potency, 4 * OVERCHARGE_STIR_POTENCY);
-    assert_eq!(instability, 4 * STIR_INSTABILITY);
+    let potency = overcharge_potency(&recipe, 2, 6, tuning);
+    let instability = brew_instability(
+        &recipe,
+        &ingredients,
+        None,
+        false,
+        2,
+        6,
+        0,
+        mastery_threshold,
+        tuning,
+    );
+    assert_eq!(potency, 4 * tuning.overcharge_stir_potency);
+    assert_eq!(instability, 4 * tuning.stir_instability);
 }
 
 #[test]
 fn pushing_too_far_destabilizes() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let tuning = &data.config.balance.alchemy.volatility;
+    let mastery_threshold = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default();
     let recipe = recipe(2, 2);
     let plain = item(&[]);
     let ingredients = vec![&plain];
     // Ten stirs over the requirement clears the collapse threshold.
-    let instability = brew_instability(&recipe, &ingredients, None, false, 2, 12, 0);
-    assert!(is_destabilized(instability));
+    let instability = brew_instability(
+        &recipe,
+        &ingredients,
+        None,
+        false,
+        2,
+        12,
+        0,
+        mastery_threshold,
+        tuning,
+    );
+    assert!(is_destabilized(instability, tuning.instability_limit));
 }
 
 #[test]
 fn stabilizers_widen_the_overcharge_window() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let tuning = &data.config.balance.alchemy.volatility;
+    let mastery_threshold = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default();
     let recipe = recipe(2, 2);
     let volatile = item(&["volatile"]);
     let pure = item(&["pure", "calm"]);
@@ -91,19 +161,69 @@ fn stabilizers_widen_the_overcharge_window() {
     let volatile_only = vec![&volatile];
     let steadied = vec![&volatile, &pure];
 
-    let risky = brew_instability(&recipe, &volatile_only, None, false, 2, 8, 0);
-    let steadier = brew_instability(&recipe, &steadied, None, false, 2, 8, 0);
+    let risky = brew_instability(
+        &recipe,
+        &volatile_only,
+        None,
+        false,
+        2,
+        8,
+        0,
+        mastery_threshold,
+        tuning,
+    );
+    let steadier = brew_instability(
+        &recipe,
+        &steadied,
+        None,
+        false,
+        2,
+        8,
+        0,
+        mastery_threshold,
+        tuning,
+    );
     assert!(steadier < risky);
 }
 
 #[test]
 fn mastery_and_catalyst_settle_the_brew() {
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let tuning = &data.config.balance.alchemy.volatility;
+    let mastery_threshold = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default();
     let recipe = recipe(2, 2);
     let volatile = item(&["volatile"]);
     let ingredients = vec![&volatile];
     let catalyst = item(&["pure"]);
 
-    let raw = brew_instability(&recipe, &ingredients, None, false, 2, 6, 0);
-    let settled = brew_instability(&recipe, &ingredients, Some(&catalyst), true, 2, 6, 6);
+    let raw = brew_instability(
+        &recipe,
+        &ingredients,
+        None,
+        false,
+        2,
+        6,
+        0,
+        mastery_threshold,
+        tuning,
+    );
+    let settled = brew_instability(
+        &recipe,
+        &ingredients,
+        Some(&catalyst),
+        true,
+        2,
+        6,
+        6,
+        mastery_threshold,
+        tuning,
+    );
     assert!(settled < raw);
 }

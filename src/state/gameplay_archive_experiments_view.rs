@@ -134,7 +134,10 @@ impl GameplayState {
                 "overlay_archive_mastery_now",
                 &[(
                     "stage",
-                    mastery_stage(self.recipe_mastery_brews(&recipe.id)),
+                    mastery_stage(
+                        self.recipe_mastery_brews(&recipe.id),
+                        &data.config.balance.alchemy,
+                    ),
                 )],
             ),
             memory_text: ui_format(

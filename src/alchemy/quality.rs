@@ -1,5 +1,5 @@
 use crate::content::ui_copy;
-use crate::data::{ItemDefinition, RecipeDefinition, StationDefinition};
+use crate::data::{AlchemyTuning, ItemDefinition, RecipeDefinition, StationDefinition};
 
 #[path = "quality_factors.rs"]
 mod quality_factors;
@@ -9,29 +9,32 @@ use self::quality_factors::{
     preferred_trait_matches, shared_trait_bonus, synthesis_efficiency_bonus, total_synthesis_weight,
 };
 
-pub(crate) fn quality_band(score: u32) -> &'static str {
-    match score {
-        0..=19 => ui_copy("quality_band_crude"),
-        20..=39 => ui_copy("quality_band_serviceable"),
-        40..=59 => ui_copy("quality_band_fine"),
-        60..=79 => ui_copy("quality_band_excellent"),
-        _ => ui_copy("quality_band_masterwork"),
-    }
+pub(crate) fn quality_band(score: u32, tuning: &AlchemyTuning) -> &'static str {
+    tuning
+        .quality_bands
+        .iter()
+        .rev()
+        .find(|band| score >= band.minimum_score)
+        .map(|band| ui_copy(&band.label_key))
+        .unwrap_or_else(|| ui_copy(&tuning.quality_bands[0].label_key))
 }
 
-/// Successful brews at which a recipe reaches the "mastered" stage. Kept as a
-/// named constant so progression gates (`required_mastered_recipe`) and
-/// `mastery_stage` agree on the threshold.
-pub(crate) const MASTERED_BREW_COUNT: u32 = 7;
+pub(crate) fn mastery_stage(successful_brews: u32, tuning: &AlchemyTuning) -> &'static str {
+    tuning
+        .mastery_stages
+        .iter()
+        .rev()
+        .find(|stage| successful_brews >= stage.minimum_brews)
+        .map(|stage| ui_copy(&stage.label_key))
+        .unwrap_or_else(|| ui_copy(&tuning.mastery_stages[0].label_key))
+}
 
-pub(crate) fn mastery_stage(successful_brews: u32) -> &'static str {
-    match successful_brews {
-        0 => ui_copy("mastery_stage_unknown"),
-        1 => ui_copy("mastery_stage_guessed"),
-        2..=3 => ui_copy("mastery_stage_discovered"),
-        4..=6 => ui_copy("mastery_stage_refined"),
-        _ => ui_copy("mastery_stage_mastered"),
-    }
+pub(crate) fn mastery_threshold(tuning: &AlchemyTuning) -> u32 {
+    tuning
+        .mastery_stages
+        .last()
+        .map(|stage| stage.minimum_brews)
+        .unwrap_or_default()
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -48,54 +51,63 @@ pub(super) fn calculate_quality(
     room_bonus_applied: bool,
     minimum_elements_met: bool,
     mastery_brews: u32,
+    tuning: &AlchemyTuning,
 ) -> u32 {
     let total_weight = total_synthesis_weight(ingredients);
     let mut score = weighted_quality_average(ingredients);
 
-    score += synthesis_efficiency_bonus(ingredients, total_weight);
-    score += shared_trait_bonus(ingredients) * 3;
-    score += preferred_trait_matches(recipe, ingredients, catalyst) as u32 * 4;
-    // The ramp runs all the way to mastery. It used to cap one brew short, so
-    // the seventh — the brew that flips the label and opens the mastery gates —
-    // was the only one in the run that changed nothing.
-    score += mastery_brews.min(MASTERED_BREW_COUNT) * 3;
+    score += synthesis_efficiency_bonus(
+        ingredients,
+        total_weight,
+        tuning.scoring.synthesis_efficiency_multiplier,
+    );
+    score += shared_trait_bonus(ingredients) * tuning.scoring.shared_trait_multiplier;
+    score += preferred_trait_matches(recipe, ingredients, catalyst) as u32
+        * tuning.scoring.preferred_trait_match_bonus;
+    score +=
+        mastery_brews.min(mastery_threshold(tuning)) * tuning.scoring.mastery_brew_quality_bonus;
 
     // Heat and stirs at the target brew cleanly; overcharging past the target
     // adds potency (see `volatility::overcharge_potency`) at the cost of
     // instability; underfiring/understirring still degrades the brew.
     if heat >= recipe.required_heat {
-        score += 6;
+        score += tuning.scoring.heat_match_bonus;
     } else {
-        score = score.saturating_sub((recipe.required_heat - heat).unsigned_abs() * 4);
+        score = score.saturating_sub(
+            (recipe.required_heat - heat).unsigned_abs() * tuning.scoring.heat_shortfall_penalty,
+        );
     }
 
     if stirs >= recipe.required_stirs {
-        score += 5;
+        score += tuning.scoring.stirs_match_bonus;
     } else {
-        score = score.saturating_sub(stirs.abs_diff(recipe.required_stirs) * 2);
+        score = score.saturating_sub(
+            stirs.abs_diff(recipe.required_stirs) * tuning.scoring.stirs_shortfall_penalty,
+        );
     }
 
-    score += super::volatility::overcharge_potency(recipe, heat, stirs);
+    score += super::volatility::overcharge_potency(recipe, heat, stirs, &tuning.volatility);
 
     if timing_match {
-        score += 4;
+        score += tuning.scoring.timing_match_bonus;
     } else if !recipe.required_timing.is_empty() {
-        score = score.saturating_sub(4);
+        score = score.saturating_sub(tuning.scoring.timing_mismatch_penalty);
     }
 
     if sequence_match {
-        score += 5;
+        score += tuning.scoring.sequence_match_bonus;
     } else if !recipe.required_sequence.is_empty() {
-        score = score.saturating_sub(5);
+        score = score.saturating_sub(tuning.scoring.sequence_mismatch_penalty);
     }
 
     if catalyst_match {
         if let Some(catalyst) = catalyst {
-            score +=
-                catalyst.quality / 4 + catalyst.synthesis_value + recipe.catalyst_quality_bonus;
+            score += catalyst.quality / tuning.scoring.catalyst_quality_divisor
+                + catalyst.synthesis_value
+                + recipe.catalyst_quality_bonus;
         }
     } else if !recipe.catalyst_tag.is_empty() {
-        score = score.saturating_sub(6);
+        score = score.saturating_sub(tuning.scoring.catalyst_mismatch_penalty);
     }
 
     if room_bonus_applied {
@@ -103,9 +115,9 @@ pub(super) fn calculate_quality(
     }
 
     if minimum_elements_met {
-        score += 5;
+        score += tuning.scoring.minimum_elements_met_bonus;
     } else if recipe.minimum_elements.total() > 0 {
-        score = score.saturating_sub(8);
+        score = score.saturating_sub(tuning.scoring.minimum_elements_missed_penalty);
     }
 
     // Mastery means being able to make one particular thing the same way twice,
@@ -113,11 +125,11 @@ pub(super) fn calculate_quality(
     // still decide how far *above* it the brew lands — this only removes the
     // possibility of a mastered recipe failing on quality, which is what makes
     // the seventh brew worth reaching rather than a label.
-    if mastery_brews >= MASTERED_BREW_COUNT {
+    if mastery_brews >= mastery_threshold(tuning) {
         score = score.max(recipe.minimum_quality);
     }
 
-    score.min(100)
+    score.min(tuning.scoring.score_cap)
 }
 
 pub(super) fn room_bonus_applies(

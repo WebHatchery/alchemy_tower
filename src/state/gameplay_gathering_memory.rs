@@ -96,7 +96,8 @@ impl GameplayState {
         entry.note = node.note.clone();
         if best_quality >= entry.best_quality {
             entry.best_quality = best_quality;
-            entry.best_quality_band = quality_band(best_quality).to_owned();
+            entry.best_quality_band =
+                quality_band(best_quality, &data.config.balance.alchemy).to_owned();
             entry.variant_name = variant_name;
         }
         FieldDiscoveryFeedback {

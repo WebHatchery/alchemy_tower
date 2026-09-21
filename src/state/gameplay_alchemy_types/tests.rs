@@ -1,5 +1,3 @@
-use super::ALCHEMY_TIMINGS;
-
 /// A recipe or morph is only content if the bench can actually be set to
 /// what it asks for. A heat the dial cannot reach, a timing that is not one
 /// of the three, or a catalyst tag no item carries all produce a branch that
@@ -20,7 +18,15 @@ fn every_recipe_and_morph_is_reachable_at_the_bench() {
         {
             unreachable.push(format!("{label}: heat {heat} is off the dial"));
         }
-        if !timing.is_empty() && !ALCHEMY_TIMINGS.contains(&timing) {
+        if !timing.is_empty()
+            && !data
+                .config
+                .balance
+                .alchemy
+                .timing_ids
+                .iter()
+                .any(|known| known == timing)
+        {
             unreachable.push(format!("{label}: timing '{timing}' is not a setting"));
         }
         if !tag.is_empty() && !available_tags.contains(tag) {

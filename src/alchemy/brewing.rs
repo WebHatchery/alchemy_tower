@@ -22,14 +22,11 @@ pub(crate) struct BrewResolution<'a> {
     pub(crate) inherited_traits: Vec<String>,
     pub(crate) mastery_stage: &'static str,
     pub(crate) morph_output_item_id: Option<String>,
-    pub(crate) timing_match: bool,
-    pub(crate) sequence_match: bool,
-    pub(crate) catalyst_match: bool,
-    pub(crate) room_bonus_applied: bool,
     pub(crate) minimum_quality_met: bool,
     pub(crate) minimum_elements_met: bool,
     /// Deterministic overcharge/volatility pressure (0 = calm). At or above
-    /// `INSTABILITY_LIMIT` the brew collapses; see `destabilized`.
+    /// the authored alchemy instability limit the brew collapses; see
+    /// `destabilized`.
     pub(crate) instability: u32,
     /// True when instability has crossed the collapse threshold, forcing the
     /// unstable output even if the recipe/process/quality checks pass.
@@ -113,14 +110,10 @@ pub(crate) fn resolve_brew<'a>(
         output_amount: 1,
         process_match: false,
         quality_score,
-        quality_band: quality_band(quality_score),
+        quality_band: quality_band(quality_score, &data.config.balance.alchemy),
         inherited_traits: fallback_traits(&ingredient_items, catalyst),
-        mastery_stage: super::quality::mastery_stage(0),
+        mastery_stage: super::quality::mastery_stage(0, &data.config.balance.alchemy),
         morph_output_item_id: None,
-        timing_match: false,
-        sequence_match: false,
-        catalyst_match: catalyst.is_none(),
-        room_bonus_applied: false,
         minimum_quality_met: false,
         minimum_elements_met: false,
         instability: 0,

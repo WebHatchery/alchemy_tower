@@ -77,7 +77,7 @@ impl GameplayState {
             return Some(BottleBatchEntry {
                 item_id: item_id.to_owned(),
                 quality_score: item.quality,
-                quality_band: quality_band(item.quality).to_owned(),
+                quality_band: quality_band(item.quality, &data.config.balance.alchemy).to_owned(),
                 traits: item.traits.clone(),
                 count: 1,
             });
@@ -103,11 +103,14 @@ impl GameplayState {
         let plain = (self.untracked_bottles(item_id) > 0)
             .then(|| data.item(item_id))
             .flatten()
-            .filter(|item| quality_band_rank(quality_band(item.quality)) >= wanted_rank)
+            .filter(|item| {
+                quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy))
+                    >= wanted_rank
+            })
             .map(|item| BottleBatchEntry {
                 item_id: item_id.to_owned(),
                 quality_score: item.quality,
-                quality_band: quality_band(item.quality).to_owned(),
+                quality_band: quality_band(item.quality, &data.config.balance.alchemy).to_owned(),
                 traits: item.traits.clone(),
                 count: 1,
             });
@@ -149,7 +152,8 @@ impl GameplayState {
         let wanted_rank = quality_band_rank(minimum_quality_band);
         let plain_is_chosen = self.untracked_bottles(item_id) > 0
             && data.item(item_id).is_some_and(|item| {
-                quality_band_rank(quality_band(item.quality)) >= wanted_rank
+                quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy))
+                    >= wanted_rank
                     && item.quality <= chosen.quality_score
             });
 
@@ -292,7 +296,7 @@ impl GameplayState {
             return false;
         };
         let quality_ok = quest.minimum_quality_band.is_empty()
-            || quality_band_rank(quality_band(item.quality))
+            || quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy))
                 >= quality_band_rank(&quest.minimum_quality_band);
         let traits_ok =
             trait_requirement_target(quest) == 0 || trait_requirement_met(quest, &item.traits);
@@ -346,7 +350,10 @@ impl GameplayState {
             .sum::<u32>();
         let from_plain = data
             .item(&quest.required_item_id)
-            .filter(|item| quality_band_rank(quality_band(item.quality)) >= wanted_rank)
+            .filter(|item| {
+                quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy))
+                    >= wanted_rank
+            })
             .map(|_| self.untracked_bottles(&quest.required_item_id))
             .unwrap_or_default();
         from_batches.saturating_add(from_plain)
@@ -405,7 +412,9 @@ impl GameplayState {
             if plain > 0 {
                 let plain_rank = data
                     .item(&quest.required_item_id)
-                    .map(|item| quality_band_rank(quality_band(item.quality)))
+                    .map(|item| {
+                        quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy))
+                    })
                     .unwrap_or_default();
                 worst = worst.min(plain_rank);
             }
@@ -453,7 +462,7 @@ impl GameplayState {
     pub(super) fn worst_held_band_rank(&self, data: &GameData, item_id: &str) -> u8 {
         let plain_rank = data
             .item(item_id)
-            .map(|item| quality_band_rank(quality_band(item.quality)))
+            .map(|item| quality_band_rank(quality_band(item.quality, &data.config.balance.alchemy)))
             .unwrap_or_default();
         if self.untracked_bottles(item_id) > 0 {
             return plain_rank;

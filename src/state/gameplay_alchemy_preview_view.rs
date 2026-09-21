@@ -1,7 +1,6 @@
 use super::gameplay_alchemy_preview_detail_text::{preview_detail, preview_title};
 use super::gameplay_alchemy_preview_text::{
-    instability_line, output_line, process_flags_line, quality_line, read_line, requirements_line,
-    traits_line,
+    instability_line, output_line, quality_line, read_line, traits_line,
 };
 use crate::alchemy::BrewResolution;
 use crate::content::{ui_copy, ui_format};
@@ -37,8 +36,6 @@ impl AlchemyPreviewPanelView {
                 destabilized: preview.destabilized,
                 traits_line: traits_line(preview),
                 read_line: read_line(preview, known, stable_preview),
-                requirements_line: requirements_line(preview),
-                process_flags_line: process_flags_line(preview),
                 failure_reasons_title: ui_copy("overlay_alchemy_instability_points"),
                 failure_reason_lines: preview
                     .failure_reasons
@@ -50,7 +47,6 @@ impl AlchemyPreviewPanelView {
                     })
                     .collect(),
                 detail: preview_detail(data, preview, known, stable_preview, preview_uncertain),
-                has_recipe: preview.recipe.is_some(),
             },
         ))
     }

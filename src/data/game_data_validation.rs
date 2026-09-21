@@ -103,6 +103,73 @@ impl GameData {
         {
             return Err("config.balance.salvage values are inconsistent".to_owned());
         }
+        self.validate_alchemy_tuning()?;
+        Ok(())
+    }
+
+    fn validate_alchemy_tuning(&self) -> Result<(), String> {
+        let alchemy = &self.config.balance.alchemy;
+        if alchemy.min_heat > alchemy.max_heat
+            || !(alchemy.min_heat..=alchemy.max_heat).contains(&alchemy.initial_heat)
+        {
+            return Err("config.balance.alchemy heat bounds are inconsistent".to_owned());
+        }
+        if alchemy.timing_ids.is_empty()
+            || alchemy.timing_ids.iter().any(String::is_empty)
+            || has_duplicates(alchemy.timing_ids.iter().map(String::as_str))
+        {
+            return Err(
+                "config.balance.alchemy timing_ids must be unique and non-empty".to_owned(),
+            );
+        }
+        validate_thresholds(
+            &alchemy.quality_bands,
+            |band| band.minimum_score,
+            |band| band.id.as_str(),
+            "quality bands",
+        )?;
+        validate_thresholds(
+            &alchemy.mastery_stages,
+            |stage| stage.minimum_brews,
+            |stage| stage.id.as_str(),
+            "mastery stages",
+        )?;
+        if alchemy
+            .quality_bands
+            .first()
+            .is_none_or(|band| band.minimum_score != 0)
+            || alchemy
+                .mastery_stages
+                .first()
+                .is_none_or(|stage| stage.minimum_brews != 0)
+        {
+            return Err("config.balance.alchemy thresholds must start at zero".to_owned());
+        }
+        if alchemy
+            .quality_bands
+            .iter()
+            .any(|band| band.label_key.is_empty())
+            || alchemy
+                .mastery_stages
+                .iter()
+                .any(|stage| stage.label_key.is_empty())
+        {
+            return Err("config.balance.alchemy threshold labels must be non-empty".to_owned());
+        }
+        let scoring = &alchemy.scoring;
+        if scoring.catalyst_quality_divisor == 0 || scoring.score_cap == 0 {
+            return Err(
+                "config.balance.alchemy scoring divisors and caps must be positive".to_owned(),
+            );
+        }
+        let volatility = &alchemy.volatility;
+        if volatility.instability_limit == 0
+            || volatility.volatile_trait.is_empty()
+            || volatility.stabilizer_traits.is_empty()
+            || volatility.stabilizer_traits.iter().any(String::is_empty)
+        {
+            return Err("config.balance.alchemy volatility identifiers are incomplete".to_owned());
+        }
         Ok(())
     }
 
@@ -239,7 +306,17 @@ impl GameData {
                     self.item_exists(&morph.output_item_id),
                     &format!("recipe {} morph output", recipe.id),
                 )?;
+                validate_timing_id(
+                    &self.config.balance.alchemy.timing_ids,
+                    &morph.required_timing,
+                    &format!("recipe {} morph timing", recipe.id),
+                )?;
             }
+            validate_timing_id(
+                &self.config.balance.alchemy.timing_ids,
+                &recipe.required_timing,
+                &format!("recipe {} timing", recipe.id),
+            )?;
         }
         for recipe in &self.rune_recipes {
             require(
@@ -303,6 +380,14 @@ impl GameData {
             validate_quality_band(
                 &quest.minimum_quality_band,
                 &format!("quest {} quality", quest.id),
+                &self
+                    .config
+                    .balance
+                    .alchemy
+                    .quality_bands
+                    .iter()
+                    .map(|band| band.id.clone())
+                    .collect::<Vec<_>>(),
             )?;
         }
         Ok(())
@@ -422,14 +507,55 @@ fn validate_effect(value: &str, label: &str) -> Result<(), String> {
         .ok_or_else(|| format!("{label} names unknown effect {value}"))
 }
 
-fn validate_quality_band(value: &str, label: &str) -> Result<(), String> {
+fn validate_quality_band(value: &str, label: &str, known_ids: &[String]) -> Result<(), String> {
     if value.is_empty() {
         return Ok(());
     }
-    ["crude", "serviceable", "fine", "excellent", "masterwork"]
-        .contains(&value.to_ascii_lowercase().as_str())
+    known_ids
+        .iter()
+        .any(|known| known.eq_ignore_ascii_case(value))
         .then_some(())
         .ok_or_else(|| format!("{label} names unknown quality band {value}"))
+}
+
+fn validate_timing_id(known_ids: &[String], value: &str, label: &str) -> Result<(), String> {
+    if value.is_empty() {
+        return Ok(());
+    }
+    known_ids
+        .iter()
+        .any(|known| known == value)
+        .then_some(())
+        .ok_or_else(|| format!("{label} names unknown timing {value}"))
+}
+
+fn validate_thresholds<T, Score, Id>(
+    values: &[T],
+    score: Score,
+    id: Id,
+    label: &str,
+) -> Result<(), String>
+where
+    Score: Fn(&T) -> u32,
+    Id: Fn(&T) -> &str,
+{
+    if values.is_empty()
+        || values.iter().any(|value| id(value).is_empty())
+        || has_duplicates(values.iter().map(&id))
+        || values
+            .windows(2)
+            .any(|pair| score(&pair[0]) >= score(&pair[1]))
+    {
+        return Err(format!(
+            "config.balance.alchemy {label} must be ordered and unique"
+        ));
+    }
+    Ok(())
+}
+
+fn has_duplicates<'a>(values: impl Iterator<Item = &'a str>) -> bool {
+    let mut seen = HashSet::new();
+    values.into_iter().any(|value| !seen.insert(value))
 }
 
 #[cfg(test)]
@@ -453,5 +579,17 @@ mod tests {
         data.config.balance.rapport.kin = 1;
         let error = data.validate().expect_err("descending rapport should fail");
         assert!(error.contains("rapport"), "{error}");
+    }
+
+    #[test]
+    fn malformed_alchemy_tuning_is_rejected_before_indexes_are_built() {
+        let mut data = load_embedded().expect("fixture data should load");
+        data.config.balance.alchemy.quality_bands[0]
+            .label_key
+            .clear();
+        let error = data
+            .validate()
+            .expect_err("missing alchemy label should fail");
+        assert!(error.contains("threshold labels"), "{error}");
     }
 }

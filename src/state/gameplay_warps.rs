@@ -46,8 +46,7 @@ impl GameplayState {
     /// the mastered stage.
     pub(super) fn mastery_requirement_met(&self, warp: &WarpDefinition) -> bool {
         warp.required_mastered_recipe.is_empty()
-            || self.recipe_mastery_brews(&warp.required_mastered_recipe)
-                >= crate::alchemy::MASTERED_BREW_COUNT
+            || self.recipe_mastery_brews(&warp.required_mastered_recipe) >= self.mastery_threshold
     }
 
     pub(super) fn pay_warp_costs(&mut self, warp: &WarpDefinition) {

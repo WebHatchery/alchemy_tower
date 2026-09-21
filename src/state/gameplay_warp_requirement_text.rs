@@ -77,7 +77,15 @@ pub(super) fn warp_requirement_summary(
         ));
     }
     if !warp.required_mastered_recipe.is_empty()
-        && progress.mastered_recipe_brews < crate::alchemy::MASTERED_BREW_COUNT
+        && progress.mastered_recipe_brews
+            < data
+                .config
+                .balance
+                .alchemy
+                .mastery_stages
+                .last()
+                .map(|stage| stage.minimum_brews)
+                .unwrap_or_default()
     {
         let recipe_name = data
             .recipes
@@ -90,7 +98,18 @@ pub(super) fn warp_requirement_summary(
             &[
                 ("recipe", recipe_name),
                 ("have", &progress.mastered_recipe_brews.to_string()),
-                ("need", &crate::alchemy::MASTERED_BREW_COUNT.to_string()),
+                (
+                    "need",
+                    &data
+                        .config
+                        .balance
+                        .alchemy
+                        .mastery_stages
+                        .last()
+                        .map(|stage| stage.minimum_brews)
+                        .unwrap_or_default()
+                        .to_string(),
+                ),
             ],
         ));
     }

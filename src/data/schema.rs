@@ -31,7 +31,7 @@ pub(crate) use self::schema_render::{
 };
 pub(crate) use self::schema_stations::StationDefinition;
 pub(crate) use self::schema_world::{
-    ApplyTargetDefinition, AreaDefinition, GameConfig, GatherNodeDefinition,
-    GatheringRouteDefinition, JournalMilestoneEntry, QuestDefinition, RectDefinition,
-    SalvageTuning, WarpDefinition,
+    AlchemyTuning, AlchemyVolatilityTuning, ApplyTargetDefinition, AreaDefinition, GameConfig,
+    GatherNodeDefinition, GatheringRouteDefinition, JournalMilestoneEntry, QuestDefinition,
+    RectDefinition, SalvageTuning, WarpDefinition,
 };

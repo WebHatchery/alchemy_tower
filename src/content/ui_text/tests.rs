@@ -41,6 +41,15 @@ fn all_rust_source() -> String {
 #[test]
 fn every_line_of_copy_is_asked_for_by_something() {
     let source = all_rust_source();
+    let data = crate::data::load_embedded().expect("embedded game data should load");
+    let authored_alchemy_copy = data
+        .config
+        .balance
+        .alchemy
+        .mastery_stages
+        .iter()
+        .map(|stage| stage.label_key.as_str())
+        .collect::<std::collections::BTreeSet<_>>();
     let orphans = super::ui_text()
         .copy
         .keys()
@@ -49,7 +58,9 @@ fn every_line_of_copy_is_asked_for_by_something() {
                 .iter()
                 .any(|prefix| key.starts_with(prefix))
         })
-        .filter(|key| !source.contains(&format!("\"{key}\"")))
+        .filter(|key| {
+            !source.contains(&format!("\"{key}\"")) && !authored_alchemy_copy.contains(key.as_str())
+        })
         .cloned()
         .collect::<std::collections::BTreeSet<_>>();
 

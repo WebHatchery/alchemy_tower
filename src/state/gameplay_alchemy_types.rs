@@ -1,5 +1,5 @@
 pub(super) const SLOT_COUNT: usize = 3;
-pub(super) const ALCHEMY_TIMINGS: [&str; 3] = ["steady", "early", "late"];
+use crate::data::AlchemyTuning;
 
 #[derive(Clone, Debug)]
 pub(super) struct AlchemySession {
@@ -7,6 +7,7 @@ pub(super) struct AlchemySession {
     pub(super) heat: i32,
     pub(super) stirs: u32,
     pub(super) timing_index: usize,
+    pub(super) timing_ids: Vec<String>,
     pub(super) slots: [Option<String>; SLOT_COUNT],
     pub(super) catalyst: Option<String>,
 }
@@ -18,6 +19,7 @@ impl Default for AlchemySession {
             heat: 2,
             stirs: 0,
             timing_index: 0,
+            timing_ids: Vec::new(),
             slots: [None, None, None],
             catalyst: None,
         }
@@ -25,9 +27,10 @@ impl Default for AlchemySession {
 }
 
 impl AlchemySession {
-    pub(super) fn with_initial_heat(initial_heat: i32) -> Self {
+    pub(super) fn with_tuning(tuning: &AlchemyTuning) -> Self {
         Self {
-            heat: initial_heat,
+            heat: tuning.initial_heat,
+            timing_ids: tuning.timing_ids.clone(),
             ..Self::default()
         }
     }

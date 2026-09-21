@@ -43,8 +43,7 @@ impl GameplayState {
     /// thing the same way twice.
     fn has_mastered_requirement(&self, quest: &QuestDefinition) -> bool {
         quest.required_mastered_recipe.is_empty()
-            || self.recipe_mastery_brews(&quest.required_mastered_recipe)
-                >= crate::alchemy::MASTERED_BREW_COUNT
+            || self.recipe_mastery_brews(&quest.required_mastered_recipe) >= self.mastery_threshold
     }
 
     pub(super) fn quest_unlock_summary(&self, data: &GameData, quest: &QuestDefinition) -> String {

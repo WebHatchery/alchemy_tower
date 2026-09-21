@@ -22,7 +22,13 @@ fn mastery_gate_blocks_until_recipe_is_mastered() {
     // Reaching the mastered threshold opens the gate.
     state.progression.recipe_mastery.insert(
         "glow_potion_recipe".to_owned(),
-        crate::alchemy::MASTERED_BREW_COUNT,
+        data.config
+            .balance
+            .alchemy
+            .mastery_stages
+            .last()
+            .map(|stage| stage.minimum_brews)
+            .unwrap_or_default(),
     );
     assert!(state.can_unlock_warp(&warp));
 }

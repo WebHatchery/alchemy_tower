@@ -16,6 +16,10 @@ use std::cell::Cell;
 
 pub(crate) const UI_DESIGN_W: f32 = 1280.0;
 pub(crate) const UI_DESIGN_H: f32 = 720.0;
+pub(crate) const UI_SUPPORTED_W: f32 = 960.0;
+pub(crate) const UI_SUPPORTED_H: f32 = 540.0;
+const UI_COMPACT_W: f32 = 1200.0;
+const UI_COMPACT_H: f32 = 675.0;
 pub(crate) const WORLD_SAFE_TOP: f32 = 76.0;
 pub(crate) const WORLD_SAFE_BOTTOM_BAND: f32 = 180.0;
 
@@ -34,7 +38,8 @@ fn virtual_ui() -> Option<VirtualUi> {
     if sw >= UI_DESIGN_W && sh >= UI_DESIGN_H {
         return None;
     }
-    let mut ui = VirtualUi::new(UI_DESIGN_W, UI_DESIGN_H);
+    let logical_size = logical_ui_size(vec2(sw, sh));
+    let mut ui = VirtualUi::new(logical_size.x, logical_size.y);
     if ui.scale < 0.1 {
         ui.scale = 0.1;
         ui.offset = vec2(
@@ -52,18 +57,24 @@ pub(crate) fn is_scaling() -> bool {
 /// Layout width the UI anchors to: the design width when scaling, else the real
 /// window width.
 pub(crate) fn ui_w() -> f32 {
-    if virtual_ui().is_some() {
-        UI_DESIGN_W
-    } else {
-        screen_width()
-    }
+    logical_ui_size(vec2(screen_width(), screen_height())).x
 }
 
 pub(crate) fn ui_h() -> f32 {
-    if virtual_ui().is_some() {
-        UI_DESIGN_H
+    logical_ui_size(vec2(screen_width(), screen_height())).y
+}
+
+/// Pick the authored canvas for each supported breakpoint. The compact canvas
+/// gives the 960x540 contract 20% more logical room for text and touch targets
+/// than the old full-design shrink, while the smaller stress sizes retain the
+/// design canvas until their dedicated reflow pass is complete.
+fn logical_ui_size(viewport: Vec2) -> Vec2 {
+    if viewport.x >= UI_DESIGN_W && viewport.y >= UI_DESIGN_H {
+        viewport
+    } else if viewport.x >= UI_SUPPORTED_W && viewport.y >= UI_SUPPORTED_H {
+        vec2(UI_COMPACT_W, UI_COMPACT_H)
     } else {
-        screen_height()
+        vec2(UI_DESIGN_W, UI_DESIGN_H)
     }
 }
 
@@ -131,7 +142,10 @@ pub(crate) fn transform_hud_mouse(point: [f32; 2]) -> [f32; 2] {
 
 #[cfg(test)]
 mod tests {
-    use super::{safe_play_rect, WORLD_SAFE_BOTTOM_BAND, WORLD_SAFE_TOP};
+    use super::{
+        logical_ui_size, safe_play_rect, UI_DESIGN_H, UI_DESIGN_W, UI_SUPPORTED_H, UI_SUPPORTED_W,
+        WORLD_SAFE_BOTTOM_BAND, WORLD_SAFE_TOP,
+    };
     use macroquad::prelude::vec2;
 
     #[test]
@@ -145,5 +159,26 @@ mod tests {
     #[test]
     fn world_safe_rect_stays_non_empty_at_stress_height() {
         assert!(safe_play_rect(vec2(360.0, 360.0)).h > 0.0);
+    }
+
+    #[test]
+    fn supported_landscape_uses_the_compact_canvas() {
+        let size = logical_ui_size(vec2(UI_SUPPORTED_W, UI_SUPPORTED_H));
+
+        assert_eq!(size, vec2(1200.0, 675.0));
+    }
+
+    #[test]
+    fn stress_viewport_keeps_the_design_canvas_until_reflow_exists() {
+        let size = logical_ui_size(vec2(640.0, 360.0));
+
+        assert_eq!(size, vec2(UI_DESIGN_W, UI_DESIGN_H));
+    }
+
+    #[test]
+    fn large_viewport_uses_its_real_dimensions() {
+        let size = logical_ui_size(vec2(1920.0, 1080.0));
+
+        assert_eq!(size, vec2(1920.0, 1080.0));
     }
 }
