@@ -1,7 +1,7 @@
 use super::GameplayState;
 use crate::content::{ui_copy, ui_format};
 use crate::data::{AreaDefinition, GameData};
-use crate::view_models::hud::{HudControlTag, HudPotionSlot, HudView, HOTBAR_SLOT_COUNT};
+use crate::view_models::hud::{HudPotionSlot, HudView, HOTBAR_SLOT_COUNT};
 
 /// Where the HUD starts saying you are running out. Presentation rather
 /// than balance, so it stays beside the panel that draws it.
@@ -13,13 +13,13 @@ impl GameplayState {
         let potions: [HudPotionSlot; HOTBAR_SLOT_COUNT] = std::array::from_fn(|index| {
             if let Some(item_id) = quick.get(index) {
                 HudPotionSlot {
-                    key_label: quick_potion_key_label(index),
+                    key_label: quick_potion_key_label(),
                     icon_id: Some(item_id.clone()),
                     amount: self.inventory.get(item_id).copied().unwrap_or_default(),
                 }
             } else {
                 HudPotionSlot {
-                    key_label: quick_potion_key_label(index),
+                    key_label: quick_potion_key_label(),
                     icon_id: None,
                     amount: 0,
                 }
@@ -30,11 +30,8 @@ impl GameplayState {
         let vitality_value = format!("{:.0}", self.vitality);
 
         HudView {
-            game_title: ui_copy("menu_title").to_owned(),
             vitality_label: ui_copy("hud_vitality_label").to_owned(),
             vitality_text: ui_format("hud_vitality_value", &[("value", &vitality_value)]),
-            coins_label: ui_copy("hud_coins_label").to_owned(),
-            coins_value: self.coins.to_string(),
             clock_text: clock_text_12h(
                 self.world.day_clock_seconds,
                 data.config.day_length_seconds,
@@ -59,33 +56,19 @@ impl GameplayState {
             },
             goal_prefix: ui_copy("hud_current_goal").to_owned(),
             goal: self.hud_goal(data),
-            status_text: (self.runtime.status_text_seconds > 0.0)
-                .then(|| self.runtime.status_text.clone())
-                .unwrap_or_default(),
+            status_text: if self.runtime.status_text_seconds > 0.0 {
+                self.runtime.status_text.clone()
+            } else {
+                String::new()
+            },
             area_label: area.name.clone(),
             area_banner_alpha: (self.runtime.area_banner_seconds / 0.8).clamp(0.0, 1.0),
-            inventory_label: ui_copy("hud_drawer_inventory").to_owned(),
-            inventory_hint: ui_copy("hud_drawer_inventory_hint").to_owned(),
-            effects_label: ui_copy("hud_drawer_effects").to_owned(),
-            no_effects_label: ui_copy("overlay_none").to_owned(),
-            journal_label: ui_copy("hud_drawer_journal").to_owned(),
-            journal_key_label: "TAP".to_owned(),
-            minimap_north_label: ui_copy("hud_minimap_north").to_owned(),
-            control_tags: hud_control_tags(),
             truncation_suffix: ui_copy("hud_truncation_suffix").to_owned(),
             potions,
-            inventory_count: self.inventory.values().copied().sum(),
-            effect_count: self.runtime.active_effects.len(),
             feedbacks: self.build_hud_feedbacks(area),
             toasts: self.build_hud_toasts(),
         }
     }
-}
-
-fn hud_control_tags() -> Vec<HudControlTag> {
-    // The persistent touch controls name their own actions. Leaving old
-    // keyboard badges on screen would make the browser UI look keyboard-only.
-    Vec::new()
 }
 
 fn clock_text_12h(day_clock_seconds: f32, full_day_seconds: f32) -> String {
@@ -117,6 +100,6 @@ fn title_case_label(value: &str) -> String {
     format!("{}{}", first.to_ascii_uppercase(), chars.as_str())
 }
 
-fn quick_potion_key_label(_index: usize) -> &'static str {
+fn quick_potion_key_label() -> &'static str {
     "TAP"
 }

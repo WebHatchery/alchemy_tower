@@ -1,4 +1,4 @@
-use super::{ALCHEMY_MAX_HEAT, ALCHEMY_MIN_HEAT, ALCHEMY_TIMINGS};
+use super::ALCHEMY_TIMINGS;
 
 /// A recipe or morph is only content if the bench can actually be set to
 /// what it asks for. A heat the dial cannot reach, a timing that is not one
@@ -15,7 +15,9 @@ fn every_recipe_and_morph_is_reachable_at_the_bench() {
 
     let mut unreachable = Vec::new();
     let mut check = |label: String, heat: i32, timing: &str, tag: &str| {
-        if !(ALCHEMY_MIN_HEAT..=ALCHEMY_MAX_HEAT).contains(&heat) {
+        if !(data.config.balance.alchemy.min_heat..=data.config.balance.alchemy.max_heat)
+            .contains(&heat)
+        {
             unreachable.push(format!("{label}: heat {heat} is off the dial"));
         }
         if !timing.is_empty() && !ALCHEMY_TIMINGS.contains(&timing) {

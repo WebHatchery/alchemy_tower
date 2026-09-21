@@ -21,11 +21,20 @@
     "read_request_board": "Read request board"
   },
   "overlays": {
-    "shop_subtitle": "Coins {coins}  |  Tap a listed item to purchase or sell.",
+    "shop_subtitle": "Coins {coins}  |  Select an item, then use BUY or SELL to confirm.",
     "rune_subtitle": "Tap a potion-and-rune pairing to apply it.",
     "archive_subtitle": "Recovered research, experiment records, and higher synthesis controls.",
     "quest_board_subtitle": "Tap a request to accept it.",
     "alchemy_subtitle": "Tap materials, set the process, then tap BREW."
+  },
+  "touch_controls": {
+    "up": "UP",
+    "left": "L",
+    "right": "R",
+    "down": "DN",
+    "inventory": "BAG",
+    "journal": "JOURNAL",
+    "pause": "PAUSE"
   },
   "copy": {
     "window_title": "Alchemy Tower",
@@ -124,7 +133,6 @@
     "world_prompt_interact": "ACT: {label}",
     "world_prompt_alchemy": "ACT: {label}",
     "hud_vitality_label": "Vitality",
-    "hud_coins_label": "Coins",
     "hud_vitality_value": "{value}/100",
     "hud_clock": "{hour}:{minute} {period}",
     "hud_time_period_am": "AM",
@@ -147,11 +155,6 @@
     "hud_goal_item_need_with_requirements": "Need: {item} x{amount} ({requirements})",
     "hud_goal_healing_recipe": "Open the cauldron: Healing Draught = Sunleaf + Whisper Moss.",
     "hud_goal_item_amount": "x{amount}",
-    "hud_drawer_inventory": "Bag",
-    "hud_drawer_inventory_hint": "TAP TO INSPECT",
-    "hud_drawer_effects": "Effects",
-    "hud_drawer_journal": "Journal",
-    "hud_minimap_north": "N",
     "gather_toast_journal": "Journal note added: {route}.",
     "gather_fallback_notes": "field notes",
     "gather_fallback_route": "unknown route",
@@ -495,7 +498,10 @@
     "overlay_shop_range": "showing {first}-{last} of {total}",
     "overlay_shop_empty_buy": "Nothing is stocked right now.",
     "overlay_shop_empty_sell": "Nothing safe to sell right now.",
-    "overlay_shop_footer": "Tap BUY or SELL, then tap an item to trade. Tap CLOSE to leave.",
+    "overlay_shop_footer": "Select an item to inspect it. Use BUY or SELL to commit, or CLOSE to leave.",
+    "overlay_shop_buy_action": "BUY",
+    "overlay_shop_sell_action": "SELL",
+    "overlay_rune_action": "IMBUE",
     "overlay_rune_drafts": "Rune Drafts",
     "overlay_rune_range": "showing {first}-{last} of {total}",
     "overlay_alchemy_range": "showing {first}-{last} of {total}",

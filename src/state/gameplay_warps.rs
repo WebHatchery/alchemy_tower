@@ -68,10 +68,10 @@ impl GameplayState {
     pub(super) fn next_locked_warp<'a>(&self, data: &'a GameData) -> Option<&'a WarpDefinition> {
         self.locked_warps(data)
             .into_iter()
-            .min_by_key(|warp| self.warp_progress_score(data, warp))
+            .min_by_key(|warp| self.warp_progress_score(warp))
     }
 
-    pub(super) fn warp_progress_score(&self, _data: &GameData, warp: &WarpDefinition) -> u32 {
+    pub(super) fn warp_progress_score(&self, warp: &WarpDefinition) -> u32 {
         let owned = self
             .inventory
             .get(&warp.required_item_id)

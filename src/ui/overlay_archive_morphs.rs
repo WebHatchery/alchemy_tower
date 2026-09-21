@@ -8,7 +8,6 @@ pub(crate) fn draw_archive_morphs_section_view(
     x: f32,
     y: f32,
     w: f32,
-    _h: f32,
 ) {
     draw_ui_text(&view.title, x + 20.0, y + 122.0, 26.0, dark::TEXT_BRIGHT);
     if let Some(page_text) = &view.page_text {

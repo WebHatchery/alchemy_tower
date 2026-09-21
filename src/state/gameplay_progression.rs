@@ -5,13 +5,8 @@ use crate::data::{ExperimentLogEntry, GameData, RecipeDefinition};
 #[path = "gameplay_progression_text.rs"]
 mod progression_text;
 
-#[allow(dead_code)]
 impl GameplayState {
-    pub(super) fn archive_experiment_entries<'a>(
-        &'a self,
-        data: &'a GameData,
-    ) -> Vec<&'a ExperimentLogEntry> {
-        let _ = data;
+    pub(super) fn archive_experiment_entries(&self) -> Vec<&ExperimentLogEntry> {
         self.progression
             .experiment_log
             .iter()
@@ -76,7 +71,7 @@ impl GameplayState {
 
     pub(super) fn archive_selection_len(&self, data: &GameData) -> usize {
         match ARCHIVE_TABS[self.ui.archive_tab] {
-            "experiments" => self.archive_experiment_entries(data).len(),
+            "experiments" => self.archive_experiment_entries().len(),
             "mastery" => self.mastery_recipes(data).len(),
             "morphs" => self.morph_recipes(data).len(),
             "disassembly" => self.available_disassembly_recipes(data).len(),

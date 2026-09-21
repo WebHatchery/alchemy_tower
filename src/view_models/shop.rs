@@ -10,6 +10,7 @@ pub(crate) struct ShopOverlayView {
     pub(crate) range_text: Option<String>,
     pub(crate) empty_text: String,
     pub(crate) safe_sell_banner: Option<String>,
+    pub(crate) action_label: String,
     pub(crate) footer_text: String,
     pub(crate) previous_label: &'static str,
     pub(crate) next_label: &'static str,

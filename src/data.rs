@@ -1,6 +1,5 @@
 //! Data definitions and embedded content loading.
 
-mod embedded_json;
 mod game_data;
 #[cfg(test)]
 mod game_data_apply_target_tests;
@@ -17,6 +16,7 @@ mod game_data_rapport_tests;
 mod game_data_reference_tests;
 #[cfg(test)]
 mod game_data_schema_tests;
+mod game_data_validation;
 #[cfg(test)]
 mod game_data_world_tests;
 mod loader;

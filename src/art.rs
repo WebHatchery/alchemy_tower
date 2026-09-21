@@ -3,7 +3,6 @@ mod asset_manifest;
 mod assets;
 mod draw;
 mod draw_markers;
-mod embedded_json;
 mod props;
 mod ui_art_catalog;
 

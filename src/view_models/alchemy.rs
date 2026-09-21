@@ -42,6 +42,7 @@ pub(crate) struct AlchemyMaterialRowView {
     pub(crate) enabled: bool,
 }
 
+#[allow(clippy::large_enum_variant)]
 pub(crate) enum AlchemyPreviewPanelState {
     EmptySelection,
     NoStation,

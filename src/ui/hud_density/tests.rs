@@ -32,7 +32,6 @@ fn quiet_drops_the_framing_and_keeps_what_you_act_on() {
             "quiet mode hides {required:?}, which the player needs to act"
         );
     }
-
 }
 
 /// The full HUD is the default: a display preference should never change

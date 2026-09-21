@@ -55,6 +55,7 @@ pub(super) fn draw_text_shadowed(
     draw_ui_text(text, x, baseline_y, font_size, color);
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn draw_wrapped_text_limited(
     text: &str,
     x: f32,

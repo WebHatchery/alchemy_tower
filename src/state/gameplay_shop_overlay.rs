@@ -142,6 +142,12 @@ impl GameplayState {
                 self.unavailable_state_text(ui_copy("overlay_shop_empty_sell"))
             },
             safe_sell_banner,
+            action_label: ui_copy(if buying {
+                "overlay_shop_buy_action"
+            } else {
+                "overlay_shop_sell_action"
+            })
+            .to_owned(),
             footer_text: shop_footer_text(),
             previous_label: ui_copy("overlay_inventory_previous"),
             next_label: ui_copy("overlay_inventory_next"),

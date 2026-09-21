@@ -2,8 +2,6 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
-use super::embedded_json::load_embedded_json;
-
 /// `deny_unknown_fields` because this file had two keys nothing read —
 /// `toast_icons` and `default_toast_icon` — and serde dropped them in silence,
 /// which is how six generated icons sat unused for the whole project. A key
@@ -39,10 +37,11 @@ pub(super) struct UiIconAssetDefinition {
 pub(super) fn ui_art_catalog() -> &'static UiArtCatalog {
     static CATALOG: OnceLock<UiArtCatalog> = OnceLock::new();
     CATALOG.get_or_init(|| {
-        load_embedded_json(
+        macroquad_toolkit::data_loader::load_embedded_json_labeled(
             "ui_art.json",
             macroquad_toolkit::include_json_str!("../../assets/data/ui_art.json"),
         )
+        .unwrap_or_else(|error| panic!("embedded ui_art.json should be valid: {error}"))
     })
 }
 

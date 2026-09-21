@@ -1,7 +1,7 @@
 use super::gameplay_render_color::render_color;
 use super::GameplayState;
 use crate::art::ArtAssets;
-use crate::data::{AreaDefinition, GameData};
+use crate::data::AreaDefinition;
 use crate::ui::draw_gather_node_world_marker;
 use macroquad::prelude::{vec2, Vec2};
 
@@ -10,7 +10,6 @@ impl GameplayState {
         &self,
         area: &AreaDefinition,
         offset: Vec2,
-        _data: &GameData,
         art: &ArtAssets,
     ) {
         for node in &area.gather_nodes {

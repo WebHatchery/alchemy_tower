@@ -8,6 +8,7 @@ use super::super::volatility::{brew_instability, is_destabilized};
 use super::brewing_failures::brew_failure_reasons;
 use super::{stable_brew, BrewResolution};
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn resolve_known_recipe_brew<'a>(
     data: &'a GameData,
     station: &StationDefinition,

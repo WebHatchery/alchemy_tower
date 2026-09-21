@@ -1,7 +1,7 @@
 use super::GameplayState;
 use crate::data::{GameData, StationKind};
 use crate::input::{
-    confirm_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
+    confirm_pressed, left_mouse_released, mouse_position_point, rect_contains_point,
     select_next_pressed, select_previous_pressed, sort_pressed, switch_next_pressed,
     switch_previous_pressed,
 };
@@ -18,7 +18,7 @@ impl GameplayState {
             return;
         }
 
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let point = mouse_position_point();
             if rect_contains_point(crate::ui::shop_tab_rect(true), point) {
                 self.ui.shop_buy_tab = true;
@@ -47,6 +47,10 @@ impl GameplayState {
                 self.ui.shop_index = (start + page_rows).min(total.saturating_sub(1));
                 return;
             }
+            if rect_contains_point(crate::ui::overlay_primary_action_rect(), point) {
+                self.confirm_shop_selection(data, station);
+                return;
+            }
             let count = if self.ui.shop_buy_tab {
                 station.stock.len().min(SHOP_BUY_VISIBLE_ROWS)
             } else {
@@ -65,11 +69,7 @@ impl GameplayState {
                     continue;
                 }
                 let index = start + offset;
-                if self.ui.shop_index == index {
-                    self.confirm_shop_selection(data, station);
-                } else {
-                    self.ui.shop_index = index;
-                }
+                self.ui.shop_index = index;
                 return;
             }
         }

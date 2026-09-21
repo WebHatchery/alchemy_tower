@@ -3,7 +3,7 @@ use std::sync::{Mutex, OnceLock};
 
 use serde::Deserialize;
 
-use super::embedded_json::parse_json_or_else;
+use macroquad_toolkit::data_loader::load_embedded_json_labeled;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -11,6 +11,7 @@ pub(crate) struct UiText {
     pub(crate) statuses: StatusText,
     pub(crate) prompts: PromptText,
     pub(crate) overlays: OverlayText,
+    pub(crate) touch_controls: TouchControlText,
     #[serde(default)]
     pub(crate) copy: HashMap<String, String>,
 }
@@ -52,6 +53,18 @@ pub(crate) struct OverlayText {
     pub(crate) alchemy_subtitle: String,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct TouchControlText {
+    pub(crate) up: String,
+    pub(crate) left: String,
+    pub(crate) right: String,
+    pub(crate) down: String,
+    pub(crate) inventory: String,
+    pub(crate) journal: String,
+    pub(crate) pause: String,
+}
+
 impl UiText {
     fn fallback() -> Self {
         Self {
@@ -83,6 +96,15 @@ impl UiText {
                 quest_board_subtitle: "[missing ui_text.overlays.quest_board_subtitle]".to_owned(),
                 alchemy_subtitle: "[missing ui_text.overlays.alchemy_subtitle]".to_owned(),
             },
+            touch_controls: TouchControlText {
+                up: "[missing ui_text.touch_controls.up]".to_owned(),
+                left: "[missing ui_text.touch_controls.left]".to_owned(),
+                right: "[missing ui_text.touch_controls.right]".to_owned(),
+                down: "[missing ui_text.touch_controls.down]".to_owned(),
+                inventory: "[missing ui_text.touch_controls.inventory]".to_owned(),
+                journal: "[missing ui_text.touch_controls.journal]".to_owned(),
+                pause: "[missing ui_text.touch_controls.pause]".to_owned(),
+            },
             copy: HashMap::new(),
         }
     }
@@ -91,11 +113,14 @@ impl UiText {
 pub(crate) fn ui_text() -> &'static UiText {
     static TEXT: OnceLock<UiText> = OnceLock::new();
     TEXT.get_or_init(|| {
-        parse_json_or_else(
-            macroquad_toolkit::include_json_str!("../../assets/data/ui_text.json"),
+        load_embedded_json_labeled(
             "ui_text.json",
-            UiText::fallback,
+            macroquad_toolkit::include_json_str!("../../assets/data/ui_text.json"),
         )
+        .unwrap_or_else(|error| {
+            eprintln!("Failed to load embedded ui_text.json: {error}");
+            UiText::fallback()
+        })
     })
 }
 

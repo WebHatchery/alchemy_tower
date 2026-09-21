@@ -41,7 +41,7 @@ impl GameplayState {
                         "overlay_archive_mastery_entry_meta",
                         &[
                             ("stage", mastery_stage(mastery)),
-                            ("memory", &self.recipe_memory_meta(data, recipe)),
+                            ("memory", &self.recipe_memory_meta(recipe)),
                         ],
                     ),
                     selected: page_start + index == selected_index,

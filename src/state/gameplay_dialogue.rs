@@ -1,7 +1,7 @@
 use super::GameplayState;
 use crate::data::{GameData, QuestDefinition};
 use crate::input::{
-    dialogue_advance_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
+    dialogue_advance_pressed, left_mouse_released, mouse_position_point, rect_contains_point,
 };
 
 #[path = "gameplay_dialogue_quest_text.rs"]
@@ -10,7 +10,7 @@ mod dialogue_quest_text;
 impl GameplayState {
     pub(super) fn handle_dialogue_inputs(&mut self, data: &GameData) {
         if !dialogue_advance_pressed()
-            && !(left_mouse_pressed()
+            && !(left_mouse_released()
                 && rect_contains_point(
                     crate::ui::overlay_primary_action_rect(),
                     mouse_position_point(),
@@ -65,11 +65,8 @@ impl GameplayState {
                 .entry(npc.id.clone())
                 .or_insert(0) += 1;
             self.trigger_quest_accepted_feedback(dialogue_quest_text::accepted_toast(&quest.title));
-            self.runtime.status_text = dialogue_quest_text::accepted_status(
-                data,
-                quest,
-                &self.quest_location_hint(data, quest),
-            );
+            self.runtime.status_text =
+                dialogue_quest_text::accepted_status(quest, &self.quest_location_hint(data, quest));
             return;
         }
 

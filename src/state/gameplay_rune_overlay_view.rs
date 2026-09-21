@@ -54,6 +54,7 @@ impl GameplayState {
             drafts_title: ui_copy("overlay_rune_drafts").to_owned(),
             empty_text: self.unavailable_state_text(ui_copy("overlay_rune_empty")),
             footer_text: rune_footer_text(),
+            action_label: ui_copy("overlay_rune_action").to_owned(),
             range_text,
             entries,
         })

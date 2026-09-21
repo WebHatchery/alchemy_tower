@@ -8,6 +8,7 @@
     "move_speed": 220.0,
     "interaction_range": 28.0,
     "day_length_seconds": 600.0,
+    "tutorial_hint_delay_seconds": 6.0,
     "save_version": 5,
     "archive_required_completed_quests": [
       "star_elixir_for_ione",
@@ -61,6 +62,11 @@
         "dark_time_windows": [
           "night"
         ]
+      },
+      "alchemy": {
+        "min_heat": 1,
+        "max_heat": 3,
+        "initial_heat": 2
       }
     }
   }

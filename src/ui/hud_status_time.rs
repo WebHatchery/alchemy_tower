@@ -4,9 +4,6 @@ use super::hud_primitives::*;
 use super::HudView;
 use macroquad::prelude::*;
 
-#[path = "hud_minimap_frame.rs"]
-mod hud_minimap_frame;
-
 pub(super) fn draw_time_panel(view: &HudView) {
     // Shifted left of the circular minimap (whose left edge sits at
     // screen_width - 124) so the compass no longer overlaps the clock plaque.
@@ -55,8 +52,4 @@ pub(super) fn draw_time_panel(view: &HudView) {
             Color::from_rgba(255, 224, 168, 255),
         );
     }
-}
-
-pub(super) fn draw_minimap_frame(view: &HudView) {
-    hud_minimap_frame::draw_minimap_frame(view);
 }

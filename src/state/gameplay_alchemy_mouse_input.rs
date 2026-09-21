@@ -117,11 +117,11 @@ impl GameplayState {
         mouse: [f32; 2],
     ) -> bool {
         if rect_contains_point(heat_down_rect(), mouse) {
-            self.alchemy.heat = (self.alchemy.heat - 1).max(1);
+            self.alchemy.heat = (self.alchemy.heat - 1).max(data.config.balance.alchemy.min_heat);
             return true;
         }
         if rect_contains_point(heat_up_rect(), mouse) {
-            self.alchemy.heat = (self.alchemy.heat + 1).min(3);
+            self.alchemy.heat = (self.alchemy.heat + 1).min(data.config.balance.alchemy.max_heat);
             return true;
         }
         if rect_contains_point(stirs_rect(), mouse) {

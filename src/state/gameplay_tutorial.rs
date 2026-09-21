@@ -17,7 +17,7 @@ impl GameplayState {
 
         if let Some((text, tone)) = self.take_next_tutorial_hint(data) {
             self.push_tutorial_hint(text, tone);
-            self.runtime.tutorial.next_hint_delay_seconds = 6.0;
+            self.runtime.tutorial.next_hint_delay_seconds = data.config.tutorial_hint_delay_seconds;
         }
     }
 

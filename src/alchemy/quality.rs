@@ -34,6 +34,7 @@ pub(crate) fn mastery_stage(successful_brews: u32) -> &'static str {
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn calculate_quality(
     recipe: &RecipeDefinition,
     station: &StationDefinition,

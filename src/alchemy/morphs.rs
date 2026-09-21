@@ -40,6 +40,7 @@ fn unmet_requirement_count(
     checks.into_iter().filter(|unmet| *unmet).count()
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn morph_output(
     recipe: &RecipeDefinition,
     quality_score: u32,
@@ -68,6 +69,7 @@ pub(super) fn morph_output(
     None
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(super) fn morph_trigger_hint(
     recipe: &RecipeDefinition,
     quality_score: u32,

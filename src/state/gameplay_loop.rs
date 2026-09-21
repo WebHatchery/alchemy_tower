@@ -3,7 +3,7 @@ use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::GameData;
 use crate::input::{
-    cancel_pressed, hud_mouse_position_point, journal_pressed, left_mouse_pressed,
+    cancel_pressed, hud_mouse_position_point, journal_pressed, left_mouse_released,
     mouse_position_point, rect_contains_point, sort_pressed,
 };
 use crate::state::StateTransition;
@@ -63,13 +63,13 @@ impl GameplayState {
         audio: &AudioAssets,
         frame_time: f32,
     ) -> Option<StateTransition> {
-        if left_mouse_pressed()
+        if left_mouse_released()
             && rect_contains_point(crate::ui::touch_pause_rect(), mouse_position_point())
         {
             return Some(StateTransition::Pause);
         }
         if journal_pressed()
-            || (left_mouse_pressed()
+            || (left_mouse_released()
                 && rect_contains_point(crate::ui::touch_journal_rect(), mouse_position_point()))
         {
             self.set_overlay(OverlayScreen::Journal);
@@ -77,14 +77,14 @@ impl GameplayState {
             self.runtime.status_text = loop_status_text::open_journal();
             return None;
         }
-        if left_mouse_pressed()
+        if left_mouse_released()
             && rect_contains_point(crate::ui::touch_inventory_rect(), mouse_position_point())
         {
             self.set_overlay(OverlayScreen::Inventory);
             self.ui.inventory_index = 0;
             return None;
         }
-        if left_mouse_pressed()
+        if left_mouse_released()
             && rect_contains_point(
                 crate::inventory_layout::inventory_hud_rect(),
                 hud_mouse_position_point(),

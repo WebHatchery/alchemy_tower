@@ -1,32 +1,6 @@
-#![allow(clippy::large_enum_variant, clippy::too_many_arguments)]
-
-use macroquad::prelude::{next_frame, Conf};
+use alchemy_tower::{game::Game, window_conf};
+use macroquad::prelude::next_frame;
 use macroquad_toolkit::capture;
-
-mod alchemy;
-mod alchemy_layout;
-mod archive_layout;
-mod art;
-mod audio;
-mod content;
-mod data;
-mod game;
-mod input;
-mod inventory_layout;
-mod journal_layout;
-use alchemy_tower::{menu_layout, settings};
-mod pause_layout;
-mod save;
-mod state;
-mod ui;
-mod ui_scale;
-mod view_models;
-
-use game::Game;
-
-fn window_conf() -> Conf {
-    capture::capture_window_conf("ALCHEMY_TOWER", content::ui_copy("window_title"), 1280, 720)
-}
 
 #[macroquad::main(window_conf)]
 async fn main() {

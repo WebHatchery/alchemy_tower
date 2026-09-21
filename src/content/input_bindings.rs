@@ -2,7 +2,7 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
-use super::embedded_json::parse_required_json;
+use macroquad_toolkit::data_loader::load_embedded_json_labeled;
 
 /// `deny_unknown_fields` throughout: `alchemy.heat` and `alchemy.fill_slots`
 /// sat in this file for months as display labels no struct claimed, so serde
@@ -85,9 +85,10 @@ pub(crate) struct DialogueBindings {
 pub(crate) fn input_bindings() -> &'static InputBindings {
     static INPUTS: OnceLock<InputBindings> = OnceLock::new();
     INPUTS.get_or_init(|| {
-        parse_required_json(
-            macroquad_toolkit::include_json_str!("../../assets/data/input_bindings.json"),
+        load_embedded_json_labeled(
             "input_bindings.json",
+            macroquad_toolkit::include_json_str!("../../assets/data/input_bindings.json"),
         )
+        .unwrap_or_else(|error| panic!("embedded input_bindings.json should be valid: {error}"))
     })
 }

@@ -1,6 +1,5 @@
 use serde::Deserialize;
 
-use super::super::embedded_json::load_labeled_json;
 use crate::data::{
     AreaDefinition, GameConfig, GameDataParts, GatheringRouteDefinition, ItemDefinition,
     MutationFormulaDefinition, NpcDefinition, QuestDefinition, RecipeDefinition,
@@ -384,14 +383,17 @@ const RECIPE_SOURCES: &[(&str, &str)] = &[
 fn load_areas() -> Result<Vec<AreaDefinition>, String> {
     AREA_SOURCES
         .iter()
-        .map(|&(label, source)| load_labeled_json(label, source))
+        .map(|&(label, source)| {
+            macroquad_toolkit::data_loader::load_embedded_json_labeled(label, source)
+        })
         .collect()
 }
 
 fn load_items() -> Result<Vec<ItemDefinition>, String> {
     let mut items = Vec::new();
     for &(label, source) in ITEM_SOURCES {
-        let part: EmbeddedItemData = load_labeled_json(label, source)?;
+        let part: EmbeddedItemData =
+            macroquad_toolkit::data_loader::load_embedded_json_labeled(label, source)?;
         items.extend(part.items);
     }
     Ok(items)
@@ -400,7 +402,8 @@ fn load_items() -> Result<Vec<ItemDefinition>, String> {
 fn load_stations() -> Result<Vec<StationDefinition>, String> {
     let mut stations = Vec::new();
     for &(label, source) in STATION_SOURCES {
-        let part: EmbeddedStationData = load_labeled_json(label, source)?;
+        let part: EmbeddedStationData =
+            macroquad_toolkit::data_loader::load_embedded_json_labeled(label, source)?;
         stations.extend(part.stations);
     }
     Ok(stations)
@@ -409,7 +412,8 @@ fn load_stations() -> Result<Vec<StationDefinition>, String> {
 fn load_quests() -> Result<Vec<QuestDefinition>, String> {
     let mut quests = Vec::new();
     for &(label, source) in QUEST_SOURCES {
-        let part: EmbeddedQuestData = load_labeled_json(label, source)?;
+        let part: EmbeddedQuestData =
+            macroquad_toolkit::data_loader::load_embedded_json_labeled(label, source)?;
         quests.extend(part.quests);
     }
     Ok(quests)
@@ -418,33 +422,37 @@ fn load_quests() -> Result<Vec<QuestDefinition>, String> {
 fn load_recipes() -> Result<Vec<RecipeDefinition>, String> {
     let mut recipes = Vec::new();
     for &(label, source) in RECIPE_SOURCES {
-        let part: EmbeddedRecipeData = load_labeled_json(label, source)?;
+        let part: EmbeddedRecipeData =
+            macroquad_toolkit::data_loader::load_embedded_json_labeled(label, source)?;
         recipes.extend(part.recipes);
     }
     Ok(recipes)
 }
 
 pub(super) fn load_embedded_parts() -> Result<GameDataParts, String> {
-    let config: EmbeddedConfigData = load_labeled_json(
+    let config: EmbeddedConfigData = macroquad_toolkit::data_loader::load_embedded_json_labeled(
         "game_data_config",
         macroquad_toolkit::include_json_str!("../../assets/data/game_data_config.json"),
     )?;
-    let routes: EmbeddedRouteData = load_labeled_json(
+    let routes: EmbeddedRouteData = macroquad_toolkit::data_loader::load_embedded_json_labeled(
         "world/gathering_routes",
         macroquad_toolkit::include_json_str!("../../assets/data/world/gathering_routes.json"),
     )?;
-    let npc: EmbeddedNpcData = load_labeled_json(
+    let npc: EmbeddedNpcData = macroquad_toolkit::data_loader::load_embedded_json_labeled(
         "town/npcs",
         macroquad_toolkit::include_json_str!("../../assets/data/town/npcs.json"),
     )?;
-    let runes: EmbeddedRuneRecipeData = load_labeled_json(
+    let runes: EmbeddedRuneRecipeData = macroquad_toolkit::data_loader::load_embedded_json_labeled(
         "crafting/rune_recipes",
         macroquad_toolkit::include_json_str!("../../assets/data/crafting/rune_recipes.json"),
     )?;
-    let mutations: EmbeddedMutationData = load_labeled_json(
-        "crafting/mutation_formulas",
-        macroquad_toolkit::include_json_str!("../../assets/data/crafting/mutation_formulas.json"),
-    )?;
+    let mutations: EmbeddedMutationData =
+        macroquad_toolkit::data_loader::load_embedded_json_labeled(
+            "crafting/mutation_formulas",
+            macroquad_toolkit::include_json_str!(
+                "../../assets/data/crafting/mutation_formulas.json"
+            ),
+        )?;
 
     Ok(GameDataParts {
         config: config.config,

@@ -1,5 +1,5 @@
 use super::gameplay_alchemy_input_text as alchemy_input_text;
-use super::gameplay_alchemy_types::{ALCHEMY_MAX_HEAT, ALCHEMY_MIN_HEAT, ALCHEMY_TIMINGS};
+use super::gameplay_alchemy_types::ALCHEMY_TIMINGS;
 use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::{GameData, StationKind};
@@ -8,7 +8,7 @@ use crate::input::{
     alchemy_clear_slot_pressed, alchemy_fill_slot_pressed, alchemy_heat_decrease_pressed,
     alchemy_heat_increase_pressed, alchemy_open_pressed, alchemy_remove_catalyst_pressed,
     alchemy_repeat_pressed, alchemy_stir_pressed, alchemy_timing_pressed, cancel_pressed,
-    interact_pressed, left_mouse_pressed, right_mouse_pressed, select_next_pressed,
+    interact_pressed, left_mouse_released, right_mouse_pressed, select_next_pressed,
     select_previous_pressed, sort_pressed,
 };
 
@@ -39,10 +39,10 @@ impl GameplayState {
             }
         }
         if alchemy_heat_decrease_pressed() {
-            self.alchemy.heat = (self.alchemy.heat - 1).max(ALCHEMY_MIN_HEAT);
+            self.alchemy.heat = (self.alchemy.heat - 1).max(data.config.balance.alchemy.min_heat);
         }
         if alchemy_heat_increase_pressed() {
-            self.alchemy.heat = (self.alchemy.heat + 1).min(ALCHEMY_MAX_HEAT);
+            self.alchemy.heat = (self.alchemy.heat + 1).min(data.config.balance.alchemy.max_heat);
         }
         if sort_pressed() {
             self.cycle_inventory_sort_mode();
@@ -83,7 +83,7 @@ impl GameplayState {
         if alchemy_brew_pressed() {
             self.brew_selected(data, &station, audio);
         }
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             self.handle_alchemy_mouse_inputs(data, &station, &items, audio);
         } else if right_mouse_pressed() {
             self.handle_alchemy_mouse_removals();

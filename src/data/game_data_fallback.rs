@@ -1,5 +1,3 @@
-#[cfg(debug_assertions)]
-use super::embedded_json::expect_labeled_json;
 use super::game_data::GameData;
 
 impl GameData {
@@ -10,10 +8,11 @@ impl GameData {
 
     #[cfg(debug_assertions)]
     pub(crate) fn runtime_fallback() -> Self {
-        let mut data: GameData = expect_labeled_json(
+        let mut data: GameData = macroquad_toolkit::data_loader::load_embedded_json_labeled(
             "game_data_fallback",
             macroquad_toolkit::include_json_str!("../../assets/data/game_data_fallback.json"),
-        );
+        )
+        .unwrap_or_else(|error| panic!("embedded game_data_fallback should be valid: {error}"));
         data.build_indexes()
             .expect("embedded runtime fallback indexes must remain valid");
         data

@@ -30,11 +30,11 @@ pub(crate) fn draw_alchemy_materials_panel_view(
     } else {
         view.sort_text.clone()
     };
-    let sort_label = truncate_text_to_width(&sort_label, 168.0, 15.0);
-    if !sort_label.is_empty() {
-        let sort_width = measure_ui_text(&sort_label, None, 15, 1.0).width;
+    let display_sort_label = truncate_text_to_width(&sort_label, 168.0, 15.0);
+    if !display_sort_label.is_empty() {
+        let sort_width = measure_ui_text(&display_sort_label, None, 15, 1.0).width;
         draw_ui_text(
-            &sort_label,
+            &display_sort_label,
             x + AL_LX - 2.0 + AL_LW - sort_width - 8.0,
             y + AL_MAT_TITLE_Y,
             15.0,

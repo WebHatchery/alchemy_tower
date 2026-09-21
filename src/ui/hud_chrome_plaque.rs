@@ -33,15 +33,3 @@ pub(super) fn draw_small_plaque_backplate(rect: Rect) {
     draw_panel_texture(back, 12.0, Color::from_rgba(120, 82, 42, 136), 0.68);
     draw_beveled_rect_lines(back, 12.0, 1.1, Color::from_rgba(235, 196, 118, 132));
 }
-
-pub(super) fn draw_vertical_plaque_backplate(rect: Rect) {
-    let back = Rect::new(rect.x - 8.0, rect.y - 8.0, rect.w + 16.0, rect.h + 16.0);
-    draw_beveled_rect(
-        Rect::new(back.x + 5.0, back.y + 7.0, back.w, back.h),
-        11.0,
-        Color::from_rgba(0, 0, 0, 78),
-    );
-    draw_beveled_rect(back, 11.0, Color::from_rgba(95, 62, 32, 116));
-    draw_panel_texture(back, 11.0, Color::from_rgba(95, 62, 32, 116), 0.62);
-    draw_beveled_rect_lines(back, 11.0, 1.0, Color::from_rgba(235, 196, 118, 112));
-}

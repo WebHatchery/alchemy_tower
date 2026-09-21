@@ -1,5 +1,4 @@
 pub(super) use super::hud_gem_icons::*;
-pub(super) use super::hud_icons::*;
 use super::hud_palette::*;
 use super::hud_shapes::*;
 use super::hud_text::*;
@@ -47,23 +46,6 @@ pub(super) fn draw_flourish_line(x1: f32, y1: f32, x2: f32, y2: f32, left: bool)
     draw_line(x2, y2, x2 + sign * 18.0, y2 + 12.0, 1.5, color);
 }
 
-pub(super) fn draw_title_vines(x: f32, y: f32, width: f32) {
-    let color = Color::from_rgba(221, 177, 96, 150);
-    draw_line(x + 42.0, y + 8.0, x + 118.0, y + 8.0, 1.5, color);
-    draw_line(
-        x + width - 118.0,
-        y + 8.0,
-        x + width - 42.0,
-        y + 8.0,
-        1.5,
-        color,
-    );
-    draw_circle_lines(x + 126.0, y + 8.0, 8.0, 1.2, color);
-    draw_circle_lines(x + width - 126.0, y + 8.0, 8.0, 1.2, color);
-    draw_leaf_cluster_scaled(vec2(x + 58.0, y + 9.0), false, 0.42);
-    draw_leaf_cluster_scaled(vec2(x + width - 58.0, y + 9.0), true, 0.42);
-}
-
 pub(super) fn draw_keycap(rect: Rect, key: &str, blue: bool) {
     let fill = if blue {
         Color::from_rgba(39, 75, 110, 235)
@@ -89,3 +71,4 @@ pub(super) fn draw_keycap(rect: Rect, key: &str, blue: bool) {
         bright_ink(),
     );
 }
+pub(super) use super::hud_icons::*;

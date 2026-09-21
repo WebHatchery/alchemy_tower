@@ -2,8 +2,8 @@ use std::sync::OnceLock;
 
 use serde::Deserialize;
 
-use super::embedded_json::parse_required_json;
 use crate::data::JournalMilestoneEntry;
+use macroquad_toolkit::data_loader::load_embedded_json_labeled;
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -197,14 +197,16 @@ struct NarrativeReactions {
 pub(crate) fn narrative_text() -> &'static NarrativeText {
     static TEXT: OnceLock<NarrativeText> = OnceLock::new();
     TEXT.get_or_init(|| {
-        let mut text: NarrativeText = parse_required_json(
-            macroquad_toolkit::include_json_str!("../../assets/data/narrative_text.json"),
+        let mut text: NarrativeText = load_embedded_json_labeled(
             "narrative_text.json",
-        );
+            macroquad_toolkit::include_json_str!("../../assets/data/narrative_text.json"),
+        )
+        .unwrap_or_else(|error| panic!("embedded narrative_text.json should be valid: {error}"));
         text.reactions = REACTION_SOURCES
             .iter()
             .flat_map(|(label, source)| {
-                let spoken: NarrativeReactions = parse_required_json(source, label);
+                let spoken: NarrativeReactions = load_embedded_json_labeled(label, source)
+                    .unwrap_or_else(|error| panic!("embedded {label} should be valid: {error}"));
                 spoken.reactions
             })
             .collect();

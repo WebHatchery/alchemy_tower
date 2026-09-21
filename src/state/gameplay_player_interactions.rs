@@ -71,7 +71,7 @@ impl GameplayState {
             self.runtime.status_text = self.gather_status_text(data, node, &discovery);
             audio.play_gather_pickup();
         } else {
-            self.runtime.status_text = self.gather_attempt_status(data, node);
+            self.runtime.status_text = self.gather_attempt_status(node);
         }
     }
 

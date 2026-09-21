@@ -5,6 +5,7 @@ use super::truncate_text_to_width;
 use crate::art::{draw_texture_centered, ArtAssets};
 use macroquad_toolkit::ui::{draw_ui_text, measure_ui_text};
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn draw_selection_card(
     x: f32,
     y: f32,
@@ -19,6 +20,7 @@ pub(crate) fn draw_selection_card(
     draw_selection_card_content(x, y, w, h, selected, enabled, title, subtitle, meta, 18.0);
 }
 
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn draw_item_selection_card(
     art: &ArtAssets,
     item_id: &str,
@@ -77,6 +79,7 @@ fn draw_selection_card_content(
     draw_selection_card_text(x, y, w, title, subtitle, meta, text_color, text_inset);
 }
 
+#[allow(clippy::too_many_arguments)]
 fn draw_selection_card_text(
     x: f32,
     y: f32,

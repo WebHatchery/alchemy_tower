@@ -5,7 +5,7 @@ use super::gameplay_npc_types::NpcRuntimeState;
 use super::gameplay_world_types::{CAMERA_PADDING, PLAYER_RADIUS};
 use super::GameplayState;
 use crate::data::{AreaDefinition, NpcDefinition};
-use macroquad::prelude::{get_time, screen_height, screen_width, vec2, Vec2};
+use macroquad::prelude::{get_time, vec2, Vec2};
 
 impl GameplayState {
     pub(super) fn resolve_area_collision(&self, area: &AreaDefinition, candidate: Vec2) -> Vec2 {
@@ -42,15 +42,18 @@ impl GameplayState {
     }
 
     pub(super) fn camera_offset(&self, area: &AreaDefinition) -> Vec2 {
-        let viewport = vec2(screen_width(), screen_height());
+        let safe_rect = crate::ui_scale::world_safe_rect();
+        let viewport = vec2(safe_rect.w, safe_rect.h);
         let area_size = vec2(area.size[0], area.size[1]);
-        let centered = (viewport - area_size) * 0.5;
+        let centered = vec2(safe_rect.x, safe_rect.y) + (viewport - area_size) * 0.5;
         let padding = Vec2::splat(CAMERA_PADDING);
         // Collapse each axis to the room's center when its padded bounds fit.
-        let min_offset = (viewport - area_size - padding).min(centered);
-        let max_offset = padding.max(centered);
-        let mut offset =
-            (viewport * 0.5 - self.world.player.position).clamp(min_offset, max_offset);
+        let min_offset =
+            (vec2(safe_rect.right(), safe_rect.bottom()) - area_size - padding).min(centered);
+        let max_offset = (vec2(safe_rect.x, safe_rect.y) + padding).max(centered);
+        let mut offset = (vec2(safe_rect.center().x, safe_rect.center().y)
+            - self.world.player.position)
+            .clamp(min_offset, max_offset);
         if macroquad_toolkit::settings::screen_shake_enabled() {
             offset += self.runtime.camera_shake.offset();
         }

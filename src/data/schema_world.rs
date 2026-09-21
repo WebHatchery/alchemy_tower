@@ -9,6 +9,7 @@ pub(crate) struct GameConfig {
     pub(crate) move_speed: f32,
     pub(crate) interaction_range: f32,
     pub(crate) day_length_seconds: f32,
+    pub(crate) tutorial_hint_delay_seconds: f32,
     pub(crate) save_version: u32,
     #[serde(default)]
     pub(crate) archive_required_completed_quests: Vec<String>,
@@ -36,6 +37,16 @@ pub(crate) struct BalanceDefinition {
     pub(crate) quality_effect_percent: QualityBandPercentTuning,
     pub(crate) vitality: VitalityTuning,
     pub(crate) gathering: GatheringTuning,
+    pub(crate) alchemy: AlchemyTuning,
+}
+
+/// Bounds for the cauldron's authored process controls.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub(crate) struct AlchemyTuning {
+    pub(crate) min_heat: i32,
+    pub(crate) max_heat: i32,
+    pub(crate) initial_heat: i32,
 }
 
 /// What a day's work costs and what rest gives back.

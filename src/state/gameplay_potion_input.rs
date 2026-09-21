@@ -1,7 +1,7 @@
 use super::GameplayState;
 use crate::data::GameData;
 use crate::input::{
-    hud_mouse_position_point, left_mouse_pressed, quick_potion_pressed, rect_contains_point,
+    hud_mouse_position_point, left_mouse_released, quick_potion_pressed, rect_contains_point,
 };
 
 impl GameplayState {
@@ -16,7 +16,7 @@ impl GameplayState {
     }
 
     fn touch_potion_pressed(&self, index: usize) -> bool {
-        left_mouse_pressed()
+        left_mouse_released()
             && rect_contains_point(
                 crate::ui::hud_potion_slot_rect(index),
                 hud_mouse_position_point(),

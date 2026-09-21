@@ -1,3 +1,5 @@
+//! Loaded game content plus validated lookup indexes.
+
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
@@ -78,6 +80,7 @@ impl GameData {
             quest_index: HashMap::new(),
             mutation_formula_index: HashMap::new(),
         };
+        data.validate()?;
         data.build_indexes()?;
         Ok(data)
     }

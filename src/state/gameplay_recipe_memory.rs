@@ -16,7 +16,7 @@ impl GameplayState {
             .collect()
     }
 
-    pub(super) fn recipe_memory_meta(&self, _data: &GameData, recipe: &RecipeDefinition) -> String {
+    pub(super) fn recipe_memory_meta(&self, recipe: &RecipeDefinition) -> String {
         let mastery = self.recipe_mastery_brews(&recipe.id);
         let best = self
             .progression

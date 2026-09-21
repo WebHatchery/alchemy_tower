@@ -5,7 +5,7 @@ use crate::archive_layout::{archive_panel_rect, archive_tab_rect_at};
 use crate::content::narrative_text;
 use crate::data::GameData;
 use crate::input::{
-    archive_filter_pressed, cancel_pressed, confirm_pressed, left_mouse_pressed,
+    archive_filter_pressed, cancel_pressed, confirm_pressed, left_mouse_released,
     mouse_position_point, rect_contains_point, select_next_pressed, select_previous_pressed,
     switch_next_pressed, switch_previous_pressed,
 };
@@ -15,7 +15,7 @@ mod archive_input_text;
 
 impl GameplayState {
     pub(super) fn handle_archive_inputs(&mut self, data: &GameData) {
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let point = mouse_position_point();
             let panel = archive_panel_rect();
             for index in 0..ARCHIVE_TABS.len() {

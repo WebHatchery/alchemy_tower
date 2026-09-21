@@ -55,7 +55,7 @@ impl RuntimeState {
             status_text: String::new(),
             status_text_seconds: 0.0,
             last_brew_setup: None,
-            tutorial: TutorialState::default(),
+            tutorial: TutorialState::new(data.config.tutorial_hint_delay_seconds),
             footstep_cooldown_seconds: 0.0,
             area_banner_area_id: data.config.starting_area.clone(),
             area_banner_label: data
@@ -77,10 +77,10 @@ pub(super) struct TutorialState {
     pub(super) next_hint_delay_seconds: f32,
 }
 
-impl Default for TutorialState {
-    fn default() -> Self {
+impl TutorialState {
+    fn new(initial_delay_seconds: f32) -> Self {
         Self {
-            next_hint_delay_seconds: 1.5,
+            next_hint_delay_seconds: initial_delay_seconds,
         }
     }
 }

@@ -4,6 +4,7 @@ pub(crate) struct RuneOverlayView {
     pub(crate) drafts_title: String,
     pub(crate) empty_text: String,
     pub(crate) footer_text: String,
+    pub(crate) action_label: String,
     /// Set only when the drafts list is longer than the window shows.
     pub(crate) range_text: Option<String>,
     pub(crate) entries: Vec<RuneOverlayEntry>,

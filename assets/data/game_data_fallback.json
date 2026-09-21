@@ -8,6 +8,7 @@
     "move_speed": 180.0,
     "interaction_range": 42.0,
     "day_length_seconds": 600.0,
+    "tutorial_hint_delay_seconds": 6.0,
     "save_version": 1,
     "balance": {
       "rapport": {
@@ -46,6 +47,11 @@
         "dark_time_windows": [
           "night"
         ]
+      },
+      "alchemy": {
+        "min_heat": 1,
+        "max_heat": 3,
+        "initial_heat": 2
       }
     }
   },

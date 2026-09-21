@@ -1,11 +1,6 @@
 pub(super) const SLOT_COUNT: usize = 3;
 pub(super) const ALCHEMY_TIMINGS: [&str; 3] = ["steady", "early", "late"];
 
-/// What the heat dial can actually be set to. A recipe or morph asking for
-/// anything outside this range can never fire, however well authored it is.
-pub(crate) const ALCHEMY_MIN_HEAT: i32 = 1;
-pub(crate) const ALCHEMY_MAX_HEAT: i32 = 3;
-
 #[derive(Clone, Debug)]
 pub(super) struct AlchemySession {
     pub(super) index: usize,
@@ -25,6 +20,15 @@ impl Default for AlchemySession {
             timing_index: 0,
             slots: [None, None, None],
             catalyst: None,
+        }
+    }
+}
+
+impl AlchemySession {
+    pub(super) fn with_initial_heat(initial_heat: i32) -> Self {
+        Self {
+            heat: initial_heat,
+            ..Self::default()
         }
     }
 }

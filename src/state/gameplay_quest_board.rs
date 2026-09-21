@@ -2,8 +2,8 @@ use super::gameplay_overlay_window::visible_window_start;
 use super::GameplayState;
 use crate::data::GameData;
 use crate::input::{
-    cancel_pressed, confirm_pressed, left_mouse_pressed, mouse_position_point, rect_contains_point,
-    select_next_pressed, select_previous_pressed,
+    cancel_pressed, confirm_pressed, left_mouse_released, mouse_position_point,
+    rect_contains_point, select_next_pressed, select_previous_pressed,
 };
 
 #[path = "gameplay_quest_board_text.rs"]
@@ -27,7 +27,7 @@ impl GameplayState {
         if actions.is_empty() {
             return;
         }
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let point = mouse_position_point();
             let start = visible_window_start(self.ui.shop_index, actions.len(), 3);
             for offset in 0..actions.len().saturating_sub(start).min(3) {

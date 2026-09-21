@@ -4,7 +4,7 @@ use super::GameplayState;
 use crate::audio::AudioAssets;
 use crate::data::GameData;
 use crate::input::{
-    cancel_pressed, confirm_pressed, journal_pressed, left_mouse_pressed, mouse_position_point,
+    cancel_pressed, confirm_pressed, journal_pressed, left_mouse_released, mouse_position_point,
     rect_contains_point, select_next_pressed, select_previous_pressed, switch_next_pressed,
     switch_previous_pressed,
 };
@@ -36,7 +36,7 @@ impl GameplayState {
         // Overlay hit-testing reads the mouse in UI design space, so enable the
         // scale transform for the duration of this dispatch.
         crate::ui_scale::set_overlay_mouse(true);
-        if left_mouse_pressed()
+        if left_mouse_released()
             && rect_contains_point(crate::ui::overlay_close_rect(), mouse_position_point())
         {
             self.clear_overlay();
@@ -53,7 +53,7 @@ impl GameplayState {
                 if cancel_pressed() {
                     self.clear_overlay();
                 } else if confirm_pressed()
-                    || (left_mouse_pressed()
+                    || (left_mouse_released()
                         && rect_contains_point(
                             crate::ui::overlay_primary_action_rect(),
                             mouse_position_point(),
@@ -80,7 +80,7 @@ impl GameplayState {
     fn handle_journal_overlay_inputs(&mut self, data: &GameData) {
         let journal_tab_count = self.journal_tabs().len();
         self.ui.journal_tab = self.ui.journal_tab.min(journal_tab_count.saturating_sub(1));
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let mouse = mouse_position_point();
             if self.ui.journal_tab == 0
                 && rect_contains_point(journal_access_previous_rect(), mouse)

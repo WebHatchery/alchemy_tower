@@ -5,6 +5,7 @@
 //! real screen space: they stay usable while the HUD scales down on a phone.
 
 use super::draw_action_button;
+use crate::content::ui_text;
 use macroquad::prelude::{screen_height, screen_width, Rect};
 
 const MOVE_SIZE: f32 = 52.0;
@@ -53,13 +54,14 @@ pub(crate) fn touch_pause_rect() -> Rect {
 }
 
 pub(crate) fn draw_touch_controls() {
-    draw_action_button(touch_move_up_rect(), "UP", 16.0);
-    draw_action_button(touch_move_left_rect(), "L", 18.0);
-    draw_action_button(touch_move_right_rect(), "R", 18.0);
-    draw_action_button(touch_move_down_rect(), "DN", 16.0);
-    draw_action_button(touch_inventory_rect(), "BAG", 15.0);
-    draw_action_button(touch_journal_rect(), "JOURNAL", 14.0);
-    draw_action_button(touch_pause_rect(), "PAUSE", 16.0);
+    let labels = &ui_text().touch_controls;
+    draw_action_button(touch_move_up_rect(), &labels.up, 16.0);
+    draw_action_button(touch_move_left_rect(), &labels.left, 18.0);
+    draw_action_button(touch_move_right_rect(), &labels.right, 18.0);
+    draw_action_button(touch_move_down_rect(), &labels.down, 16.0);
+    draw_action_button(touch_inventory_rect(), &labels.inventory, 15.0);
+    draw_action_button(touch_journal_rect(), &labels.journal, 14.0);
+    draw_action_button(touch_pause_rect(), &labels.pause, 16.0);
 }
 
 fn move_origin() -> (f32, f32) {

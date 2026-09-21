@@ -60,8 +60,13 @@ pub(crate) fn draw_shop_overlay_view(view: &ShopOverlayView, art: &ArtAssets) {
         }
     }
     draw_overlay_footer(x, y, w, h, &view.footer_text);
+    draw_action_button(
+        crate::ui::overlay_primary_action_rect(),
+        &view.action_label,
+        16.0,
+    );
     if view.range_text.is_some() {
-        draw_action_button(crate::ui::shop_previous_rect(), &view.previous_label, 0.0);
-        draw_action_button(crate::ui::shop_next_rect(), &view.next_label, 0.0);
+        draw_action_button(crate::ui::shop_previous_rect(), view.previous_label, 0.0);
+        draw_action_button(crate::ui::shop_next_rect(), view.next_label, 0.0);
     }
 }

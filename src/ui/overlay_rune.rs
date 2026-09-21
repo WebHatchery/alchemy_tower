@@ -44,6 +44,11 @@ pub(crate) fn draw_rune_overlay_view(view: &RuneOverlayView, art: &ArtAssets) {
         }
     }
     draw_overlay_footer(x, y, w, h, &view.footer_text);
+    draw_action_button(
+        crate::ui::overlay_primary_action_rect(),
+        &view.action_label,
+        16.0,
+    );
     if view.range_text.is_some() {
         draw_action_button(
             crate::ui::standard_overlay_previous_rect(),

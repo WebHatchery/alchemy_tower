@@ -2,7 +2,7 @@ use super::gameplay_overlay_window::visible_window_start;
 use super::GameplayState;
 use crate::data::{GameData, ItemCategory};
 use crate::input::{
-    left_mouse_pressed, mouse_position_point, rect_contains_point, select_next_pressed,
+    left_mouse_released, mouse_position_point, rect_contains_point, select_next_pressed,
     select_previous_pressed, sort_pressed,
 };
 use crate::inventory_layout::{
@@ -15,7 +15,7 @@ impl GameplayState {
         let items = self.sorted_inventory_items(data);
         self.ui.inventory_index = self.ui.inventory_index.min(items.len().saturating_sub(1));
 
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let mouse = mouse_position_point();
             if rect_contains_point(inventory_previous_rect(), mouse) {
                 self.ui.inventory_index = self.ui.inventory_index.saturating_sub(1);

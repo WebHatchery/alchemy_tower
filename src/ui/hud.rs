@@ -4,10 +4,6 @@ use macroquad::prelude::*;
 
 #[path = "hud_atmosphere.rs"]
 mod hud_atmosphere;
-#[path = "hud_banner.rs"]
-mod hud_banner;
-#[path = "hud_banner_hardware.rs"]
-mod hud_banner_hardware;
 #[path = "hud_belt.rs"]
 mod hud_belt;
 #[path = "hud_belt_frame.rs"]
@@ -18,8 +14,6 @@ mod hud_belt_slots;
 mod hud_botanical_icons;
 #[path = "hud_chrome.rs"]
 mod hud_chrome;
-#[path = "hud_chrome_coin.rs"]
-mod hud_chrome_coin;
 #[path = "hud_chrome_filigree.rs"]
 mod hud_chrome_filigree;
 #[path = "hud_chrome_goal.rs"]
@@ -28,16 +22,10 @@ mod hud_chrome_goal;
 mod hud_chrome_medallion;
 #[path = "hud_chrome_plaque.rs"]
 mod hud_chrome_plaque;
-#[path = "hud_chrome_tag.rs"]
-mod hud_chrome_tag;
-#[path = "hud_compass.rs"]
-mod hud_compass;
 #[path = "hud_decor.rs"]
 mod hud_decor;
 #[path = "hud_gem_icons.rs"]
 mod hud_gem_icons;
-#[path = "hud_gem_mount.rs"]
-mod hud_gem_mount;
 #[path = "hud_header.rs"]
 mod hud_header;
 #[path = "hud_icons.rs"]

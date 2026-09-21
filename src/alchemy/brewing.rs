@@ -73,6 +73,7 @@ pub(super) fn stable_brew(
 /// traits and elements reach every calculation below without any of them
 /// knowing variants exist. Callers with no variant stock to consult use
 /// `selected_item_defs`.
+#[allow(clippy::too_many_arguments)]
 pub(crate) fn resolve_brew<'a>(
     data: &'a GameData,
     station: &StationDefinition,

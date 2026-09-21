@@ -21,11 +21,11 @@ impl GameplayState {
 
         match self.archive_tab_id() {
             "timeline" => self.draw_archive_timeline_section(data, x, y, w, h),
-            "experiments" => self.draw_archive_experiments_section(data, x, y, w, h),
-            "mastery" => self.draw_archive_mastery_section(data, x, y, w, h),
-            "morphs" => self.draw_archive_morphs_section(data, x, y, w, h),
-            "disassembly" => self.draw_archive_disassembly_section(data, x, y, w, h),
-            _ => self.draw_archive_duplication_section(data, x, y, w, h),
+            "experiments" => self.draw_archive_experiments_section(data, x, y, w),
+            "mastery" => self.draw_archive_mastery_section(data, x, y, w),
+            "morphs" => self.draw_archive_morphs_section(data, x, y, w),
+            "disassembly" => self.draw_archive_disassembly_section(data, x, y, w),
+            _ => self.draw_archive_duplication_section(data, x, y, w),
         }
         match self.archive_tab_id() {
             "timeline" => crate::ui::draw_overlay_primary_action("RECONSTRUCT"),

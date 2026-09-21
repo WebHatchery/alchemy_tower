@@ -8,6 +8,7 @@ pub(crate) use gameplay::GameplayState;
 pub(crate) use menu::MenuState;
 pub(crate) use pause::PauseState;
 
+#[allow(clippy::large_enum_variant)]
 pub(crate) enum StateTransition {
     EnterGameplay(GameplayState),
     ReturnToMenu,

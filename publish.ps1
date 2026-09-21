@@ -22,7 +22,7 @@ if (-not (Test-Path $rootPublisher)) {
 if (-not $SkipBuild -and -not $DeployOnly) {
     Push-Location $PSScriptRoot
     try {
-        cargo test --bin alchemy_tower
+        cargo test
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Alchemy Tower validation tests failed."
             exit 1

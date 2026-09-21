@@ -13,7 +13,7 @@ impl GameplayState {
         &self,
         data: &GameData,
     ) -> ArchiveExperimentsSectionView {
-        let entries = self.archive_experiment_entries(data);
+        let entries = self.archive_experiment_entries();
         let filter_text = ui_format(
             "overlay_filter",
             &[("mode", self.archive_experiment_filter_label())],
@@ -139,7 +139,7 @@ impl GameplayState {
             ),
             memory_text: ui_format(
                 "overlay_archive_memory",
-                &[("text", &self.recipe_memory_meta(data, recipe))],
+                &[("text", &self.recipe_memory_meta(recipe))],
             ),
             detail_text: self.recipe_memory_detail(data, recipe),
         })

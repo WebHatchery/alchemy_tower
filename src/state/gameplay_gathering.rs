@@ -27,11 +27,7 @@ impl GameplayState {
             || self.effect_active(EffectKind::Glow)
     }
 
-    pub(super) fn gather_attempt_status(
-        &self,
-        _data: &GameData,
-        node: &GatherNodeDefinition,
-    ) -> String {
+    pub(super) fn gather_attempt_status(&self, node: &GatherNodeDefinition) -> String {
         gathering_text::attempt_status(self.item_has_field_notes(&node.item_id), &node.name)
     }
 

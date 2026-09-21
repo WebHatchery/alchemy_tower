@@ -16,6 +16,8 @@ use std::cell::Cell;
 
 pub(crate) const UI_DESIGN_W: f32 = 1280.0;
 pub(crate) const UI_DESIGN_H: f32 = 720.0;
+pub(crate) const WORLD_SAFE_TOP: f32 = 76.0;
+pub(crate) const WORLD_SAFE_BOTTOM_BAND: f32 = 180.0;
 
 thread_local! {
     // True while overlay mouse coordinates are being read, so the transform only
@@ -65,6 +67,18 @@ pub(crate) fn ui_h() -> f32 {
     }
 }
 
+/// Screen-space rectangle left for the world after the persistent HUD and
+/// movement controls are subtracted. Camera framing uses this same contract so
+/// a player or gather node is not deliberately centred underneath a control.
+pub(crate) fn world_safe_rect() -> Rect {
+    safe_play_rect(vec2(screen_width(), screen_height()))
+}
+
+fn safe_play_rect(viewport: Vec2) -> Rect {
+    let height = (viewport.y - WORLD_SAFE_TOP - WORLD_SAFE_BOTTOM_BAND).max(1.0);
+    Rect::new(0.0, WORLD_SAFE_TOP, viewport.x, height)
+}
+
 /// Install the scaled UI camera. Returns whether a camera was set (i.e. whether
 /// scaling is active); pass that value to [`end_ui_camera`].
 pub(crate) fn begin_ui_camera() -> bool {
@@ -112,5 +126,24 @@ pub(crate) fn transform_hud_mouse(point: [f32; 2]) -> [f32; 2] {
             [mapped.x, mapped.y]
         }
         None => point,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{safe_play_rect, WORLD_SAFE_BOTTOM_BAND, WORLD_SAFE_TOP};
+    use macroquad::prelude::vec2;
+
+    #[test]
+    fn world_safe_rect_leaves_both_persistent_control_bands_clear() {
+        let rect = safe_play_rect(vec2(1280.0, 720.0));
+
+        assert_eq!(rect.y, WORLD_SAFE_TOP);
+        assert_eq!(rect.bottom(), 720.0 - WORLD_SAFE_BOTTOM_BAND);
+    }
+
+    #[test]
+    fn world_safe_rect_stays_non_empty_at_stress_height() {
+        assert!(safe_play_rect(vec2(360.0, 360.0)).h > 0.0);
     }
 }

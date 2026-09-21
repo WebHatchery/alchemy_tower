@@ -3,7 +3,7 @@ use super::gameplay_rune_overlay_view::VISIBLE_RUNE_ROWS;
 use super::GameplayState;
 use crate::data::{GameData, StationKind};
 use crate::input::{
-    cancel_pressed, confirm_pressed, interact_pressed, left_mouse_pressed, mouse_position_point,
+    cancel_pressed, confirm_pressed, interact_pressed, left_mouse_released, mouse_position_point,
     rect_contains_point, select_next_pressed, select_previous_pressed,
 };
 
@@ -27,7 +27,7 @@ impl GameplayState {
             }
             return;
         }
-        if left_mouse_pressed() {
+        if left_mouse_released() {
             let point = mouse_position_point();
             if recipes.len() > VISIBLE_RUNE_ROWS
                 && rect_contains_point(crate::ui::standard_overlay_previous_rect(), point)
@@ -43,6 +43,12 @@ impl GameplayState {
                 self.ui.rune_index = (start + VISIBLE_RUNE_ROWS).min(recipes.len() - 1);
                 return;
             }
+            if rect_contains_point(crate::ui::overlay_primary_action_rect(), point) {
+                if let Some(recipe) = recipes.get(self.ui.rune_index) {
+                    self.apply_rune_recipe(data, recipe);
+                }
+                return;
+            }
             let (start, _) = paged_window(self.ui.rune_index, recipes.len(), VISIBLE_RUNE_ROWS);
             for offset in 0..recipes.len().saturating_sub(start).min(VISIBLE_RUNE_ROWS) {
                 if !rect_contains_point(
@@ -52,11 +58,7 @@ impl GameplayState {
                     continue;
                 }
                 let index = start + offset;
-                if self.ui.rune_index == index {
-                    self.apply_rune_recipe(data, recipes[index]);
-                } else {
-                    self.ui.rune_index = index;
-                }
+                self.ui.rune_index = index;
                 return;
             }
         }

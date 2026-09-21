@@ -35,17 +35,9 @@ pub(crate) struct HudToastView {
     pub(crate) alpha: f32,
 }
 
-pub(crate) struct HudControlTag {
-    pub(crate) key_label: String,
-    pub(crate) label: String,
-}
-
 pub(crate) struct HudView {
-    pub(crate) game_title: String,
     pub(crate) vitality_label: String,
     pub(crate) vitality_text: String,
-    pub(crate) coins_label: String,
-    pub(crate) coins_value: String,
     pub(crate) clock_text: String,
     pub(crate) season_weather_text: String,
     pub(crate) day_text: String,
@@ -55,18 +47,8 @@ pub(crate) struct HudView {
     pub(crate) status_text: String,
     pub(crate) area_label: String,
     pub(crate) area_banner_alpha: f32,
-    pub(crate) inventory_label: String,
-    pub(crate) inventory_hint: String,
-    pub(crate) effects_label: String,
-    pub(crate) no_effects_label: String,
-    pub(crate) journal_label: String,
-    pub(crate) journal_key_label: String,
-    pub(crate) minimap_north_label: String,
-    pub(crate) control_tags: Vec<HudControlTag>,
     pub(crate) truncation_suffix: String,
     pub(crate) potions: [HudPotionSlot; HOTBAR_SLOT_COUNT],
-    pub(crate) inventory_count: u32,
-    pub(crate) effect_count: usize,
     pub(crate) feedbacks: Vec<HudFeedbackView>,
     pub(crate) toasts: Vec<HudToastView>,
 }

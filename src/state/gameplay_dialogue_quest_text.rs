@@ -5,11 +5,7 @@ pub(super) fn accepted_toast(quest_title: &str) -> String {
     ui_format("quests_accepted_toast", &[("title", quest_title)])
 }
 
-pub(super) fn accepted_status(
-    _data: &GameData,
-    quest: &QuestDefinition,
-    location_hint: &str,
-) -> String {
+pub(super) fn accepted_status(quest: &QuestDefinition, location_hint: &str) -> String {
     ui_format(
         "quests_accepted_status",
         &[("title", &quest.title), ("hint", location_hint)],

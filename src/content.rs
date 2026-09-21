@@ -1,4 +1,3 @@
-mod embedded_json;
 mod input_bindings;
 mod narrative_text;
 mod ui_text;

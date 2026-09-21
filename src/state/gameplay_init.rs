@@ -24,7 +24,7 @@ impl GameplayState {
             inventory: BTreeMap::new(),
             runtime: RuntimeState::new(data),
             ui: OverlayState::new_gameplay(),
-            alchemy: AlchemySession::default(),
+            alchemy: AlchemySession::with_initial_heat(data.config.balance.alchemy.initial_heat),
         };
         state.seed_starter_recipes(data);
         state.initialize_npc_motion_states(data);
